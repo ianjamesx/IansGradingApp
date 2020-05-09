@@ -1,0 +1,15 @@
+{
+  "name": "grade",
+  "version": "1.0.0",
+  "description": "grading app",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ian",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {}
+}
