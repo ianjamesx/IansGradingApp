@@ -1,9 +1,12 @@
+var render = require('../utils/render');
+
 var homepage = (templates, components) => {
 
-  console.log(templates);
+  var errorbox = components.error({message: 'This is an Error'});
 
-  var page = templates.user1.file1;
-  return page;
+  return render.render(templates.user1.file1, {
+    err: errorbox
+  });
 
 };
 

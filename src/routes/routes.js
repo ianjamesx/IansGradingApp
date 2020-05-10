@@ -5,6 +5,7 @@ module.exports = (app, templates, components) => {
 
     var page = pb.homepage(templates, components);
     res.send(page);
+    
   });
 
 }
