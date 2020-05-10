@@ -73,9 +73,7 @@ var generatecomponentcontent = (components) => {
 };
 
 var removeduplicateprops = (properties) => {
-
   return Array.from(new Set(properties)); //set properties must be unique, just create a set, and convert back to array
-
 };
 
 var componenterrcheck = (properties) => {
@@ -202,6 +200,9 @@ var writecomponentfile = (filepath, filecontent, buffer) => {
     components = require(absolutepath);
     filecontent = filecontent.replace(exportstr, '');
   }
+  /*
+  write final final for use on client side
+  */
   fs.writeFileSync(absolutepath, filecontent);
   return components;
 

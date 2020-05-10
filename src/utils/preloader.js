@@ -24,21 +24,18 @@ var loadtemplates = (templatepath) => {
 
 };
 
-var loadassets = (settings) => {
+var loadassets = (userassetpath) => {
 
   var i;
 
-  var assetpath = path.join(__dirname, settings.assetspath);
+  var assetpath = path.join(__dirname, userassetpath);
   var assets = fs.readdirSync(assetpath);
   var assetdata = [];
-
-  //custom delims (is user passes them)
-  var delimstart = settings.delimstart || '[', delimend = settings.delimend || ']';
 
   for(i = 0; i < assets.length; i++){
 
     var assetName = (assets[i].split('.'))[0];
-    assetName = delimstart + assetName + delimend;
+    assetName = '[' + assetName + ']';
 
     assetdata.push({
       tag: assetName, //tag for asset (e.g. [sidebar])
@@ -78,7 +75,7 @@ var renderassets = (templates, assets) => {
 //only export this function
 var load = (settings) => {
   var templates = loadtemplates(settings.templatepath);
-  var assets = loadassets(settings);
+  var assets = loadassets(settings.assetspath);
   renderassets(templates, assets);
   return templates;
 };

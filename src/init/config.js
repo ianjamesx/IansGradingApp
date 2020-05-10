@@ -32,6 +32,8 @@ module.exports = () => {
   preloader setup
   */
 
+  var start = Date.now();
+
   var pre = require('../utils/preloader');
   var templates = pre.load({ //<--- NOTE: we will want to give back our templates
     templatepath: '../view/templates',
@@ -53,6 +55,10 @@ module.exports = () => {
   return any config output that other parts of the app needed
   (mostly the template buffer from preloader)
   */
+
+  var end = Date.now();
+
+  console.log('rendered in ' + (end - start) + 'ms');
 
   return {
     templates: templates,

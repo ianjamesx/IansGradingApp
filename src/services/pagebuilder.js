@@ -4,7 +4,7 @@ var homepage = (templates, components) => {
 
   var errorbox = components.error({message: 'This is an Error'});
 
-  return render.render(templates.user1.file1, {
+  return render(templates.user1.file1, {
     err: errorbox
   });
 
