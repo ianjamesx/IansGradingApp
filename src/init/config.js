@@ -33,19 +33,30 @@ module.exports = () => {
   */
 
   var pre = require('../utils/preloader');
-  var templates = pre.load({ //<--- NOTE: we will want to give back our templates eventually
+  var templates = pre.load({ //<--- NOTE: we will want to give back our templates
     templatepath: '../view/templates',
     assetspath: '../view/assets'
   });
 
   /*
-  component renderer setup
+  component loader setup
   */
 
-  var componentloader = require('../utils/componentloader');
-  componentloader.load({
+  var component = require('../utils/componentloader');
+  var components = component.load({
     components: '../view/components',
-    renderfile: '../view/componentrender.js'
+    renderfile: '../view/componentrender.js',
+    buffer: true
   });
+
+  /*
+  return any config output that other parts of the app needed
+  (mostly the template buffer from preloader)
+  */
+
+  return {
+    templates: templates,
+    components: components
+  };
 
 };

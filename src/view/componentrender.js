@@ -1,12 +1,12 @@
-var assets = {assignmentcardsimple: function(param){var properties = ['name','opendisplaydate','id'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+var components = {assignmentcardsimple: function(param){var properties = ['name','opendisplaydate','id'];
+components.errorcheck(properties, param);return `<div class="list-group-item">
   <h3 class="card-title">` + param.name + `</h3>
   <h4>` + param.opendisplaydate + `</h4>
   <a href="/assignment/` + param.id + `" class="reportlink">View Assignment</a>
   <span style="display:block; height: 20px;"></span>
 </div>
 `;},courseinfocard: function(param){var properties = ['name','dept','number','section','season','year','id'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+components.errorcheck(properties, param);return `<div class="list-group-item">
   <h3 class="card-title">` + param.name + `</h3>
   <h4>` + param.dept + ` ` + param.number + ` - ` + param.section + `</h4>
   <h4>` + param.season + ` ` + param.year + `</h4>
@@ -14,7 +14,7 @@ this.errorcheck(properties, param);return `<div class="list-group-item">
   <span style="display:block; height: 20px;"></span>
 </div>
 `;},coursesearchsuccess: function(param){var properties = ['name','dept','number','section','season','year','instructor'];
-this.errorcheck(properties, param);return `<span style="display:block; height: 20px;"></span>
+components.errorcheck(properties, param);return `<span style="display:block; height: 20px;"></span>
 <div class="alert alert-success"><span>Course Found</span></div>
 <span style="display:block; height: 10px;"></span>
 <div class="panel panel-default">
@@ -74,7 +74,7 @@ this.errorcheck(properties, param);return `<span style="display:block; height: 2
 
 </form>
 `;},deletemodal: function(param){var properties = ['title','text','canceltext','deletebtn','confirmtext'];
-this.errorcheck(properties, param);return `<div class="modal fade" id="myModal" role="dialog">
+components.errorcheck(properties, param);return `<div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -91,11 +91,11 @@ this.errorcheck(properties, param);return `<div class="modal fade" id="myModal" 
   </div>
 </div>
 `;},dismiss: function(param){var properties = ['id'];
-this.errorcheck(properties, param);return `<button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
+components.errorcheck(properties, param);return `<button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
   <span aria-hidden="true">&times;</span>
 </button>
 `;},enteransdissmissable: function(param){var properties = ['id','question','answer','hint'];
-this.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item">
+components.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item">
   <button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -107,11 +107,11 @@ this.errorcheck(properties, param);return `<div id="` + param.id + `" class="lis
   <span style="display:block; height: 20px;"></span>
 </div>
 `;},error: function(param){var properties = ['message'];
-this.errorcheck(properties, param);return `<span style="display:block; height: 20px;"></span>
+components.errorcheck(properties, param);return `<span style="display:block; height: 20px;"></span>
 <div class="alert alert-danger"><span>` + param.message + `</span></div>
 <span style="display:block; height: 10px;"></span>
 `;},instructorassignmentcard: function(param){var properties = ['name','opendisplaydate','id','questioncount','points','attempts'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+components.errorcheck(properties, param);return `<div class="list-group-item">
   <h3 class="card-title">` + param.name + `</h3>
   <h4>` + param.opendisplaydate + `</h4>
   <span style="display:block; height: 20px;"></span>
@@ -129,7 +129,7 @@ this.errorcheck(properties, param);return `<div class="list-group-item">
   </div>
 </div>
 `;},instructorcodecard: function(param){var properties = ['name','opendisplaydate','id','prompt'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+components.errorcheck(properties, param);return `<div class="list-group-item">
   <h3 class="card-title">` + param.name + `</h3>
   <h4>` + param.opendisplaydate + `</h4>
   <span style="display:block; height: 20px;"></span>
@@ -147,7 +147,7 @@ this.errorcheck(properties, param);return `<div class="list-group-item">
   </div>
 </div>
 `;},modal: function(param){var properties = ['modal','title','text','buttontext'];
-this.errorcheck(properties, param);return `<div class="modal fade" id="` + param.modal + `" role="dialog">
+components.errorcheck(properties, param);return `<div class="modal fade" id="` + param.modal + `" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -163,7 +163,7 @@ this.errorcheck(properties, param);return `<div class="modal fade" id="` + param
   </div>
 </div>
 `;},multiplechoicedismissable: function(param){var properties = ['id','question','ans1','ans2','ans3','ans4','hint'];
-this.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item">
+components.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item">
   <button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -178,7 +178,7 @@ this.errorcheck(properties, param);return `<div id="` + param.id + `" class="lis
   <span style="display:block; height: 20px;"></span>
 </div>
 `;},questionchoice: function(param){var properties = ['id'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+components.errorcheck(properties, param);return `<div class="list-group-item">
 <!--  <button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button> -->
@@ -194,7 +194,7 @@ this.errorcheck(properties, param);return `<div class="list-group-item">
   </div>
 </div>
 `;},questiondismiss: function(param){var properties = ['id','question'];
-this.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item question-select">
+components.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item question-select">
   <button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
     <span aria-hidden="true">test</span>
   </button>
@@ -202,7 +202,7 @@ this.errorcheck(properties, param);return `<div id="` + param.id + `" class="lis
   <span style="display:block; height: 20px;"></span>
 </div>
 `;},questionselect: function(param){var properties = ['id','question'];
-this.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item question-select">
+components.errorcheck(properties, param);return `<div id="` + param.id + `" class="list-group-item question-select">
   <!--<button type="button" id="remove` + param.id + `" class="close" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button> -->
@@ -210,7 +210,7 @@ this.errorcheck(properties, param);return `<div id="` + param.id + `" class="lis
   <span style="display:block; height: 20px;"></span>
 </div>
 `;},studentassignmentcard: function(param){var properties = ['name','opendisplaydate','id','questioncount','points','attempts'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+components.errorcheck(properties, param);return `<div class="list-group-item">
   <h3 class="card-title">` + param.name + `</h3>
   <h4>` + param.opendisplaydate + `</h4>
   <span style="display:block; height: 20px;"></span>
@@ -226,7 +226,7 @@ this.errorcheck(properties, param);return `<div class="list-group-item">
   </div>
 </div>
 `;},studentcodecard: function(param){var properties = ['name','opendisplaydate','id','prompt'];
-this.errorcheck(properties, param);return `<div class="list-group-item">
+components.errorcheck(properties, param);return `<div class="list-group-item">
   <h3 class="card-title">` + param.name + `</h3>
   <h4>` + param.opendisplaydate + `</h4>
   <span style="display:block; height: 20px;"></span>
@@ -242,14 +242,16 @@ this.errorcheck(properties, param);return `<div class="list-group-item">
   </div>
 </div>
 `;},success: function(param){var properties = ['message'];
-this.errorcheck(properties, param);return `<span style="display:block; height: 20px;"></span>
+components.errorcheck(properties, param);return `<span style="display:block; height: 20px;"></span>
 <div class="alert alert-success"><span>` + param.message + `</span></div>
 <span style="display:block; height: 10px;"></span>
 `;},errorcheck: function(properties, obj){
     var i;
+    if(typeof obj === 'undefined') throw new Error('No object not passed to component loader');
     for(i = 0; i < properties.length; i++){
       if(typeof obj[properties[i]] === 'undefined'){
-        throw new Error('Object property "' + properties[i] + '" not passed to asset renderer');
+        var err = 'Object property "' + properties[i] + '" not passed to component loader: requires properties: ' + properties
+        throw new Error(err);
       }
     }
   }};

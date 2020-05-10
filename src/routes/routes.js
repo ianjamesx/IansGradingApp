@@ -1,8 +1,10 @@
-
-module.exports = (app) => {
+var pb = require('../services/pagebuilder');
+module.exports = (app, templates, components) => {
 
   app.get('/', async (req, res) => {
-    res.send(templates.user1.file1);
+
+    var page = pb.homepage(templates, components);
+    res.send(page);
   });
 
 }
