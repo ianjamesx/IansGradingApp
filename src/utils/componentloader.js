@@ -47,7 +47,7 @@ var createassetrender = (asset) => {
 
     var protoName = asset.name; //name for function prototype
     componentcontent = protoName + ': function(param){'; //function header
-    componentcontent += errorcheck(asset.properties);
+    componentcontent += componenterrcheck(asset.properties);
     componentcontent += 'return ' + asset.code + ';'; //return code
     componentcontent += '},';
 
@@ -57,32 +57,28 @@ var createassetrender = (asset) => {
 
 };
 
-var createAssetFile = (assets) => {
+var generatecomponentcontent = (components) => {
 
   var i;
   var filecontent = 'var components = {'; //module header
 
-  for(i = 0; i < assets.length; i++){
-    filecontent += createassetrender(assets[i]);
-    //console.log(assets[i]);
-    //console.log(createassetrender(assets[i]));
-    //console.log('--------------------------');
+  for(i = 0; i < components.length; i++){
+    filecontent += createassetrender(components[i]); //append  component data
   }
 
-  filecontent += getErrCheckFunction(); //append function for checking errors
-
+  filecontent += geterrcheckfunction(); //append function for checking errorss
   filecontent += '};';
   return filecontent;
 
 };
 
-var removeDuplicateProps = (properties) => {
+var removeduplicateprops = (properties) => {
 
   return Array.from(new Set(properties)); //set properties must be unique, just create a set, and convert back to array
 
 };
 
-var errorcheck = (properties) => {
+var componenterrcheck = (properties) => {
 
   if(properties.length === 0) return ''; //if we have no properties, no need to error check
 
@@ -99,7 +95,7 @@ var errorcheck = (properties) => {
 
 };
 
-var getErrCheckFunction = () => {
+var geterrcheckfunction = () => {
 
   var errcheck = `errorcheck: function(properties, obj){
     var i;
@@ -166,7 +162,7 @@ var rendercomponents = (components) => {
           compattrs.push(tags[j]); //actually property so we can use it for error checking
         }
 
-        compattrs = removeDuplicateProps(compattrs);
+        compattrs = removeduplicateprops(compattrs);
 
         //replace all instances of tags with object accessor
         for(j = 0; j < compassets.length; j++){
@@ -191,7 +187,7 @@ var rendercomponents = (components) => {
 
 };
 
-var writefile = (filepath, filecontent, buffer) => {
+var writecomponentfile = (filepath, filecontent, buffer) => {
 
   var absolutepath = path.join(__dirname, filepath);
   var components;
@@ -214,8 +210,8 @@ var writefile = (filepath, filecontent, buffer) => {
 var load = (settings) => {
   var componenttemplates = loadcomponents(settings.components);
   var componentdata = rendercomponents(componenttemplates);
-  var jsfilecontent = createAssetFile(componentdata);
-  var components = writefile(settings.renderfile, jsfilecontent, settings.buffer);
+  var jsfilecontent = generatecomponentcontent(componentdata);
+  var components = writecomponentfile(settings.renderfile, jsfilecontent, settings.buffer);
   if(settings.buffer) return components;
 };
 
