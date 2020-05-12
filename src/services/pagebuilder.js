@@ -1,4 +1,5 @@
 var render = require('../utils/render');
+var User = require('../models/User');
 
 var homepage = async (session, templates, components) => {
 

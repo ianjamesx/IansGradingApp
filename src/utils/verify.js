@@ -12,8 +12,8 @@ how verification functions work;
 */
 
 var validator = require('validator');
-var passvalid = require('password-validator');
-var db = require('../db/data');
+var passwordValidator = require('password-validator');
+//var db = require('../db/data');
 
 /*
 conditions to use email:
@@ -24,8 +24,8 @@ conditions to use email:
 var email = async (email) => {
   if(!validator.isEmail(email))
     return 'That is not a valid email address';
-  if(await db.emailinuse(email))
-    return 'This email address is already in use';
+  /*if(await db.emailinuse(email))
+    return 'This email address is already in use';*/
 
   return '';
 };
@@ -59,7 +59,7 @@ password conditions:
 
 var password = (password) => {
 
-  if(!pass)
+  if(!password)
     return 'please enter a password';
 
   var passreq = new passwordValidator();
@@ -92,18 +92,19 @@ var anyerrors = (errs) => {
 
   var i;
   for(i in errs){
-    if(i) return errs; //if we get an error, return entire object
+    if(errs[i]) return errs; //if we get an error, return entire object
   }
 
   return null; //or just return null if we have no errors
 
 }
 
-var all = async (fields) => {
+var all = async (fields) => { //<-- async cause some utils do db searches for username/email availability
 
   var allroutines = { //all routines user can utilize
     email: email,
-    name: name
+    name: name,
+    password: password
   }
 
   var errormessages = {}; //eror messages we'll send back to client
@@ -126,4 +127,12 @@ var all = async (fields) => {
 
   return anyerrors(errormessages);
 
+};
+
+module.exports = {
+  email: email,
+  name: name,
+  password: password,
+  anyerrors: anyerrors,
+  all: all
 };
