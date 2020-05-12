@@ -4,7 +4,7 @@ module.exports = (app, templates, components) => {
 
   app.get('/', async (req, res) => {
 
-    var page = pb.homepage(templates, components);
+    var page = pb.homepage(req.getSession(), templates, components);
     res.send(page);
 
   });

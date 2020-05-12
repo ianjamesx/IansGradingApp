@@ -1,6 +1,6 @@
 var render = require('../utils/render');
 
-var homepage = (templates, components) => {
+var homepage = (session, templates, components) => {
 
   var errorbox = components.error({message: 'This is an Error'});
 
