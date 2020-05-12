@@ -111,7 +111,16 @@ var all = async (fields) => {
 
   for(i in fields){
     var data = fields[i][0], routine = fields[i][1]; //data (index 0) and verify function (index 1) to use from user
-    var errmsg = allroutines[routine](data); //call their verify function with their data
+
+    //need to determine if function is async or not before calling (so we know if we have to await)
+    var isasync = allroutines[routine].constructor.name === "AsyncFunction";
+    var errmsg;
+
+    if(isasync)
+      errmsg = await allroutines[routine](data); //call their verify function with their data
+    else
+      errmsg = allroutines[routine](data);
+
     errormessages[i] = errmsg; //store the error message
   }
 
