@@ -2,9 +2,10 @@
 connection pooling/promise wrapper for mysql
 */
 
-const mysql = require('mysql');
+var mysql = require('mysql'); //db module
+var { format, insert, update } = require('../utils/dbutils'); //include some formatting utils
 
-const sqlconfig = {
+var sqlconfig = {
   connectionLimit: 100,
   host: '127.0.0.1',
   user: 'root',
@@ -12,20 +13,26 @@ const sqlconfig = {
   database: 'grade_db'
 };
 
-module.exports = (query) => {
+/*
+get results from a single query from db
+*/
+
+var query = async (query) => {
 
   var conn = mysql.createPool(sqlconfig); //get a conn from the pool
-
-  new Promise((resolve, reject) => {
-
+  let promise = new Promise((resolve, reject) => { //promise wrapper for sql queries
     conn.query(query, (err, rows, fields) => {
-      if (err) return reject(err); //on error
-      resolve(rows); //result
-    );
-
+      if (err) return reject(err);
+      resolve(rows);
+    });
   });
 
   let result = await promise;
   return result;
 
+};
+
+module.exports = {
+  query: query,
+  insert: insert
 };

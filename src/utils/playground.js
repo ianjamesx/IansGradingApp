@@ -4,20 +4,20 @@ var hello = async () => {
   });
 
   let result = await promise; // wait until the promise resolves (*)
+  console.log('promise:');
+  console.log(result);
   return result;
 
   //console.log(result); // "done!"
 };
 
 var hello2 = async () => {
-
   return await hello();
-
 };
 
 var start = () => {
   hello2().then((result) => {
-    console.log(result);
+    //console.log(result);
   });
 };
 
@@ -39,10 +39,17 @@ var valid = async () => {
 start();
 valid().then(console.log);
 
-var database = require('../db/db');
-var db = database();
+var db = require('../db/db');
 
-db.query('SHOW TABLES', (err, result) => {
-  if (err) throw err;
+db.query('SHOW TABLES').then(result => {
   console.log(result);
+});
+
+db.insert('users', {
+  greeting: "Hello!",
+  farewell: "Goodbye! now!",
+  time: 13,
+  isonline: 0
+}).then(res => {
+  console.log(res);
 });

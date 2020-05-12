@@ -29,7 +29,7 @@ class User {
     if(errs)
       return errs;
 
-    var inserterr = await db.insertuser(this.getuserdata()); //save in db, get any db errs
+    var inserterr = await db.insert(this.getuserdata()); //save in db, get any db errs
     if(inserterr)
       return inserterr;
     return null; //no errors encountered, return null
