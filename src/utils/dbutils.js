@@ -89,9 +89,9 @@ var insert = async (table, data) => {
 
 var update = async (table, data, condition) => {
 
-  var formatted = updateformat(data);
-  var ins = 'INSERT INTO ' + table + ' ' + formatted.columns + ' VALUES ' + formatted.data + ';';
-  var res = await query(ins);
+  var updatedata = updateformat(data), updatecond = updateformat(condition);
+  var upd = 'UPDATE ' + table + ' SET ' + formatted + ' WHERE ' + updatecond + ';';
+  var res = await query(upd);
   return res;
 
 };

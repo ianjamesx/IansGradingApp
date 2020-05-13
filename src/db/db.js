@@ -3,7 +3,7 @@ connection pooling/promise wrapper for mysql
 */
 
 var mysql = require('mysql'); //db module
-var { format, insert, update } = require('../utils/dbutils'); //include some formatting utils
+var { insert, update } = require('../utils/dbutils'); //include some formatting utils
 
 var sqlconfig = {
   connectionLimit: 100,
@@ -34,5 +34,6 @@ var query = async (query) => {
 
 module.exports = {
   query: query,
-  insert: insert
+  insert: insert,
+  update: update
 };
