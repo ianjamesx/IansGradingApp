@@ -1,11 +1,11 @@
 var pb = require('../services/pagebuilder');
 
-module.exports = (app, templates, components) => {
+module.exports = (app) => {
 
   app.get('/', (req, res) => {
 
-    pb.homepage(req.getSession(), templates, components).then((page) => {
-      res.send(page);
+    pb.homepate(req).then(content => {
+      res.render('pages/index', content);
     });
 
   });

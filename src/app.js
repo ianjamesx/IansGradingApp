@@ -2,12 +2,10 @@ var express = require("express");
 var app = express();
 
 //all our configuration code
-var configout = require('./init/config')();
-
-//console.log(configout);
+var configout = require('./init/config')(app);
 
 //all our routes
-var routes = require('./routes/routes')(app, configout.templates, configout.components);
+var routes = require('./routes/routes')(app);
 
 app.listen(8080, () => {
   console.log('listening on 8080');

@@ -13,12 +13,13 @@ how verification functions work;
 
 var validator = require('validator');
 var passwordValidator = require('password-validator');
-//var db = require('../db/data');
+var db = require('../db/db');
 
 /*
 conditions to use email:
   must be in email format
-  must not be in use
+
+emailinuse checks condition and if email is currently in database (for making new users)
 */
 
 var email = async (email) => {
@@ -29,6 +30,15 @@ var email = async (email) => {
 
   return '';
 };
+
+/*
+var emailinuse = async (email) => {
+  if(!validator.isEmail(email))
+    return 'That is not a valid email address';
+  if(await db.emailinuse(email))
+    return 'This email address is already in use';
+};
+*/
 
 /*
 first/last names

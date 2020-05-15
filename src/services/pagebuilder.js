@@ -1,13 +1,18 @@
 var render = require('../utils/render');
 var User = require('../models/User');
 
-var homepage = async (session, templates, components) => {
+/*
 
-  var errorbox = components.error({message: 'This is an Error'});
+page builder
 
-  return render(templates.user1.file1, {
-    err: errorbox
-  });
+gets all data needed for templating engine, sends object of that data back
+to router, router renders it with expressjs
+
+*/
+
+var homepage = async (req) => {
+
+  
 
 };
 

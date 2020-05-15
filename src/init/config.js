@@ -14,6 +14,10 @@ module.exports = () => {
   /*
   middleware for express
   */
+
+  //set EJS as view engine
+  app.set('view engine', 'ejs');
+
 /*
   var bodyParser = require("body-parser");
   var session = require("express-session");
@@ -27,42 +31,5 @@ module.exports = () => {
 
   app.use('/public', express.static(__dirname + '/public')); //make everything in public accessible
 */
-
-  /*
-  preloader setup
-  */
-
-  var start = Date.now();
-
-  var pre = require('../utils/preloader');
-  var templates = pre.load({ //<--- NOTE: we will want to give back our templates
-    templatepath: '../view/templates',
-    assetspath: '../view/assets'
-  });
-
-  /*
-  component loader setup
-  */
-
-  var component = require('../utils/componentloader');
-  var components = component.load({
-    components: '../view/components',
-    renderfile: '../view/componentrender.js',
-    buffer: true
-  });
-
-  /*
-  return any config output that other parts of the app needed
-  (mostly the template buffer from preloader)
-  */
-
-  var end = Date.now();
-
-  console.log('rendered in ' + (end - start) + 'ms');
-
-  return {
-    templates: templates,
-    components: components
-  };
 
 };

@@ -78,26 +78,11 @@ var formatmultiple = (data) => {
 
 };
 
-var insert = async (table, data) => {
-
-  var formatted = insertformat(data);
-  var ins = 'INSERT INTO ' + table + ' ' + formatted.columns + ' VALUES ' + formatted.data + ';';
-  var res = await query(ins);
-  return res;
-
-};
-
-var update = async (table, data, condition) => {
-
-  var updatedata = updateformat(data), updatecond = updateformat(condition);
-  var upd = 'UPDATE ' + table + ' SET ' + formatted + ' WHERE ' + updatecond + ';';
-  var res = await query(upd);
-  return res;
-
-};
-
 module.exports = {
-  format: format,
-  insert: insert,
-  update: update,
+  insertformat: insertformat,
+  updateformat: updateformat,
+
+  //dependency injections
+  escape: escape,
+  format: format
 };

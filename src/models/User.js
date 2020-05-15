@@ -1,5 +1,8 @@
 var db = require('../db/data');
 var verify = require('../utils/verify');
+var { vals, keys } = require('../utils/utils');
+
+var bcrypt = require('bcrypt');
 
 class User {
 
@@ -47,20 +50,59 @@ class User {
     return false;
   }
 
+  async encryptpassword(){
+
+    var saltRounds = 5;
+    var salt = await bcrypt.genSalt(saltRounds);
+    var hash = await bcrypt.hash(this.password, salt);
+    this.hash = hash;
+    return hash;
+
+  }
+
   //get users courses
   async getcourses(){
     if(await !this.veryifycredentials()) return;
   }
 
-  getuserdata(){
+  getdbdata(){
 
     return {
       email: this.email,
-      password: this.password,
+      password: this.hash,
       firstname: this.firstname,
       lastname: this.lastname
     };
 
+  }
+
+  /*
+  portions formatted to work with SQLString library
+  */
+
+  logincredentials(){
+    return {
+      email: this.email,
+      password: this.hash
+    };
+  }
+
+  loadonlogin(){
+    return [keys(this.getdbdata())];
+  }
+
+  getinsert(){
+    return [
+      [keys(this.getdbdata())],
+      [vals(this.getdbdata())]
+    ];
+  }
+
+  getupdate(){
+    return [
+      this.getdbdata(),
+      this.id
+    ];
   }
 
 };
