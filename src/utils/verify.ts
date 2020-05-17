@@ -70,9 +70,9 @@ password conditions:
 let password = (password: string): string => {
 
   if(!password)
-    return 'please enter a password';
+    return 'Please enter a password';
 
-  var passreq = new passwordValidator();
+  let passreq: any = new passwordValidator();
   passreq
   .is().min(8)            // Minimum length 8
   .is().max(256)          // Maximum length 100

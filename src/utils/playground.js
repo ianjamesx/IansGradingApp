@@ -1,3 +1,4 @@
+"use strict";
 /*
 var hello = async () => {
   let promise = new Promise((resolve, reject) => {
@@ -40,10 +41,18 @@ var valid = async () => {
 start();
 valid().then(console.log);
 */
+exports.__esModule = true;
 var db = require('../db/db');
-var x;
-console.log(x);
-console.log(typeof x);
+var bcrypt_1 = require("bcrypt"); //password encryption
+var str = "Password1234xFi";
+var hash;
+bcrypt_1.hash(str, 5)
+    .then(function (hash) {
+    return bcrypt_1.compare(str, hash);
+})
+    .then(function (res) {
+    console.log(res);
+});
 /*
 
 db.query('SELECT * FROM users').then(result => {

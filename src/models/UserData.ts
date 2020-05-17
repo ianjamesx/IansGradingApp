@@ -4,7 +4,8 @@ operations for storing user data in SQL db
 
 import { escape, format, query, idlength, unknownerr } from '../db/db';
 import { id } from '../utils/utils';
-import { User, DBResult } from './User';
+import { User, DBResult, Credentials } from './User';
+import { compare } from 'bcrypt'; //for comparing passwords to hash
 
 /*
 if we encounter any DB errors
@@ -21,17 +22,18 @@ load a user from db based on login credentials
 
 let load = async (user: User): Promise<string | any> => {
 
-    let select: string = `SELECT ?? FROM users WHERE email = ? AND password = ?`;
-    let credentials: [string, string] = user.credentials(); //get user login credentials
-    let querydata: any[] = [user.loadOnLogin(), credentials[0], credentials[1]]; //what to load on login & login credentials
-    let loginquery: string = format(select, querydata);
     let result: DBResult;
+
+    let credentials: Credentials = user.credentials(); //get user login credentials (email, password)
+    let select: string = `SELECT ?? FROM users WHERE email = ?`; //dont compare to password in query, we do that with bcrypt
+    let querydata: any[] = [user.loadOnLogin(), credentials.email]; //what to load on login & login credentials
+    let loginquery: string = format(select, querydata);
 
     try {
         result.data = await query(loginquery)[0];
-        if(!result.data){ //if no user found by those credentials
+        let success: boolean = await compare(credentials.password, result.data.password); //compare users password to hash in db
+        if(!success || !result.data)
             result.error = "Email or Password incorrect." //<-- invalid credentials error message
-        }
     } catch(err){
         result.error = unknownerr;
     }

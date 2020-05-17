@@ -43,10 +43,18 @@ valid().then(console.log);
 
 var db = require('../db/db');
 
-let x: string;
-console.log(x);
-console.log(typeof x);
+import { hash as genhash, compare as compare } from 'bcrypt';    //password encryption
 
+let str: string = "Password1234xFi";
+let hash: string;
+
+genhash(str, 5)
+.then((hash) => {
+  return compare(str, hash);
+})
+.then(res => {
+  console.log(res);
+});
 
 /*
 

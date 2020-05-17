@@ -18,7 +18,7 @@ let sqlconfig: any = {
 };
 
 let idlength: number = 10; //specify length of ids in the database
-let unknownerr: string = 'Ah! Something went wrong. We saved this error and we\'re looking into it. Please try again later.'; //error message when anything in database goes wrong
+let unknownerr: string = `Ah! Something went wrong. We saved this error and we're looking into it. Please try again later.`; //error message when anything in database goes wrong
 
 /*
 get results from a single query from db

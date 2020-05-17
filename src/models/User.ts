@@ -21,6 +21,11 @@ interface DBResult {
   data: any;     //result from db
 }
 
+interface Credentials {
+  email: string;
+  password: string;
+}
+
 class User {
 
   private email: string;
@@ -42,13 +47,12 @@ class User {
   }
 
   //as typescript is yet to support constructor overloading, use methods as alternatives
-  public async sessionLogin(email: string, hash: string): Promise<string | void>{
-    this.email = email;
-    this.hash = hash;
+  public async sessionLogin(id: number): Promise<string | void>{
+    this.id = id;
     return this.login(); //after we get data from session, login
   }
 
-  private async verify(): Promise<Errors> {
+  private async verify(): Promise<Errors | null> {
 
     let errs: Errors = await verify.all({
       email:    [this.email, 'email'],
@@ -65,8 +69,8 @@ class User {
     let errs: Errors = await this.verify(); //first, see if we have any errors in user inputted data
     if(errs) return errs;
 
-    //if we dont have a hash, get it from current password
-    if(!this.hash) await this.encryptPassword();
+    if(!this.hash) await this.encryptPassword(); //if we dont have a hash, get it from current password
+    if(!this.id) await this.generateID();        //if we dont have an ID either, generate one
 
     let inserterr: string | null = await db.save(this); //save in db, return any db errors or null if no errs
     if(inserterr) return inserterr;
@@ -97,7 +101,7 @@ class User {
 
     return {
       email: this.email,
-      password: this.hash, //<-- save hash instead of actual password
+      password: this.password, //<-- save hash instead of actual password
       firstname: this.firstname,
       lastname: this.lastname,
       id: this.id
@@ -114,8 +118,11 @@ class User {
   }
 
   public credentials(): any { //login credentials
-    var tuple: [string, string] = [this.email, this.hash];
-    return tuple;
+    let creds: Credentials = {
+      email: this.email,
+      password: this.password
+    }
+    return creds;
   }
 
   public loadOnLogin(): any {
@@ -140,5 +147,6 @@ class User {
 
 export {
   User,
-  DBResult
+  DBResult,
+  Credentials
 };
