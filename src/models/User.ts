@@ -30,8 +30,9 @@ class User {
   private hash: string;     //hashed password
   private id: number;
 
+
   //constructor
-  //notice all params are optional as you can load data from session: userFromSession(email, hash)
+  //notice all params are optional as you can load data from session: sessionLogin(email, hash)
   //if you are loading data from a session rather than from a user
   constructor(email?:string, password?:string, firstname?:string, lastname?:string){
     this.email = email;
@@ -40,8 +41,8 @@ class User {
     this.lastname = lastname;
   }
 
-  //as typescript is yet to support constructor overloading, use static methods as alternatives
-  public async loginFromSession(email: string, hash: string): Promise<string | void>{
+  //as typescript is yet to support constructor overloading, use methods as alternatives
+  public async sessionLogin(email: string, hash: string): Promise<string | void>{
     this.email = email;
     this.hash = hash;
     return this.login(); //after we get data from session, login
@@ -92,11 +93,6 @@ class User {
     this.hash = await generatehash(this.password, saltRounds);
   }
 
-  //get users courses
-  async getCourses(){
-
-  }
-
   public getColumns(): any {
 
     return {
@@ -118,10 +114,8 @@ class User {
   }
 
   public credentials(): any { //login credentials
-    return {
-      email: this.email,
-      password: this.hash
-    };
+    var tuple: [string, string] = [this.email, this.hash];
+    return tuple;
   }
 
   public loadOnLogin(): any {

@@ -21,16 +21,19 @@ load a user from db based on login credentials
 
 let load = async (user: User): Promise<string | any> => {
 
-    let select: string = `SELECT ?? FROM users WHERE ?`;
-    let credentials: any[] = [user.loadOnLogin(), user.credentials()]; //what to load on login & login credentials
-    let loginquery: string = format(select, credentials);
+    let select: string = `SELECT ?? FROM users WHERE email = ? AND password = ?`;
+    let credentials: [string, string] = user.credentials(); //get user login credentials
+    let querydata: any[] = [user.loadOnLogin(), credentials[0], credentials[1]]; //what to load on login & login credentials
+    let loginquery: string = format(select, querydata);
     let result: DBResult;
 
-    //return results
     try {
         result.data = await query(loginquery)[0];
+        if(!result.data){ //if no user found by those credentials
+            result.error = "Email or Password incorrect." //<-- invalid credentials error message
+        }
     } catch(err){
-        result.data = err;
+        result.error = unknownerr;
     }
     return result;
 

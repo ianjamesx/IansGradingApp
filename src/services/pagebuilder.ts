@@ -1,5 +1,5 @@
 //var render = require('../utils/render');
-import User = require('../models/User');
+import { User } from '../models/User';
 import { Request } from 'express';
 
 /*
@@ -11,9 +11,15 @@ to router, router renders it with expressjs
 functions only need request as we retrieve all data from users session
 */
 
+//interface for returning 
+
 let homepage = async (req: Request) => {
 
-  let user: User = new User(req);
+  let user: User = new User();
+  /*let err: string = await user.sessionLogin(req.session.email, req.session.hash);
+  if(err){
+
+  }*/
 
   return {
     courses: 12,

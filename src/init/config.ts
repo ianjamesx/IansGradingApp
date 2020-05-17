@@ -2,9 +2,7 @@
 all config/init setup of the app
 */
 
-import { Application } from 'express'; //we only need the app declaration here
-
-let init = (app: Application) => {
+let init = (app): void => {
 
   /*
   middleware for express
