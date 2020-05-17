@@ -11,9 +11,9 @@ how verification functions work;
 
 */
 
-var validator = require('validator');
-var passwordValidator = require('password-validator');
-var db = require('../db/db');
+import validator = require('validator');
+import passwordValidator = require('password-validator');
+import db = require('../db/db');
 
 /*
 conditions to use email:
@@ -22,7 +22,7 @@ conditions to use email:
 emailinuse checks condition and if email is currently in database (for making new users)
 */
 
-var email = async (email) => {
+let email = async (email: string): Promise<string> => {
   if(!validator.isEmail(email))
     return 'That is not a valid email address';
   /*if(await db.emailinuse(email))
@@ -45,7 +45,7 @@ first/last names
   alphabetic chars only
   between 2 - 30 chars
 */
-var name = (name) => {
+let name = (name: string): string => {
 
   if(!name)
     return 'Please enter a name';
@@ -67,7 +67,7 @@ password conditions:
   one number
 */
 
-var password = (password) => {
+let password = (password: string): string => {
 
   if(!password)
     return 'please enter a password';
@@ -98,7 +98,7 @@ for example, this object has an error:
 object with all blank attributes is error free
 */
 
-var anyerrors = (errs) => {
+let anyerrors = (errs: any): any | null => {
 
   var i;
   for(i in errs){
@@ -109,23 +109,23 @@ var anyerrors = (errs) => {
 
 }
 
-var all = async (fields) => { //<-- async cause some utils do db searches for username/email availability
+var all = async (fields: any): Promise<any | null> => { //<-- async as some utils do db searches for username/email availability
 
-  var allroutines = { //all routines user can utilize
+  let allroutines: any = { //all routines user can utilize
     email: email,
     name: name,
     password: password
   }
 
-  var errormessages = {}; //eror messages we'll send back to client
-  var i;
+  let errormessages: any = {}; //eror messages we'll send back to client
+  let i: string;
 
   for(i in fields){
-    var data = fields[i][0], routine = fields[i][1]; //data (index 0) and verify function (index 1) to use from user
+    let data: any = fields[i][0], routine = fields[i][1]; //data (index 0) and verify function (index 1) to use from user
 
     //need to determine if function is async or not before calling (so we know if we have to await)
-    var isasync = allroutines[routine].constructor.name === "AsyncFunction";
-    var errmsg;
+    var isasync: boolean = allroutines[routine].constructor.name === "AsyncFunction";
+    var errmsg: string;
 
     if(isasync)
       errmsg = await allroutines[routine](data); //call their verify function with their data
@@ -139,10 +139,10 @@ var all = async (fields) => { //<-- async cause some utils do db searches for us
 
 };
 
-module.exports = {
-  email: email,
-  name: name,
-  password: password,
-  anyerrors: anyerrors,
-  all: all
+export { 
+  email,
+  name,
+  password,
+  anyerrors,
+  all 
 };

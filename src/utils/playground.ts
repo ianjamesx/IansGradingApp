@@ -40,10 +40,14 @@ var valid = async () => {
 start();
 valid().then(console.log);
 */
+
 var db = require('../db/db');
-var x;
+
+let x: string;
 console.log(x);
 console.log(typeof x);
+
+
 /*
 
 db.query('SELECT * FROM users').then(result => {
@@ -60,4 +64,4 @@ setTimeout(() => {
   db.query('SHOW TABLES').then(res => {
     console.log(res.length);
   });
-}, 2000);*/ 
+}, 2000);*/
