@@ -17,10 +17,29 @@ var saveDBerrors = (error: string): void => {
 };
 
 /*
+load a user from db based on id only (used for loading from session)
+*/
+
+let load = async (user: User): Promise<null | any> => {
+
+    let result: DBResult;
+    let loadquery = format(`SELECT ?? FROM users WHERE id = ?`, [user.loadOnLogin(), user.getID()]);
+    
+    try {
+        result.data = await query(loadquery)[0];
+    } catch(err){
+        result.error = unknownerr;
+    }
+
+    return result;
+
+};
+
+/*
 load a user from db based on login credentials
 */
 
-let load = async (user: User): Promise<string | any> => {
+let login = async (user: User): Promise<string | any> => {
 
     let result: DBResult;
 
@@ -100,6 +119,7 @@ var getcourse_full = async (userid) => {
 
 export { 
     load,
+    login,
     save,
     generateID
 };

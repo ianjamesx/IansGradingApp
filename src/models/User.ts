@@ -35,10 +35,6 @@ class User {
   private hash: string;     //hashed password
   private id: number;
 
-
-  //constructor
-  //notice all params are optional as you can load data from session: sessionLogin(email, hash)
-  //if you are loading data from a session rather than from a user
   constructor(email?:string, password?:string, firstname?:string, lastname?:string){
     this.email = email;
     this.password = password;
@@ -46,10 +42,18 @@ class User {
     this.lastname = lastname;
   }
 
-  //as typescript is yet to support constructor overloading, use methods as alternatives
-  public async sessionLogin(id: number): Promise<string | void>{
+  //load user from an id stored in session
+  public async sessionLoad(id: number): Promise<string | void>{
     this.id = id;
-    return this.login(); //after we get data from session, login
+    let result: DBResult = await db.load(this);
+    this.loadtouser(result.data);
+  }
+
+  public loadtouser(data: any){
+    this.email = data.email;
+    this.firstname = data.firstname;
+    this.lastname = data.lastname;
+    this.id = data.id;
   }
 
   private async verify(): Promise<Errors | null> {
@@ -77,15 +81,9 @@ class User {
   }
 
   public async login(): Promise<string | void> {
-    let result: DBResult = await db.load(this);
+    let result: DBResult = await db.login(this);
     if(result.error) return result.error; //if we get an error
-
-    //save all data in this object
-    this.email = result.data.email;
-    this.hash = result.data.password;
-    this.firstname = result.data.firstname;
-    this.lastname = result.data.lastname;
-    this.id = result.data.id;
+    this.loadtouser(result.data); //save all data in this object
   }
 
   private async generateID(): Promise<void> {
@@ -101,7 +99,7 @@ class User {
 
     return {
       email: this.email,
-      password: this.password, //<-- save hash instead of actual password
+      password: this.password,
       firstname: this.firstname,
       lastname: this.lastname,
       id: this.id
