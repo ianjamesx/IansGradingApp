@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+    <%- include('../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div id="content">
+        <h1><%= hello %></h1>
+
+        <%# generate a course card for each of the users courses %>
+        <div>
+          <% courses.forEach((course) => { %>
+          <%- include('../partials/coursecard', {course: course}) %>
+          <% }); %>
+        </div>
+
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+  </body>
+
+  <%- include('../partials/scripts'); %>
+
+</html>

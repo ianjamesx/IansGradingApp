@@ -19,9 +19,31 @@ let homepage = async (req: Request) => {
 
   }*/
 
+  let courses = [
+    {
+      name: 'course1',
+      dept: 'compsci',
+      number: 221,
+      section: 101,
+      season: 'spring',
+      year: 2020,
+      id: 302931
+    },
+    {
+      name: 'course2',
+      dept: 'math',
+      number: 225,
+      section: 105,
+      season: 'spring',
+      year: 2020,
+      id: 304122
+    }
+  ]
+
   return {
     hello: 'Hello, Mr. User! How is you?',
-    title: 'My Homepage'
+    title: 'My Homepage',
+    courses: courses
   };
 
 };

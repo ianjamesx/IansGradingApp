@@ -6,7 +6,7 @@ let routes = (app: Application) => {
   app.get('/', (req: Request, res: Response) => {
 
     pb.homepage(req).then(content => {
-        res.render('home', content);
+        res.render('dashboard', content);
     })
 
     /*pb.homepage(req).then(content => {
