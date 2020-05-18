@@ -11,8 +11,6 @@ to router, router renders it with expressjs
 functions only need request as we retrieve all data from users session
 */
 
-//interface for returning 
-
 let homepage = async (req: Request) => {
 
   let user: User = new User();
@@ -22,8 +20,8 @@ let homepage = async (req: Request) => {
   }*/
 
   return {
-    courses: 12,
-
+    hello: 'Hello, Mr. User! How is you?',
+    title: 'My Homepage'
   };
 
 };

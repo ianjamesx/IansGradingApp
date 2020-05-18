@@ -6,11 +6,11 @@ let routes = (app: Application) => {
   app.get('/', (req: Request, res: Response) => {
 
     pb.homepage(req).then(content => {
-        res.send(content);
+        res.render('home', content);
     })
 
     /*pb.homepage(req).then(content => {
-      res.render('pages/index', content);
+      res.render('pages/home.', content);
     });*/
 
   });

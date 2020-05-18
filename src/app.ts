@@ -1,5 +1,7 @@
 /*
 Gradux.io
+Gradix.io
+Gradax.io
 */
 
 import express = require('express');
