@@ -1,0 +1,69 @@
+/* assets used only (or primarily for) the landing page */
+
+.jumbotron {
+    color: white;
+    background-color: #1fc8db;
+    background-image: linear-gradient(141deg, #2987b8 0%, #3883aa 70%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+
+#hero {
+	background-image: linear-gradient(141deg, #83a4d4 0%, #b6fbff 90%);
+  color: #494949;
+}
+
+#hero h1 {
+	font-size: 50px;
+	font-weight: 300;
+}
+
+
+b {
+    font-weight: 700;
+}
+
+section {
+    padding: 100px 0px;
+}
+
+.title-block {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.title-block p {
+    font-size: 20px;
+    font-weight: 300;
+    color: #8da2b5;
+    margin-bottom: 0px;
+}
+
+.divider {
+    padding: 2rem 0 0;
+    margin: 2rem 0 0;
+    border-top: 1px solid #3c3f45;
+}
+
+.divider-light {
+    padding: 2rem 0 0;
+    margin: 2rem 0 0;
+    border-top: 1px solid #edf1f2
+}
+
+/* content boxes */
+
+.content-box {
+	padding: 60px 20px;
+}
+
+#contact {
+	background-color: #f6f8f9;
+	border-top: 1px solid #F8F9FB;
+	border-bottom: 1px solid #F8F9FB;
+}

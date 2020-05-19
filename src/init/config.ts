@@ -3,7 +3,12 @@ all config/init setup of the app
 */
 
 import path = require('path');
+
 import express = require('express');
+import session = require('express-session');
+import bodyparser = require('body-parser');
+import fileupload = require('express-fileupload');
+
 import { init as dbinit } from '../db/tableinit';
 
 let init = (app: express.Application): void => {
@@ -16,25 +21,30 @@ let init = (app: express.Application): void => {
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, '../views/pages'));
   
-  //publicly send everything in /public
+  //send everything in /public (css, js)
   app.use('/public', express.static(path.join(__dirname, '../public')));
+
+  //setup users session
+  app.use(session({
+    secret: 'tempsecret',
+    resave: false,
+    saveUninitialized: true
+  }));
+
+  //body parser
+  app.use(bodyparser.urlencoded({
+     extended: false 
+  }));
+  app.use(bodyparser.json());
+
+  //fileupload for express
+  app.use(fileupload());
+
+  /*
+  init DB tables
+  */
   
-  //init db tables
   dbinit();
-  
-/*
-  var bodyParser = require("body-parser");
-  var session = require("express-session");
-  var fileUpload = require('express-fileupload');
-
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
-
-  app.use(session({secret: 'tempsecret', resave: false, saveUninitialized: false}));
-  app.use(fileUpload());
-
-  app.use('/public', express.static(__dirname + '/public')); //make everything in public accessible
-*/
 
 };
 

@@ -13,6 +13,7 @@ interface Errors {
   password: string;
   firstname: string;
   lastname: string;
+  db: string; //<-- errors when inserting into db, not based on user input
 }
 
 //DB results for select quieries
@@ -24,6 +25,10 @@ interface DBResult {
 interface Credentials {
   email: string;
   password: string;
+}
+
+interface UserSession {
+  id: number;
 }
 
 class User {
@@ -49,6 +54,13 @@ class User {
     this.loadtouser(result.data);
   }
 
+  public setSession(req: any): void {
+    let sess: UserSession = {
+      id: this.getID()
+    };
+    req.session.user = sess;
+  }
+
   public loadtouser(data: any){
     this.email = data.email;
     this.firstname = data.firstname;
@@ -56,13 +68,13 @@ class User {
     this.id = data.id;
   }
 
-  private async verify(): Promise<Errors | null> {
+  private async verify(): Promise<any | null> {
 
-    let errs: Errors = await verify.all({
+    let errs: any = await verify.all({
       email:    [this.email, 'email'],
       firsname: [this.firstname, 'name'],
       lastname: [this.lastname, 'name'],
-      password: [this.password, 'password'],
+      password: [this.password, 'password']
     });
 
     return errs;
@@ -76,8 +88,8 @@ class User {
     if(!this.hash) await this.encryptPassword(); //if we dont have a hash, get it from current password
     if(!this.id) await this.generateID();        //if we dont have an ID either, generate one
 
-    let inserterr: string | null = await db.save(this); //save in db, return any db errors or null if no errs
-    if(inserterr) return inserterr;
+    errs.db = await db.save(this); //save in db, return any db errors or null if no errs
+    if(errs.db) return errs;
   }
 
   public async login(): Promise<string | void> {
@@ -146,5 +158,6 @@ class User {
 export {
   User,
   DBResult,
-  Credentials
+  Credentials,
+  UserSession
 };

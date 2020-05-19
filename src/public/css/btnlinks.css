@@ -1,0 +1,61 @@
+/* links */
+
+.reportlink {
+    font-family: helvetica;
+    color: #4aa5cc;
+}
+
+.reportlink {
+    font-family: helvetica;
+    color: #207fd3;
+
+}
+
+.reportlink:hover {
+    color: #0866b9;
+}
+
+/* buttons */
+
+.appbtn {
+    border: none;
+    border-radius: 8px;
+    background-color: #207fd3;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+    transition: 0.2s;
+}
+
+.delete {
+    background-color: #ff3b3b;
+}
+
+.togglemenuBtn {
+    border-radius: 5px;
+}
+
+.deletebtn {
+    background-color: #dc5c5c;
+}
+
+.editbtn {
+    background-color: #a877d8;
+}
+
+.appbtn:hover {
+    background-color: #0866b9;
+}
+
+.delete:hover {
+    background-color: #ea1717;
+}
+
+.deletebtn:hover {
+    background: #c54343;
+}
+
+.editbtn:hover {
+    background-color: #8859b7;
+}
