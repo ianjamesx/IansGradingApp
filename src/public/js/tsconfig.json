@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "outDir": "../../../build/public/js",
+        "allowJs": true,
+    },
+    "files": [
+        "home.ts"
+    ]
+}

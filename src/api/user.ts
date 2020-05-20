@@ -43,6 +43,7 @@ let userapi = (app: Application): void => {
         let password: string = req.body.password;
         let firstname: string = req.body.firstname;
         let lastname: string = req.body.lastname;
+        let instructor: boolean = req.body.instructor;
 
         let user: User = new User(email, password, firstname, lastname);
         let result: Result;
@@ -61,5 +62,6 @@ let userapi = (app: Application): void => {
 };
 
 export {
-    userapi
+    userapi,
+    Result
 }
