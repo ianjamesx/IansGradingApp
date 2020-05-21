@@ -210,10 +210,9 @@ let renderComponents = (components: any[]): any[] => {
 
 let writeComponentFile = (filepath: string, filecontent: string): void => {
 
-  var absolutepath = path.join(__dirname, filepath);
-  var components;
+  let absolutepath: string = path.join(__dirname, filepath);
+  console.log(absolutepath);
   fs.writeFileSync(absolutepath, filecontent);
-  return components;
 
 };
 

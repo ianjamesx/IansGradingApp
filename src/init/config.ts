@@ -53,7 +53,7 @@ let init = (app: express.Application): void => {
 
  componentload({
     componentpath: '/clientcomponents',
-    clientpath: '../public/js'
+    clientpath: '../public/js/render.js'
   });
 
 
