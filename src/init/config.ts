@@ -10,6 +10,7 @@ import bodyparser = require('body-parser');
 import fileupload = require('express-fileupload');
 
 import { init as dbinit } from '../db/tableinit';
+import { load as componentload } from '../clientviews/componentloader'
 
 let init = (app: express.Application): void => {
 
@@ -45,6 +46,16 @@ let init = (app: express.Application): void => {
   */
   
   dbinit();
+
+  /*
+  render components for client
+  */
+
+ componentload({
+    componentpath: '/clientcomponents',
+    clientpath: '../public/js'
+  });
+
 
 };
 

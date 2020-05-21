@@ -194,10 +194,10 @@ let renderComponents = (components: any[]): any[] => {
 
       let componentname: string = i.replace('.html', ''); //get rid of '.html' at end of file name (to make it into function name)
 
-      componentdata.push({ //put this component into array of all components
-        name: componentname, //name of the component (original name of the html file)
-        code: tempcomp, //code for component render function
-        properties: compattrs //properties needed for component
+      componentdata.push({      //put this component into array of all components
+        name: componentname,    //name of the component (original name of the html file)
+        code: tempcomp,         //code for component render function
+        properties: compattrs   //properties needed for component
       });
 
     }
@@ -217,7 +217,7 @@ let writeComponentFile = (filepath: string, filecontent: string): void => {
 
 };
 
-var load = (settings: Settings): void => {
+let load = (settings: Settings): void => {
 
   let componentTemplates: any[] = loadComponents(settings.componentpath); //load components as strings from folder of component html files
   let componentData: any[] = renderComponents(componentTemplates);        //turn component strings into component objects
