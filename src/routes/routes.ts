@@ -5,7 +5,7 @@ let routes = (app: Application): void => {
 
   app.get('/', (req: Request, res: Response) => {
 
-    if(req.session.user.id){
+    if(req.session.user){
       res.redirect('/dashboard'); //if user has a session, redirect to their dashboard
     } else {
       res.render('homepage');     //if not, send homepage
