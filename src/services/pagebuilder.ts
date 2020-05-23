@@ -43,10 +43,28 @@ let dashboard = async (req: Request) => {
     }
   ];
 
+  let assignments = [
+    {
+      name: 'lab1',
+      open: 'Dec 10, 2020',
+      close: 'Dec 15, 2020',
+      id: 2012931,
+
+    },
+    {
+      name: 'hw4',
+      open: 'Sep 10, 2020',
+      close: 'Sep 15, 2020',
+      id: 20153931,
+      
+    },
+  ];
+
   return {
     hello: 'Hello ' + user.getFN(),
     title: 'Your Dashboard',
-    courses: courses
+    courses: courses,
+    assignments: assignments
   };
 
 };

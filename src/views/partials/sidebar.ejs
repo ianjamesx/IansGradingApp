@@ -1,0 +1,42 @@
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>Ian's Grading App</h3>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="active">
+            <a href="">Dashboard</a>
+        </li>
+        <li>
+            <a href="#assignSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Add New Assignment</a>
+            <div>
+                <ul class="collapse list-unstyled" id="assignSubmenu">
+                <li><a href="/createassignment"><span class="tab">Create Assignment</span></a></li>
+                <li><a href="/findassignment"><span class="tab">Find Pre-Made Assignment</span></a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">My Courses</a>
+            <div id="coursemenu">
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                </ul>
+            </div>
+        </li>
+        <li>
+            <a href="#questionsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Questions</a>
+            <div>
+                <ul class="collapse list-unstyled" id="questionsSubmenu">
+                <li><a href="/createquestion"><span class="tab">Create Questions</span></a></li>
+                <li><a href="/viewquestions"><span class="tab">View/Edit Questions</span></a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <a href="/newcourse">Create New Course</a>
+        </li>
+        <li>
+            <a href="/logout">Logout</a>
+        </li>
+    </ul>
+</nav>
