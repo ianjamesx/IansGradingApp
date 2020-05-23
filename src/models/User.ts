@@ -9,17 +9,17 @@ interfaces for this class
 
 //user input errors when making this class
 interface Errors {
-  email: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  db: string; //<-- errors when inserting into db, not based on user input
+  email?: string;
+  password?: string;
+  firstname?: string;
+  lastname?: string;
+  any?: string; //<-- errors when inserting into db, not based on user input
 }
 
 //DB results for select quieries
 interface DBResult {
-  error: string; //any db errors
-  data: any;     //result from db
+  error?: string; //any db errors
+  data?: any;     //result from db
 }
 
 interface Credentials {
@@ -48,9 +48,14 @@ class User {
   }
 
   //load user from an id stored in session
-  public async sessionLoad(id: number): Promise<string | void>{
-    this.id = id;
+  public async sessionLoad(session: any): Promise<string | void>{
+    
+    if(!session.user) return 'Error: user has no session'; //<-- this error never displayed to client, they only get a 404
+
+    this.id = session.user.id;
     let result: DBResult = await db.load(this);
+
+    if(result.error) return result.error; //error here most likely caused by user having no active session
     this.loadtouser(result.data);
   }
 
@@ -72,7 +77,7 @@ class User {
 
     let errs: any = await verify.all({
       email:    [this.email, 'email'],
-      firsname: [this.firstname, 'name'],
+      firstname:[this.firstname, 'name'],
       lastname: [this.lastname, 'name'],
       password: [this.password, 'password']
     });
@@ -82,20 +87,27 @@ class User {
   }
 
   public async save(): Promise<Errors | string | void> {
-    let errs: Errors = await this.verify(); //first, see if we have any errors in user inputted data
-    if(errs) return errs;
 
+    let errs: Errors = {};
+    errs = await this.verify(); //first, see if we have any errors in user inputted data    
+    if(errs) return errs;
+    
     if(!this.hash) await this.encryptPassword(); //if we dont have a hash, get it from current password
     if(!this.id) await this.generateID();        //if we dont have an ID either, generate one
 
-    errs.db = await db.save(this); //save in db, return any db errors or null if no errs
-    if(errs.db) return errs;
+    
+    let dberr: string = await db.save(this); //save in db, return any db errors or null if no errs
+    if(dberr) return { //return an object as we await an Error object
+      any: dberr
+    };
   }
 
-  public async login(): Promise<string | void> {
-    let result: DBResult = await db.login(this);
+  public async login(req: any): Promise<string | void> {
+    let result: DBResult = {};
+    result = await db.login(this);
     if(result.error) return result.error; //if we get an error
-    this.loadtouser(result.data); //save all data in this object
+    this.loadtouser(result.data);         //save all data in this object
+    this.setSession(req);                 //load data to session
   }
 
   private async generateID(): Promise<void> {
@@ -103,7 +115,7 @@ class User {
   }
 
   async encryptPassword(): Promise<void> {
-    let saltRounds: number = 5;
+    let saltRounds: number = 2;
     this.hash = await generatehash(this.password, saltRounds);
   }
 
@@ -111,12 +123,16 @@ class User {
 
     return {
       email: this.email,
-      password: this.password,
+      password: this.hash, //when retrieving password to store, only retrieve hash
       firstname: this.firstname,
       lastname: this.lastname,
       id: this.id
     };
 
+  }
+
+  public getFN(): string {
+    return this.firstname;
   }
 
   /*

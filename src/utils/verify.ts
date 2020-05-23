@@ -13,7 +13,7 @@ how verification functions work;
 
 import validator = require('validator');
 import passwordValidator = require('password-validator');
-import db = require('../db/db');
+import { query, format, escape } from '../db/db';
 
 /*
 conditions to use email:
@@ -22,23 +22,23 @@ conditions to use email:
 emailinuse checks condition and if email is currently in database (for making new users)
 */
 
-let email = async (email: string): Promise<string> => {
+let email = (email: string): string => {
   if(!validator.isEmail(email))
     return 'That is not a valid email address';
-  /*if(await db.emailinuse(email))
-    return 'This email address is already in use';*/
-
   return '';
 };
 
-/*
-var emailinuse = async (email) => {
+
+let emailinuse = async (email) => {
   if(!validator.isEmail(email))
     return 'That is not a valid email address';
-  if(await db.emailinuse(email))
+  let dbquery: string = format(`SELECT * FROM users WHERE email = ?`, email);
+  let dbresult: any = await query(dbquery);
+  if(dbresult.length)
     return 'This email address is already in use';
+  return '';
 };
-*/
+
 
 /*
 first/last names
@@ -100,7 +100,7 @@ object with all blank attributes is error free
 
 let anyerrors = (errs: any): any | null => {
 
-  var i;
+  let i;
   for(i in errs){
     if(errs[i]) return errs; //if we get an error, return entire object
   }
@@ -108,31 +108,44 @@ let anyerrors = (errs: any): any | null => {
   return null; //or just return null if we have no errors
 
 }
+/*
+ let parseErrors = async (errors: any): Promise<any> => { //parse promises that resolve to errors
+
+  let errorProm = new Promise((resolve, reject) => {
+    let i;
+    for(i in errors){
+      if(typeof errors[i] == 'object'){
+        console.log('parsing prop ' + i);
+         Promise.resolve(errors[i]).then(err => {
+          errors[i] = err;
+        }).then(() => {
+          resolve(errors);
+        });
+        break;
+      }
+    }
+  });
+
+  return errorProm;
+}
+*/
 
 var all = async (fields: any): Promise<any | null> => { //<-- async as some utils do db searches for username/email availability
 
   let allroutines: any = { //all routines user can utilize
-    email: email,
+    email: emailinuse,
     name: name,
     password: password
   }
 
-  let errormessages: any = {}; //eror messages we'll send back to client
-  let i: string;
+  let errormessages: any = {}; //error messages we'll send back to client
+  let i: any; //use as string in first loop, number in second
 
   for(i in fields){
     let data: any = fields[i][0], routine = fields[i][1]; //data (index 0) and verify function (index 1) to use from user
-
-    //need to determine if function is async or not before calling (so we know if we have to await)
-    var isasync: boolean = allroutines[routine].constructor.name === "AsyncFunction";
     var errmsg: string;
-
-    if(isasync)
-      errmsg = await allroutines[routine](data); //call their verify function with their data
-    else
-      errmsg = allroutines[routine](data);
-
-    errormessages[i] = errmsg; //store the error message
+    errmsg = await allroutines[routine](data); //await as function may be async
+    errormessages[i] = errmsg; //store the error message (or promise at this point)
   }
 
   return anyerrors(errormessages);

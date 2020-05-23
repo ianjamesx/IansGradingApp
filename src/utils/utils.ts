@@ -19,14 +19,19 @@ let keys = (obj: any): any[] => {
 };
 
 //generate an id for database record
-let id = (idlength: number): number => {
+let id = (): number => {
+
     let possible: string = '0123456789';
     let i: number;
     let id: string = '';
+    let max: number = 2147483647; //<-- max value for id
+    let idlength: number = 8; //specify length of ids in the database
+
     for(i = 0; i < idlength; i++){
         id += possible.charAt(Math.floor(Math.random() * possible.length)); //get digit at random spot
     }
-    return Number(id); //cast to number to store as an int in db
+    let idn: number = Number(id);
+    return idn;
 };
 
 export {

@@ -41,21 +41,6 @@ start();
 valid().then(console.log);
 */
 
-var db = require('../db/db');
-
-import { hash as genhash, compare as compare } from 'bcrypt';    //password encryption
-
-let str: string = "Password1234xFi";
-let hash: string;
-
-genhash(str, 5)
-.then((hash) => {
-  return compare(str, hash);
-})
-.then(res => {
-  console.log(res);
-});
-
 /*
 
 db.query('SELECT * FROM users').then(result => {
@@ -73,3 +58,18 @@ setTimeout(() => {
     console.log(res.length);
   });
 }, 2000);*/
+
+let f = async () => {
+  let errorProm = new Promise((resolve, reject) => {
+    resolve('hey');
+  });
+  return errorProm;
+};
+
+let n = () => {
+  return 5;
+};
+
+const AsyncFunction = (async () => {}).constructor;
+console.log(typeof f);
+console.log(typeof n);

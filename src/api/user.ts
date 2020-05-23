@@ -1,10 +1,11 @@
 import { Application, Request, Response } from 'express';
 import { User } from '../models/User';
+import bodyparser = require('body-parser');
 
 //result interface for an API call
 interface Result {
-    error: string | any; //<-- err can be string or error object (hash table of strings)
-    success: boolean;
+    error?: string | any; //<-- err can be string or error object (hash table of strings)
+    success?: boolean;
 }
 
 let userapi = (app: Application): void => {
@@ -16,13 +17,12 @@ let userapi = (app: Application): void => {
         let password: string = req.body.password;
 
         let user: User = new User(email, password);
-        let result: Result;
+        let result: Result = {};
 
-        user.login().then(err => {
+        user.login(req).then(err => {
             if(err){
                 result.error = err;
             } else {
-                user.setSession(req); //load user data into session
                 result.success = true;
             }
             res.send(result);
@@ -46,15 +46,19 @@ let userapi = (app: Application): void => {
         let instructor: boolean = req.body.instructor;
 
         let user: User = new User(email, password, firstname, lastname);
-        let result: Result;
+        let result: Result = {};
 
-        user.save().then(err => {
+        user.save().then(err => { //attempt to save user
+            console.log(err);
             if(err){
                 result.error = err;
+                res.send(result);
             } else {
                 result.success = true;
+                user.login(req).then(err => { //save data to session, login
+                    if(!err) res.send(result);
+                });
             }
-            res.send(result);
         });
 
     });

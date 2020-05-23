@@ -17,8 +17,8 @@ let sqlconfig: any = {
   database: 'grade_db'
 };
 
-let idlength: number = 10; //specify length of ids in the database
 let unknownerr: string = `Ah! Something went wrong. We saved this error and we're looking into it. Please try again later.`; //error message when anything in database goes wrong
+let loginerr: string = `Email or password incorrect`;
 
 /*
 get results from a single query from db
@@ -41,6 +41,6 @@ export {
   query,
   format,
   escape,
-  idlength,
-  unknownerr
+  unknownerr,
+  loginerr
 };

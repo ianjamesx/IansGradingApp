@@ -33,10 +33,8 @@ let init = (app: express.Application): void => {
   }));
 
   //body parser
-  app.use(bodyparser.urlencoded({
-     extended: false 
-  }));
   app.use(bodyparser.json());
+  app.use(bodyparser.urlencoded({extended: true}));
 
   //fileupload for express
   app.use(fileupload());

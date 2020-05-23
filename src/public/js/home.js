@@ -3,16 +3,19 @@ var home = {
 
         $.ajax('/login', {
             type: 'POST',
-            contentType: 'json',
-            data: {
+            contentType: 'application/json',
+            data: JSON.stringify({
                 email: email,
                 password: password
-            },
+            }),
             success: function(data){
     
                 if(data.error){
-                    alert(data.error);
-                } else {
+                    var err = Components.error({
+                        message: data.error
+                    });
+                    $('#loginerror').html(err);
+                } else if(data.success){
                     location.href='/dashboard';
                 }
     
@@ -22,23 +25,27 @@ var home = {
     
     },
 
-     accounteateaccount: function(email, password, firstname, lastname, instructor){
+     accountcreate: function(email, password, firstname, lastname, instructor){
 
         $.ajax('/user/create', {
             type: 'POST',
-            contentType: 'json',
-            data: {
+            contentType: 'application/json',
+            data: JSON.stringify({
                 email: email,
                 password: password,
                 firstname: firstname,
                 lastname: lastname,
                 instructor: instructor
-            },
+            }),
             success: function(data){
-    
                 if(data.error){
-                    alert(data.error);
-                } else {
+                    console.log(data.error);
+                    $('#account_email_error').text(data.error.email);
+                    $('#account_firstname_error').text(data.error.firstname);
+                    $('#account_lastname_error').text(data.error.lastname);
+                    $('#account_password_error').text(data.error.password);
+                    $('#account_any_error').text(data.error.any);
+                } else if(data.success){
                     location.href='/dashboard';
                 }
     
@@ -54,9 +61,8 @@ var home = {
 
 };
 
-/*
-page start
-*/
+
+//page start
  
 $(document).ready(function(){
 
@@ -73,7 +79,7 @@ $(document).ready(function(){
         var firstname = $('#account_firstname').val();
         var lastname = $('#account_lastname').val();
         var instructor = $('#account_instructor').val();
-        home.login(email, password, firstname, lastname, instructor);
+        home.accountcreate(email, password, firstname, lastname, instructor);
     });
 
     $('#contact').click(function(){

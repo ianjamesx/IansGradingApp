@@ -113,7 +113,7 @@ let componentErrorCheck = (properties: string[]): string => {
   proplist = proplist.substring(0, proplist.length - 1); //pop off last comma
   proplist += '];\n'; //cap array string
 
-  let errcheckcall: string = 'components.errorcheck(properties, param);'; //line to call the error checker, passing the properties this asset needs and user object
+  let errcheckcall: string = 'Components.errorcheck(properties, param);'; //line to call the error checker, passing the properties this asset needs and user object
   return proplist + errcheckcall;
 
 };
@@ -211,7 +211,6 @@ let renderComponents = (components: any[]): any[] => {
 let writeComponentFile = (filepath: string, filecontent: string): void => {
 
   let absolutepath: string = path.join(__dirname, filepath);
-  console.log(absolutepath);
   fs.writeFileSync(absolutepath, filecontent);
 
 };

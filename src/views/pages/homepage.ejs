@@ -41,16 +41,16 @@
          <div class="col-sm-6">
           <form>
             <div class="form-group">
-              <input type="TEXT" class="form-control" id="username" placeholder="Username or Email">
+              <input type="TEXT" class="form-control" id="email" placeholder="Username or Email">
             </div>
             <div class="form-group">
               <input type="password" class="form-control" id="password" placeholder="Password">
             </div>
-            <button id="submit" type="button" class="appbtn">Sign In</button>
+            <button id="login" type="button" class="appbtn">Sign In</button>
           </form>
         </div>
         <div class="col-sm-8">
-          <div id="loginAlert"></div>
+          <div id="loginerror"></div>
           <h4>Don't have an account?</h4>
           <button id="createAccount" type="button" class="appbtn" data-toggle="modal" data-target="#createModal">Create Account</button>
         </div>
@@ -132,48 +132,49 @@
 
             <div class="form-row">
               <div class="form-group col-md-10">
-                <input type="TEXT" class="form-control" id="newUsername" placeholder="Username">
+                <input type="TEXT" class="form-control" id="account_username" placeholder="Username">
                 <small id="usernameHelp" class="text-danger"></small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group col-md-10">
-                <input type="email" class="form-control" id="email" placeholder="Email">
-                <small id="emailHelp" class="text-danger"></small>
+                <input type="email" class="form-control" id="account_email" placeholder="Email">
+                <small id="account_email_error" class="text-danger"></small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group col-md-10">
-                <input type="TEXT" class="form-control" id="firstname" placeholder="First Name">
-                <small id="firstnameHelp" class="text-danger"></small>
+                <input type="TEXT" class="form-control" id="account_firstname" placeholder="First Name">
+                <small id="account_firstname_error" class="text-danger"></small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group col-md-10">
-                <input type="TEXT" class="form-control" id="lastname" placeholder="Last Name">
-                <small id="lastnameHelp" class="text-danger"></small>
+                <input type="TEXT" class="form-control" id="account_lastname" placeholder="Last Name">
+                <small id="account_lastname_error" class="text-danger"></small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group col-md-10">
-                <input type="password" class="form-control" id="newPassword" placeholder="Password">
-                <small id="passwordHelp" class="text-danger"></small>
+                <input type="password" class="form-control" id="account_password" placeholder="Password">
+                <small id="account_password_error" class="text-danger"></small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group col-md-10">
-                <input type="password" class="form-control" id="confirmpass" placeholder="Retype Password">
+                <input type="password" class="form-control" id="account_confirmpass" placeholder="Retype Password">
               </div>
             </div>
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="appbtn" id="newAccountInfo">Create Account</button>
+            <button type="button" class="appbtn" id="createaccount">Create Account</button>
+            <small id="account_any_error" class="text-danger"></small>
           </div>
         </div>
       </div>
@@ -187,6 +188,7 @@
   <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-  <script src="../public/js/home.js">
+  <script type="text/javascript" src="../public/js/render.js"></script>
+  <script type="text/javascript" src="../public/js/home.js"></script>
 
 </html>

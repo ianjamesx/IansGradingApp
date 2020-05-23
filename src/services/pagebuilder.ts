@@ -11,14 +11,17 @@ to router, router renders it with expressjs
 functions only need request as we retrieve all data from users session
 */
 
-let homepage = async (req: Request) => {
+interface Content {
+  data: any;
+  error: any;
+};
+
+let dashboard = async (req: Request) => {
 
   let user: User = new User();
-  /*let err: string = await user.sessionLogin(req.session.email, req.session.hash);
-  if(err){
-
-  }*/
-
+  let error: any = await user.sessionLoad(req.session);
+  if(error) return { error: error };                    //if we encounter an error (e.g. no user session)
+  
   let courses = [
     {
       name: 'course1',
@@ -38,14 +41,14 @@ let homepage = async (req: Request) => {
       year: 2020,
       id: 304122
     }
-  ]
+  ];
 
   return {
-    hello: 'Hello, Mr. User! How is you?',
-    title: 'My Homepage',
+    hello: 'Hello ' + user.getFN(),
+    title: 'Your Dashboard',
     courses: courses
   };
 
 };
 
-export { homepage };
+export { dashboard };
