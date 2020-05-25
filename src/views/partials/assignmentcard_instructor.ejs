@@ -1,0 +1,17 @@
+<div class="list-group-item">
+    <h3 class="card-title"><%= assignment.name %></h3>
+    <h4>assignment opens <%= assignment.open %></h4>
+    <span style="display:block; height: 20px;"></span>
+    <button type="button" class="appbtn" data-toggle="collapse" data-target="#<%= assignment.id %>">More Info&nbsp;<i class="fas fa-caret-down"></i></button>
+    <div id="<%= assignment.id %>" class="collapse"><hr>
+        <span style="display:block; height: 20px;"></span>
+        <p>number of questions: <%= assignment.questioncount %></p>
+        <p>total points: <%= assignment.points %></p>
+        <span style="display:block; height: 5px;"></span>
+        <a href="../assignment/<%= assignment.id %>" class="reportlink">Go To Assignment Page</a>
+        <span style="display:block; height: 5px;"></span><hr>
+        <a href="../assignment/<%= assignment.id %>" class="reportlink">View Assignment Report</a>
+        <span style="display:block; height: 10px;"></span>
+    </div>
+</div>
+  

@@ -1,4 +1,4 @@
-import * as db from './UserData';
+import * as db from './modeldata/User';
 import verify = require('../utils/verify');       //validator wrapper
 import { vals, keys } from '../utils/utils';      //some utils for restructuring data
 import { hash as generatehash } from 'bcrypt';    //password encryption
@@ -33,12 +33,12 @@ interface UserSession {
 
 class User {
 
-  private email: string;
-  private password: string;
-  private firstname: string;
-  private lastname: string;
-  private hash: string;     //hashed password
-  private id: number;
+  protected email: string;
+  protected password: string;
+  protected firstname: string;
+  protected lastname: string;
+  protected hash: string;     //hashed password
+  protected id: number;
 
   constructor(email?:string, password?:string, firstname?:string, lastname?:string){
     this.email = email;
@@ -95,11 +95,8 @@ class User {
     if(!this.hash) await this.encryptPassword(); //if we dont have a hash, get it from current password
     if(!this.id) await this.generateID();        //if we dont have an ID either, generate one
 
-    
     let dberr: string = await db.save(this); //save in db, return any db errors or null if no errs
-    if(dberr) return { //return an object as we await an Error object
-      any: dberr
-    };
+    if(dberr) return { any: dberr };
   }
 
   public async login(req: any): Promise<string | void> {

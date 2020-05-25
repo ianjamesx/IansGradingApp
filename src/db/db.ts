@@ -37,10 +37,15 @@ let query = async (query): Promise<any> => {
 
 };
 
+let errorsave = (error: string): void => {
+  console.log(error);
+};
+
 export {
   query,
+  errorsave,
   format,
   escape,
   unknownerr,
-  loginerr
+  loginerr,
 };

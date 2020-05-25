@@ -2,19 +2,10 @@
 operations for storing user data in SQL db
 */
 
-import { escape, format, query, unknownerr, loginerr } from '../db/db';
-import { id } from '../utils/utils';
-import { User, DBResult, Credentials } from './User';
+import { escape, format, query, unknownerr, loginerr, errorsave } from '../../db/db';
+import { id } from '../../utils/utils';
+import { User, DBResult, Credentials } from '../User';
 import { compare } from 'bcrypt'; //for comparing passwords to hash
-
-/*
-if we encounter any DB errors
-put into a log to review them later
-*/
-
-var saveDBerrors = (error: string): void => {
-    console.log(error);
-};
 
 /*
 load a user from db based on id only (used for loading from session)
@@ -29,6 +20,7 @@ let load = async (user: User): Promise<DBResult> => {
         result.data = await query(loadquery);
         result.data = result.data[0];
     } catch(err){
+        errorsave(err);
         result.error = unknownerr;
     }
 
@@ -48,7 +40,6 @@ let login = async (user: User): Promise<DBResult> => {
     let select: string = `SELECT ?? FROM users WHERE email = ?`; //dont compare to password in query, we do that with bcrypt
     let querydata: any[] = [user.loadOnLogin(), credentials.email]; //what to load on login & login credentials
     let loginquery: string = format(select, querydata);
-    console.log(loginquery);
 
     try {
         result.data = await query(loginquery);
@@ -63,7 +54,7 @@ let login = async (user: User): Promise<DBResult> => {
         if(!success) result.error = loginerr;
 
     } catch(err){
-        saveDBerrors(err);
+        errorsave(err);
         result.error = unknownerr;
     }
 
@@ -91,7 +82,7 @@ let save = async (user: User): Promise<string | null> => {
     try {
         await query(savequery);
     } catch(err){
-        saveDBerrors(err);
+        errorsave(err);
         return unknownerr; 
     }
 
