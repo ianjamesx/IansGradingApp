@@ -11,11 +11,6 @@ to router, router renders it with expressjs
 functions only need request as we retrieve all data from users session
 */
 
-interface Content {
-  data: any;
-  error: any;
-};
-
 let dashboard = async (req: Request) => {
 
   let user: User = new User();
