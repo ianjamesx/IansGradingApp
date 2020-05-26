@@ -3,7 +3,6 @@ connection pooling/promise wrapper for mysql
 */
 
 import mysql = require('mysql'); //db module
-import { format, escape } from 'sqlstring'; //formatting utils (export these for datbase utils)
 
 /*
 MySQL database configuration
@@ -21,12 +20,12 @@ let unknownerr: string = `Ah! Something went wrong. We saved this error and we'r
 let loginerr: string = `Email or password incorrect`;
 
 /*
-get results from a single query from db
+promise wrapper for performing SQL queries
 */
 let query = async (query): Promise<any> => {
 
-  let conn = mysql.createPool(sqlconfig); //get a conn from the pool
-  let promise = new Promise((resolve, reject) => { //promise wrapper for sql queries
+  let conn = mysql.createPool(sqlconfig);
+  let promise = new Promise((resolve, reject) => {
     conn.query(query, (err, rows, fields) => {
       if (err) return reject(err);
       resolve(rows);
@@ -44,8 +43,6 @@ let errorsave = (error: string): void => {
 export {
   query,
   errorsave,
-  format,
-  escape,
   unknownerr,
   loginerr,
 };

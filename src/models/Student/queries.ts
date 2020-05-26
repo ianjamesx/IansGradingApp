@@ -1,5 +1,5 @@
 import { escape, format, query, unknownerr, loginerr, errorsave } from '../../db/db';
-import { Student, DBResult } from '../Student';
+import { Student, DBResult } from './Student';
 
 let joinCourse = async (studentid: number, courseid: number): Promise<string | void> => {
 

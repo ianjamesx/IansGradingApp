@@ -4,7 +4,7 @@ operations for storing user data in SQL db
 
 import { escape, format, query, unknownerr, loginerr, errorsave } from '../../db/db';
 import { id } from '../../utils/utils';
-import { User, DBResult, Credentials } from '../User';
+import { User, DBResult, Credentials } from './User';
 import { compare } from 'bcrypt'; //for comparing passwords to hash
 
 /*

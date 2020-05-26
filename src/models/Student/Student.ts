@@ -1,7 +1,7 @@
-import * as db from './modeldata/Student';
+import * as db from './queries';
 
-import { User, DBResult } from './User';
-import { Course } from './Course';
+import { User, DBResult } from '../User/User';
+import { Course } from '../Course/Course';
 
 class Student extends User {
 

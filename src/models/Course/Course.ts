@@ -1,6 +1,6 @@
-import * as db from './modeldata/Course';
-import verify = require('../utils/verify');       //validator wrapper
-import { vals, keys } from '../utils/utils';      //some utils for restructuring data
+import * as db from './queries';
+import verify = require('../../utils/verify');       //validator wrapper
+import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 
 //user input errors when making this class
 interface Errors {

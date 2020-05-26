@@ -1,5 +1,5 @@
 import { escape, format, query, unknownerr, loginerr, errorsave } from '../../db/db';
-import { Course, DBResult } from '../Course';
+import { Course, DBResult } from './Course';
 import { id, key } from '../../utils/utils';
 
 let loadFromKey = async (course: Course): Promise<DBResult> => {

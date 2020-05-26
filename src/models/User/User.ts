@@ -1,6 +1,6 @@
-import * as db from './modeldata/User';
-import verify = require('../utils/verify');       //validator wrapper
-import { vals, keys } from '../utils/utils';      //some utils for restructuring data
+import * as db from './queries';
+import verify = require('../../utils/verify');       //validator wrapper
+import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 import { hash as generatehash } from 'bcrypt';    //password encryption
 
 /*
