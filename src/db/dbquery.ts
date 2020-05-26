@@ -109,6 +109,7 @@ export {
     format,
     escape,
 
+    DBResult,
     load,
     save,
     generateID
