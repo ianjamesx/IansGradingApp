@@ -1,9 +1,13 @@
-import * as db from './modeldata/User';
-import verify = require('../utils/verify');       //validator wrapper
-import { vals, keys } from '../utils/utils';      //some utils for restructuring data
+import * as db from './modeldata/Instructor';
 
-import { User, DBResult, UserSession } from './User';
+import { User, DBResult } from './User';
+import { Course } from './Course';
 
 class Instructor extends User {
-    
+
+}
+
+export {
+    Instructor,
+    DBResult
 }

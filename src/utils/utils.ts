@@ -34,9 +34,26 @@ let id = (): number => {
     return idn;
 };
 
+//generate course key
+let key = (): string => {
+
+    let possible: string = '0123456789ABCDEFGHJKMNOPQRSTUVWXYZ';
+    let key: string;
+    let keylength: number = 8;
+    let i: number;
+
+    for(i = 0; i < keylength; i++){
+       key += possible.charAt(Math.floor(Math.random() * possible.length)); //get digit at random spot
+    }
+
+    return key;
+
+}
+
 export {
     vals,
     keys,
-    id
+    id,
+    key
 };
 

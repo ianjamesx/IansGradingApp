@@ -17,7 +17,6 @@ class Student extends User {
         let joinerror: any = db.joinCourse(this.id, course.getID());
         if(joinerror)
             return joinerror;
-        
     }
 }
 

@@ -15,7 +15,7 @@ let tables: any = {
 
     courses: {
         name: `varchar(30)`,
-        department: `int FOREIGN KEY departments(id)`,
+        department: `char(4) FOREIGN KEY departments(abbreviation)`,
         season: `enum('Spring', 'Summer', 'Fall', 'Winter')`,
         year: `int`,
         number: `int`,
@@ -30,9 +30,9 @@ let tables: any = {
         course: `int FOREIGN KEY courses(id)`,
     },
 
-    departments: {
-        id: `int NOT NULL PRIMARY KEY`,
-        name: `varchar(20)`
+    departments: { //all departments a course can belong to
+        name: `varchar(20)`,
+        abbreviation: `char(4) NOT NULL PRIMARY KEY`
     }
 };
 

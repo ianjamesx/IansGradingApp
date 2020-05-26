@@ -1,6 +1,5 @@
 import { Application, Request, Response } from 'express';
 import { User } from '../models/User';
-import bodyparser = require('body-parser');
 
 //result interface for an API call
 interface Result {

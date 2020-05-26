@@ -103,7 +103,7 @@ let generateID = async (): Promise<number> => {
 
     return userid;
 
-}
+};
 /*
 var getcourses_min = async (userid) => {
     var course = new Course;

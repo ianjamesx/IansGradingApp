@@ -17,25 +17,20 @@ interface DBResult {
 }
 
 /*
-enums for storing data in course
+not using regular enum interface TS provides as we want this to work on JS based client as well
+using traditional JS based enum logic so client can pass in string correlating to object key
 */
 
-enum Season {
-    Spring,
-    Summer,
-    Fall,
-    Winter
-}
-
-enum Department {
-    COSC,
-    MATH,
-    INFO
+let Season: any = {
+    Spring: 0,
+    Summer: 1,
+    Fall: 2,
+    Winter: 3
 }
 
 /*
 interfaces for returning data to other models/render
-NOTE: in these interfaces, return enum data as strings as this will be final output to client
+return enum data as strings as this will be final output to client
 */
 
 //data for building links in sidebar
@@ -59,10 +54,13 @@ interface Coursedata {
 
 class Course {
 
-    private name: string;
-    private department: Department;
+    //NOTE
+    //department and season will pass in strings that are object keys to their respective enums
 
-    private season: Season;
+    private name: string;
+    private department: string;
+
+    private season: string;
     private year: number;
 
     private number: number;
@@ -72,7 +70,7 @@ class Course {
     private coursekey: string;
     private instructor: string;
 
-    constructor(name?: string, department?: Department, season?: Season, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: string){
+    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -85,7 +83,7 @@ class Course {
     }
 
     //load data after loaded from database
-    public loadCourseData(name?: string, department?: Department, season?: Season, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: string){
+    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -108,27 +106,72 @@ class Course {
         this.loadCourseData(result.data);
     }
 
+    //get all departments available
+    //run db query to get departments, turn into an enum style object
+    public async getDepartments(): Promise<any> {
+        let Department: any = {};
+        let departments: DBResult = await db.getAllDepartments();
+
+        if(departments.error) return departments.error;
+        let deptdata: any = departments.data;
+
+        let i: number;
+        for(i = 0; i < deptdata.length; i++){
+            let abbreviation: string = deptdata[i].abbreviation;
+            let name: string = deptdata[i].name;
+
+            Department[abbreviation] = name;
+        }
+
+        return Department;
+    }
+
+    //store section number as int in database, turn into 3 char string when showing to client
+    //for example, section number 1 --> 001, section 34 --> 034
+    private formatSection(): string {
+        let sect: string = '';
+        sect += this.section;
+
+        if(sect.length < 3){
+            let i: number;
+            for(let i = sect.length; i < 3; i++){
+                sect = '0' + sect;
+            }
+        }
+
+        return sect;
+    }
+
+
+  private async generateKey(): Promise<void> {
+    this.coursekey = await db.generateKey();
+  }
+  private async generateID(): Promise<void> {
+    this.id = await db.generateID();
+  }
+
     //verify all user inputted fields
+    //dont verify data that is selected from a drop down menu, as user cannot enter incorrect data
     private async verify(): Promise<any | null> {
         let errs: any = await verify.all({
-            name: [this.name, 'title'],
-            department: [this.department, 'department'],
-            season: [this.department, 'season'],
-            year: [this.year, 'year'],
-            number: [this.number, 'number'],
-            section: [this.section, 'number'],
+            name:    [this.name, 'title'],
+            year:    [this.year, 'year'],
+            number:  [this.number, 'coursenumber'],
+            section: [this.section, 'coursenumber'],
           });
       
           return errs;
     }
+    
 
+    //verify data and save in database, return any uesr input errors if any occurred
     public async save(): Promise<Errors | void> {
         let errs: Errors = {};
-        errs = await this.verify(); //first, see if we have any errors in user inputted data    
+        errs = await this.verify();   
         if(errs)
             return errs;
 
-        let dberr: string = await db.save(this); //save in db, return any db errors or null if no errs
+        let dberr: string = await db.save(this);
         if(dberr)
             return { any: dberr };
     }
@@ -163,6 +206,48 @@ class Course {
 
     public onLoad(): any {
         return [keys(this.getColumns())];
+    }
+
+    public getInsert(): any {
+        return [
+            [keys(this.getColumns())], //keys aligned to column names
+            [vals(this.getColumns())]  //vals aligned to values we insert
+        ];
+    }
+
+    public getUpdate(): any {
+        return [
+            this.getColumns(),
+            this.id
+        ];
+    }
+
+    /*
+    getting data for interfaces
+    */
+
+    public getLinkData(): Linkdata {
+        let data: Linkdata = {
+            id: this.id,
+            name: this.name
+        }
+        return data;
+    }
+
+    public getCourseData(): Coursedata {
+        let data: Coursedata = {
+            name: this.name,
+            department: this.department,
+            season: this.season,
+            year: this.year,
+            number: this.number,
+            section: this.formatSection(),
+            id: this.id,
+            coursekey: this.coursekey,
+            instructor: this.instructor
+        };
+
+        return data;
     }
 
 }

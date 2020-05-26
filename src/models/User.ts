@@ -112,7 +112,7 @@ class User {
   }
 
   async encryptPassword(): Promise<void> {
-    let saltRounds: number = 2;
+    let saltRounds: number = 5;
     this.hash = await generatehash(this.password, saltRounds);
   }
 
