@@ -1,4 +1,4 @@
-import db = require('./db');
+import db = require('./dbconfig');
 
 /*
 all database table declarations

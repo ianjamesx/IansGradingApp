@@ -1,5 +1,5 @@
 
-import { query, unknownerr, loginerr, errorsave } from './db';
+import { query, unknownerr, loginerr, errorsave } from './dbconfig';
 import { id, vals, keys } from '../utils/utils';
 import { format, escape } from 'sqlstring';
 
@@ -12,6 +12,7 @@ e.g. save, load, generateid
 
 /*
 this interface will be used for all db queries
+with some exceptions for, say, generateID functions
 */
 
 interface DBResult {

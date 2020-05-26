@@ -1,40 +1,44 @@
-import { escape, format, query, unknownerr, loginerr, errorsave } from '../../db/db';
+import * as db from '../../db/dbquery';
 import { Course, DBResult } from './Course';
-import { id, key } from '../../utils/utils';
+import { keys, id, key } from '../../utils/utils';
+
+let tablename: string = 'courses';
+
+let load = async (course: Course): Promise<DBResult> => {
+    return await db.load(course, tablename);
+};
+
+let save = async (course: Course): Promise<DBResult> => {
+    return await db.save(course, tablename);
+};
+
+let generateID = async (): Promise<number> => {
+    return await db.generateID(tablename);
+};
+
+/*
+load course data based on inputted key from user
+for when student attempts to join course
+*/
 
 let loadFromKey = async (course: Course): Promise<DBResult> => {
     
     let result: DBResult = {};
-    let loadquery = format(`SELECT ?? FROM courses WHERE key = ?`, [course.onLoad(), course.getKey()]);
+    let loadquery = db.format(`SELECT ?? FROM ${tablename} WHERE key = ?`, [keys(course.getColumns()), course.getKey()]);
     
     try {
-        result.data = await query(loadquery);
+        result.data = await db.query(loadquery);
         result.data = result.data[0];
     } catch(err){
-        errorsave(err);
-        result.error = unknownerr;
+        db.errorsave(err);
+        result.error = db.unknownerr;
     }
 
     return result;
 
 };
 
-let generateID = async (): Promise<number> => {
-
-    let courseid: number;
-    let valid: boolean = false; //whether we have a valid ID or not
-
-    while(!valid){
-        courseid = id();
-        let idsearch: string = format(`SELECT id FROM courses WHERE id = ?`, courseid);
-        let results: any[] = await query(idsearch); //search for this ID
-        if(results.length == 0) valid = true; //if no results, we have a valid unique ID
-    }
-
-    return courseid;
-
-};
-
+//generate course key
 let generateKey = async (): Promise<string> => {
 
     let coursekey: string;
@@ -42,8 +46,8 @@ let generateKey = async (): Promise<string> => {
 
     while(!valid){
         coursekey = key();
-        let keysearch: string = format(`SELECT id FROM users WHERE id = ?`, coursekey);
-        let results: any[] = await query(keysearch);
+        let keysearch: string = db.format(`SELECT id FROM users WHERE id = ?`, coursekey);
+        let results: any[] = await db.query(keysearch);
         if(results.length == 0) valid = true;
     }
 
@@ -51,39 +55,17 @@ let generateKey = async (): Promise<string> => {
 
 }
 
-let save = async (course: Course): Promise<string | null> => {
-
-    let existsquery: string = format(`SELECT id FROM courses WHERE id = ?`, [course.getID()]);
-    let result: any[] = await query(existsquery);
-    let savequery: string;
-
-    if(result.length > 0)
-        savequery = format(`UPDATE courses SET ?? WHERE id = ?`, course.getUpdate()); //there is a user in the db with this email, update that user
-     else 
-        savequery = format(`INSERT INTO courses (??) VALUES ?`, course.getInsert()); //no user in db with this id, insert new one
-    
-    //run, return errors if any are encountered
-    try {
-        await query(savequery);
-    } catch(err){
-        errorsave(err);
-        return unknownerr; 
-    }
-
-    return null;
-
-};
-
 //get all departments a course can belong to
 let getAllDepartments = async (): Promise<DBResult> => {
+
     let result: DBResult = {};
-    let loadquery = `SELECT id, name, abbreviation FROM departments`;
+    let loadquery = `SELECT abbreviation, name FROM departments`;
     
     try {
-        result.data = await query(loadquery);
+        result.data = await db.query(loadquery);
     } catch(err){
-        errorsave(err);
-        result.error = unknownerr;
+        db.errorsave(err);
+        result.error = db.unknownerr;
     }
 
     return result;
@@ -92,6 +74,7 @@ let getAllDepartments = async (): Promise<DBResult> => {
 export {
     loadFromKey,
     save,
+    load,
     getAllDepartments,
     generateID,
     generateKey

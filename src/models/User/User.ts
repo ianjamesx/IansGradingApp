@@ -47,6 +47,12 @@ class User {
     this.lastname = lastname;
   }
 
+  /*
+
+  user session interaction, either loading user data from session (which contain User ID) or loading User ID to session
+
+  */
+
   //load user from an id stored in session
   public async sessionLoad(session: any): Promise<string | void>{
     
@@ -73,6 +79,12 @@ class User {
     this.id = data.id;
   }
 
+  /*
+
+  saving/verification of user inputted data
+
+  */
+
   private async verify(): Promise<any | null> {
 
     let errs: any = await verify.all({
@@ -86,17 +98,19 @@ class User {
 
   }
 
-  public async save(): Promise<Errors | string | void> {
+  public async save(): Promise<Errors | void> {
 
     let errs: Errors = {};
     errs = await this.verify(); //first, see if we have any errors in user inputted data    
-    if(errs) return errs;
+    if(errs)
+      return errs;
     
     if(!this.hash) await this.encryptPassword(); //if we dont have a hash, get it from current password
     if(!this.id) await this.generateID();        //if we dont have an ID either, generate one
 
-    let dberr: string = await db.save(this); //save in db, return any db errors or null if no errs
-    if(dberr) return { any: dberr };
+    let dberr: DBResult = await db.save(this); //save in db, return any db errors or null if no errs
+    if(dberr.error)
+      return { any: dberr.error };
   }
 
   public async login(req: any): Promise<string | void> {
@@ -107,6 +121,12 @@ class User {
     this.setSession(req);                 //load data to session
   }
 
+  /*
+
+  ID generation/password encryption
+
+  */
+
   private async generateID(): Promise<void> {
     this.id = await db.generateID();
   }
@@ -115,6 +135,12 @@ class User {
     let saltRounds: number = 5;
     this.hash = await generatehash(this.password, saltRounds);
   }
+
+  /*
+
+  general getters, for db inserts, or interfaces
+
+  */
 
   public getColumns(): any {
 
@@ -132,10 +158,6 @@ class User {
     return this.firstname;
   }
 
-  /*
-  portions formatted to work with SQLString library
-  */
-
   public getID(): number {
     return this.id;
   }
@@ -146,24 +168,6 @@ class User {
       password: this.password
     }
     return creds;
-  }
-
-  public loadOnLogin(): any {
-    return [keys(this.getColumns())]; //load all columns on login
-  }
-
-  public getInsert(): any {
-    return [
-      [keys(this.getColumns())], //keys aligned to column names
-      [vals(this.getColumns())]  //vals aligned to values we insert
-    ];
-  }
-
-  public getUpdate(): any {
-    return [
-      this.getColumns(),
-      this.id
-    ];
   }
 
 };
