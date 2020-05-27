@@ -64,8 +64,7 @@ let save = async (obj: any, table: string): Promise<DBResult> => {
     if(exists.length > 0)
         savequery = format(`UPDATE users SET ?? WHERE id = ?`, [obj.getColumns(), obj.id]);
      else 
-        savequery = format(`INSERT INTO users (??) VALUES ?`, [keys(this.getColumns()), vals(this.getColumns())]);
-    
+        savequery = format(`INSERT INTO users (??) VALUES (?)`, [keys(obj.getColumns()), vals(obj.getColumns())]);
 
     //run, return errors if any are encountered
     try {

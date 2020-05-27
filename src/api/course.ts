@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import { Course } from '../models/Course';
+import { Course } from '../models/Course/Course';
 
 //result interface for an API call
 interface Result {

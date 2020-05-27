@@ -7,6 +7,8 @@ import { vals, keys, id } from '../../utils/utils';
 import { User, DBResult, Credentials } from './User';
 import { compare } from 'bcrypt';
 
+import { Course } from '../Course/Course';
+
 let tablename: string = 'users';
 
 let load = async (user: User): Promise<DBResult> => {
@@ -56,25 +58,30 @@ let login = async (user: User): Promise<DBResult> => {
 
 };
 
-/*
-var getcourses_min = async (userid) => {
-    var course = new Course;
-    var select = `SELECT ?? FROM course WHERE id IN (
-                 SELECT course FROM user_course WHERE user = ?`;
-    var coursequery = format(select, [course.getcolumns_min(), userid]);
-};
+//get all courses this user is enrolled in/instructing
+let getAllCourses = async (user: User): Promise<DBResult> => {
+    
+    let course = new Course;
+    let result: DBResult = {};
+    
+    let select = `SELECT ?? FROM courses WHERE id IN (SELECT course FROM usercourse WHERE user = ?)`;
+    let coursequery = db.format(select, [keys(course.getColumns()), user.getID()]);
 
-var getcourse_full = async (userid) => {
-    var course = new Course;
-    var select = `SELECT ?? FROM course WHERE id IN (
-                 SELECT course FROM user_course WHERE user = ?`;
-    var coursequery = format(select, [course.getcolumns_full(), userid]);
+    try {
+        result.data = await db.query(coursequery);
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+
+    return result;
+
 };
-*/
 
 export { 
     load,
     login,
     save,
-    generateID
+    generateID,
+    getAllCourses
 };

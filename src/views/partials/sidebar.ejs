@@ -20,6 +20,9 @@
             <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">My Courses</a>
             <div id="coursemenu">
                 <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <% courses.forEach((course) => { %>
+                    <%- include('./courselink', {course: course}) %>
+                    <% }); %>
                 </ul>
             </div>
         </li>

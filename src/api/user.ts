@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import { User } from '../models/User';
+import { User } from '../models/User/User';
 
 //result interface for an API call
 interface Result {
@@ -18,12 +18,12 @@ let userapi = (app: Application): void => {
         let user: User = new User(email, password);
         let result: Result = {};
 
-        user.login(req).then(err => {
-            if(err){
+        user.login(req.session).then(err => {
+            if(err)
                 result.error = err;
-            } else {
+             else 
                 result.success = true;
-            }
+            
             res.send(result);
         });
     });

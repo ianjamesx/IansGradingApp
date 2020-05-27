@@ -13,7 +13,7 @@ how verification functions work;
 
 import validator = require('validator');
 import passwordValidator = require('password-validator');
-import { query, format, escape } from '../db/db';
+import { query, format, escape } from '../db/dbquery';
 
 /*
 conditions to use email:

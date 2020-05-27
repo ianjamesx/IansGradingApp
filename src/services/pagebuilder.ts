@@ -1,5 +1,5 @@
 //var render = require('../utils/render');
-import { User } from '../models/User';
+import { User } from '../models/User/User';
 import { Request } from 'express';
 
 /*
@@ -13,30 +13,15 @@ functions only need request as we retrieve all data from users session
 
 let dashboard = async (req: Request) => {
 
+  //load user
   let user: User = new User();
   let error: any = await user.sessionLoad(req.session);
-  if(error) return { error: error };                    //if we encounter an error (e.g. no user session)
-  
-  let courses = [
-    {
-      name: 'course1',
-      dept: 'compsci',
-      number: 221,
-      section: 101,
-      season: 'spring',
-      year: 2020,
-      id: 302931
-    },
-    {
-      name: 'course2',
-      dept: 'math',
-      number: 225,
-      section: 105,
-      season: 'spring',
-      year: 2020,
-      id: 304122
-    }
-  ];
+  if(error) return { error: error };
+
+  //load courses
+  let coursedata: any = await user.getAllCourses();
+  if(coursedata.error) return {error: coursedata.error}
+  let courses: any[] = coursedata.data;
 
   let assignments = [
     {
@@ -56,8 +41,8 @@ let dashboard = async (req: Request) => {
   ];
 
   return {
-    hello: 'Hello ' + user.getFN(),
     title: 'Your Dashboard',
+    user: user.getColumns(),
     courses: courses,
     assignments: assignments
   };

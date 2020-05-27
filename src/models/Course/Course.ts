@@ -28,30 +28,6 @@ let Season: any = {
     Winter: 3
 }
 
-/*
-interfaces for returning data to other models/render
-return enum data as strings as this will be final output to client
-*/
-
-//data for building links in sidebar
-interface Linkdata {
-    name: string;
-    id: number;
-}
-
-//full data, for course cards, course page, etc
-interface Coursedata {
-    name: string;
-    department: string;
-    season: string;
-    year: number;
-    number: number;
-    section: string;
-    id: number;
-    coursekey: string;
-    instructor: string;
-}
-
 class Course {
 
     //NOTE
@@ -142,13 +118,13 @@ class Course {
         return sect;
     }
 
+    private async generateKey(): Promise<void> {
+        this.coursekey = await db.generateKey();
+    }
 
-  private async generateKey(): Promise<void> {
-    this.coursekey = await db.generateKey();
-  }
-  private async generateID(): Promise<void> {
-    this.id = await db.generateID();
-  }
+    private async generateID(): Promise<void> {
+        this.id = await db.generateID();
+    }
 
     //verify all user inputted fields
     //dont verify data that is selected from a drop down menu, as user cannot enter incorrect data
@@ -165,15 +141,22 @@ class Course {
     
 
     //verify data and save in database, return any uesr input errors if any occurred
+    //if course does not have an ID or key, generate them
     public async save(): Promise<Errors | void> {
         let errs: Errors = {};
         errs = await this.verify();   
         if(errs)
             return errs;
 
-        let dberr: string = await db.save(this);
-        if(dberr)
-            return { any: dberr };
+        if(!this.id)
+            await this.generateID();
+
+        if(!this.coursekey)
+            await this.generateKey();
+
+        let dberr: DBResult = await db.save(this);
+        if(dberr.error)
+            return { any: dberr.error };
     }
 
     /*
@@ -202,52 +185,6 @@ class Course {
 
     public getID(): number {
         return this.id;
-    }
-
-    public onLoad(): any {
-        return [keys(this.getColumns())];
-    }
-
-    public getInsert(): any {
-        return [
-            [keys(this.getColumns())], //keys aligned to column names
-            [vals(this.getColumns())]  //vals aligned to values we insert
-        ];
-    }
-
-    public getUpdate(): any {
-        return [
-            this.getColumns(),
-            this.id
-        ];
-    }
-
-    /*
-    getting data for interfaces
-    */
-
-    public getLinkData(): Linkdata {
-        let data: Linkdata = {
-            id: this.id,
-            name: this.name
-        }
-        return data;
-    }
-
-    public getCourseData(): Coursedata {
-        let data: Coursedata = {
-            name: this.name,
-            department: this.department,
-            season: this.season,
-            year: this.year,
-            number: this.number,
-            section: this.formatSection(),
-            id: this.id,
-            coursekey: this.coursekey,
-            instructor: this.instructor
-        };
-
-        return data;
     }
 
 }

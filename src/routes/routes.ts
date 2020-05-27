@@ -3,11 +3,13 @@ import { Application, Request, Response } from 'express';
 
 let routes = (app: Application): void => {
 
+  //if user has a session, redirect to their dashboard
+  //if not, send the homepage
   app.get('/', (req: Request, res: Response) => {
     if(req.session.user){
-      res.redirect('/dashboard'); //if user has a session, redirect to their dashboard
+      res.redirect('/dashboard');
     } else {
-      res.render('homepage');     //if not, send homepage
+      res.render('homepage');
     }
   });
 
@@ -18,14 +20,12 @@ let routes = (app: Application): void => {
     });
   });
 
-  app.get('/nopage', (req: Request, res: Response) => {
-    res.send('We couldnt find that page');
-  });
-
 }
 
+//on error, redirect to homepage
+//most errors are from not having a session, send back to homepage to re-login
 let err = (req: any, res: any): void => {
-  res.redirect('/nopage');
+  res.redirect('/');
 };
 
 export { routes };

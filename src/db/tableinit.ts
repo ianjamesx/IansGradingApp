@@ -15,7 +15,7 @@ let tables: any = {
 
     courses: {
         name: `varchar(30)`,
-        department: `char(4) FOREIGN KEY departments(abbreviation)`,
+        department: `char(4)`,
         season: `enum('Spring', 'Summer', 'Fall', 'Winter')`,
         year: `int`,
         number: `int`,
@@ -23,14 +23,23 @@ let tables: any = {
         id: `int NOT NULL PRIMARY KEY`,
         coursekey: `varchar(12)`,
         instructor: `varchar(30)`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (department) REFERENCES departments(abbreviation)`
+        ]
     },
 
-    usercourse: { //junction table for users and courses
-        user: `int FOREIGN KEY users(id)`,
-        course: `int FOREIGN KEY courses(id)`,
+    //junction table for users and courses
+    usercourse: {
+        user: `int`,
+        course: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (user) REFERENCES users(id)`,
+            `FOREIGN KEY (course) REFERENCES courses(id)`
+        ]
     },
 
-    departments: { //all departments a course can belong to
+    //all departments a course can belong to
+    departments: {
         name: `varchar(20)`,
         abbreviation: `char(4) NOT NULL PRIMARY KEY`
     }

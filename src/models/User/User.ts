@@ -65,11 +65,11 @@ class User {
     this.loadtouser(result.data);
   }
 
-  public setSession(req: any): void {
+  public setSession(session: any): void {
     let sess: UserSession = {
       id: this.getID()
     };
-    req.session.user = sess;
+    session.user = sess;
   }
 
   public loadtouser(data: any){
@@ -134,6 +134,21 @@ class User {
   async encryptPassword(): Promise<void> {
     let saltRounds: number = 5;
     this.hash = await generatehash(this.password, saltRounds);
+  }
+
+  /*
+  for getting course content
+  */
+
+  public async getAllCourses(): Promise<any> {
+
+    let coursedata: DBResult = await db.getAllCourses(this);
+    return coursedata;
+    
+  }
+
+  public async getSidebarInfo(): Promise<any> {
+
   }
 
   /*
