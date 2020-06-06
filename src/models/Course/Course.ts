@@ -91,6 +91,7 @@ class Course {
         if(departments.error) return departments.error;
         let deptdata: any = departments.data;
 
+        //get abbreviation and name for each department to feed into enum
         let i: number;
         for(i = 0; i < deptdata.length; i++){
             let abbreviation: string = deptdata[i].abbreviation;

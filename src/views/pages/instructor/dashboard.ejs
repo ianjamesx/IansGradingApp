@@ -2,12 +2,12 @@
 <html lang="en">
 
   <head>
-    <%- include('../partials/head', { title: title }) %>
+    <%- include('../../partials/head', { title: title }) %>
   </head>
 
   <body>
     <div class="wrapper">
-      <%- include('../partials/sidebar', {courses: courses}) %>
+      <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
       <div id="content">
         <h1>Hello <%= user.firstname %></h1>
 
@@ -17,17 +17,13 @@
             <h3>Courses</h3>
             <%# generate a course card for each of the users courses %>
             <% courses.forEach((course) => { %>
-            <%- include('../partials/coursecard', {course: course}) %>
+            <%- include('../../partials/instructor/coursecard', {course: course}) %>
             <% }); %>
 
             <%# if no courses, offer them option to create or join course (depending on instructor status) %>
             <% if(!courses.length){ %>
               <%- '<h2>You have no courses</h2>' %>
-              <% if(user.instructor){ %>
-                <%- include('../partials/btnlink', {link: '/createcourse', message: 'Create a Course'}) %>
-              <% } else { %>
-                <%- include('../partials/btnlink', {link: '/joincourse', message: 'Join a Course'}) %>
-              <% } %> 
+              <%- include('../../partials/btnlink', {link: '/createcourse', message: 'Create a Course'}) %>
             <% } %> 
           </div>
 
@@ -35,7 +31,7 @@
             <h3>Upcoming Assignments</h3>
             <%# generate assignment card for each of the users upcoming assignments %>
             <% assignments.forEach((assignment) => { %>
-              <%- include('../partials/assignmentcard', {assignment: assignment}) %>
+              <%- include('../../partials/instructor/assignmentcard', {assignment: assignment}) %>
             <% }); %>
           </div>
 
@@ -43,6 +39,6 @@
     </div> <%# close wrapper %>
   </body>
 
-  <%- include('../partials/scripts'); %>
+  <%- include('../../partials/scripts'); %>
 
 </html>
