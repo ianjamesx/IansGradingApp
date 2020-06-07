@@ -71,6 +71,11 @@ class Course {
         this.instructor = instructor;
     }
 
+    //load data into this object from another object (e.g. anonymous object from database)
+    public loadFromObject(c: any): void {
+        this.loadCourseData(c.name, c.department, c.season, c.year, c.number, c.section, c.id, c.coursekey, c.instructor);
+    }
+
     //attempt to load course data into this object from a key given
     public async loadCourseByKey(coursekey: string): Promise<string | void> {
         this.coursekey = coursekey;
@@ -85,22 +90,25 @@ class Course {
     //get all departments available
     //run db query to get departments, turn into an enum style object
     public async getDepartments(): Promise<any> {
-        let Department: any = {};
-        let departments: DBResult = await db.getAllDepartments();
+        let deptartments: any = [];
+        let dbres: DBResult = await db.getAllDepartments();
 
-        if(departments.error) return departments.error;
-        let deptdata: any = departments.data;
+        if(dbres.error) return dbres.error;
+        let deptdata: any = dbres.data;
 
-        //get abbreviation and name for each department to feed into enum
+        //get abbreviation and name for each department to feed into array
         let i: number;
         for(i = 0; i < deptdata.length; i++){
             let abbreviation: string = deptdata[i].abbreviation;
             let name: string = deptdata[i].name;
-
-            Department[abbreviation] = name;
+            
+            deptartments.push({
+                abbreviation: abbreviation,
+                name: name
+            });
         }
 
-        return Department;
+        return deptartments;
     }
 
     //store section number as int in database, turn into 3 char string when showing to client
