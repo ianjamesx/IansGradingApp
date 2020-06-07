@@ -24,7 +24,7 @@
             <% if(!courses.length){ %>
               <%- '<h2>You have no courses</h2>' %>
               <%- include('../../partials/btnlink', {link: '/createcourse', message: 'Create a Course'}) %>
-            <% } %> 
+            <% } %>
           </div>
 
           <div class="col-md-5">
@@ -34,6 +34,8 @@
               <%- include('../../partials/instructor/assignmentcard', {assignment: assignment}) %>
             <% }); %>
           </div>
+
+        </div>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>

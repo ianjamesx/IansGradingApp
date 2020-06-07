@@ -9,7 +9,7 @@ var home = {
                 password: password
             }),
             success: function(data){
-    
+
                 if(data.error){
                     var err = Components.error({
                         message: data.error
@@ -18,14 +18,14 @@ var home = {
                 } else if(data.success){
                     location.href='/dashboard';
                 }
-    
+
             }
-    
+
         });
-    
+
     },
 
-     accountcreate: function(email, password, firstname, lastname, instructor){
+    accountcreate: function(email, password, firstname, lastname, instructor){
 
         $.ajax('/user/create', {
             type: 'POST',
@@ -48,11 +48,11 @@ var home = {
                 } else if(data.success){
                     location.href='/dashboard';
                 }
-    
+
             }
-    
+
         });
-    
+
     },
 
     contact: function(message, email, name, university, subject){
@@ -63,7 +63,7 @@ var home = {
 
 
 //page start
- 
+
 $(document).ready(function(){
 
     $('#login').click(function(){

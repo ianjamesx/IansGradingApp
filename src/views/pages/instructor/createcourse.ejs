@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <%- include('../../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
+      <div id="content">
+
+        <h2>Enter information for new course</h2>
+
+        <%# ROW 1 - Name Department %>
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <input type="text" class="form-control" id="course_name" placeholder="Course Name">
+            <div class="invalid-feedback" id="course_name_error"></div>
+          </div>
+          <div class="form-group col-md-5">
+            <select id="course_department" class="form-control">
+              <% departments.forEach((department) => { %>
+                <option value="<%= department.abbreviation %>"><%= department.name %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <span style="display:block; height: 20px;"></span>
+
+        <%# ROW 2 - Number Section %>
+       <div class="form-row">
+         <div class="form-group col-md-5">
+           <input type="text" class="form-control" id="course_number" placeholder="Course Number">
+           <div class="invalid-feedback" id="course_number_error"></div>
+         </div>
+         <div class="form-group col-md-5">
+           <input type="text" class="form-control" id="course_section" placeholder="Course Section">
+           <div class="invalid-feedback" id="course_section_error"></div>
+         </div>
+       </div>
+
+       <span style="display:block; height: 20px;"></span>
+
+        <%# ROW 3 - Semester Year %>
+       <h4>Course Semester</h4>
+       <div class="form-row">
+         <div class="form-group col-md-5">
+           <select id="course_season" class="form-control">
+             <option value="0">Spring</option>
+             <option value="1">Summer</option>
+             <option value="2">Fall</option>
+             <option value="3">Winter</option>
+           </select>
+         </div>
+         <div class="form-group col-md-5">
+           <input type="text" class="form-control" id="course_year" placeholder="Year">
+           <div class="invalid-feedback" id="course_year_error"></div>
+         </div>
+       </div>
+
+       <span style="display:block; height: 20px;"></span>
+       <button id="createCourse" class="appbtn" type="button">Create Course</button>
+
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+  </body>
+
+  <%- include('../../partials/scripts'); %>
+
+</html>

@@ -4,12 +4,13 @@ import { Course } from '../models/Course/Course';
 //result interface for an API call
 interface Result {
     error?: string | any;
-    success?: boolean;
+    success?: any;
 }
 
 let courseapi = (app: Application): void => {
 
     //create a course with user entered properties
+    //send generated ID of course on success
     app.post('/course/create', (req: Request, res: Response) => {
 
         let name: string = req.body.name;
@@ -25,9 +26,9 @@ let courseapi = (app: Application): void => {
         course.save().then(err => {
             if(err)
                 result.error = err;
-             else 
-                result.success = true;
-            
+             else
+                result.success = course.getID();
+
             res.send(result);
         });
     });

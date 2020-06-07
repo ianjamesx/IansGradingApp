@@ -1,5 +1,6 @@
 //var render = require('../utils/render');
 import { User } from '../models/User/User';
+import { Course } from '../models/Course/Course'
 import { Request } from 'express';
 
 /*
@@ -36,7 +37,7 @@ let dashboard = async (req: Request) => {
       open: 'Sep 10, 2020',
       close: 'Sep 15, 2020',
       id: 20153931,
-      
+
     },
   ];
 
@@ -49,4 +50,19 @@ let dashboard = async (req: Request) => {
 
 };
 
-export { dashboard };
+let createcourse = async (req: Request) => {
+
+  let user: User = new User();
+  let error: any = await user.sessionLoad(req.session);
+  if(error) return { error: error };
+
+  let coursedata: any = await user.getAllCourses();
+  if(coursedata.error) return {error: coursedata.error}
+  let courses: any[] = coursedata.data;
+
+}
+
+export {
+  dashboard,
+  createcourse
+};
