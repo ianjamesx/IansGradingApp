@@ -5,11 +5,17 @@ all database table declarations
 */
 
 let tables: any = {
+    
+    /*
+    user course tables
+    */
+
     users: {
         email: `varchar(50)`,
         password: `varchar(256)`,
         firstname: `varchar(30)`,
         lastname: `varchar(30)`,
+        instructor: `bit`,
         id: `int NOT NULL PRIMARY KEY`
     },
 
@@ -42,6 +48,67 @@ let tables: any = {
     departments: {
         name: `varchar(20)`,
         abbreviation: `char(4) NOT NULL PRIMARY KEY`
+    },
+
+    /*
+    assignment tables
+    */
+
+    assignments: {
+        id: `int NOT NULL PRIMARY KEY`,
+        course: `int`,
+        author: `int`,
+        name: `varchar(30)`,
+        open: `varchar(15)`,
+        close: `varchar(15)`,
+        cutoff: `varchar(15)`,
+        questionpoints: `int`,
+        attempts: `int`,
+        randomize: `bit`,
+        questions: `text`,
+        latepenalty: `int`,
+        category: `int`,
+        prompt: `text`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (course) REFERENCES course(id)`,
+            `FOREIGN KEY (author) REFERENCES users(id)`,
+        ]
+
+    },
+
+    assignment_categories: {
+        id: `int NOT NULL PRIMARY KEY`,
+        course: `int`,
+        name: `varchar(20)`,
+        percent: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (course) REFERENCES course(id)`
+        ]
+    },
+
+    /*
+    question tables
+    */
+
+    questions: {
+        id: `int NOT NULL PRIMARY KEY`,
+        type: `int`,
+        authorID: `int`,
+        question: `text`,
+        hint: `varchar(200)`,
+        subject: `int`,
+        topic: `int`,
+        public: `bit`
+    },
+
+    answers: {
+        id: `int NOT NULL PRIMARY KEY`,
+        correct: `bit`,
+        ans: `varchar(200)`,
+        question: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (question) REFERENCES questions(id)`
+        ]
     }
 };
 

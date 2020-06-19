@@ -1,5 +1,5 @@
 import * as db from '../../db/dbquery';
-import { Course, DBResult } from './Course';
+import { Course, Student, DBResult } from './Course';
 import { keys, id, key } from '../../utils/utils';
 
 let tablename: string = 'courses';
@@ -46,14 +46,14 @@ let generateKey = async (): Promise<string> => {
 
     while(!valid){
         coursekey = key();
-        let keysearch: string = db.format(`SELECT id FROM users WHERE id = ?`, coursekey);
+        let keysearch: string = db.format(`SELECT key FROM ${tablename} WHERE key = ?`, coursekey);
         let results: any[] = await db.query(keysearch);
         if(results.length == 0) valid = true;
     }
 
     return coursekey;
 
-}
+};
 
 //get all departments a course can belong to
 let getAllDepartments = async (): Promise<DBResult> => {
@@ -69,7 +69,26 @@ let getAllDepartments = async (): Promise<DBResult> => {
     }
 
     return result;
-}
+};
+
+let getAllStudents = async (course: Course): Promise<DBResult> => {
+
+    let result: DBResult = {};
+
+    //select all users connected to a course through junction table
+    let student: Student;
+    let loadquery = db.format(`SELECT ?? FROM users WHERE id IN (SELECT user FROM usercourse WHERE course = ?)`, [keys(student.getColumns()), course.getID()]);
+
+    try {
+        result.data = await db.query(loadquery);
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+
+    return result;
+
+};
 
 export {
     loadFromKey,
@@ -77,5 +96,6 @@ export {
     load,
     getAllDepartments,
     generateID,
-    generateKey
+    generateKey,
+    getAllStudents
 }

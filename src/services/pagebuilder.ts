@@ -3,7 +3,7 @@ import { User } from '../models/User/User';
 import { Course } from '../models/Course/Course';
 import { Request } from 'express';
 
-import common = require('./commonserv');
+import common = require('./pagebase');
 
 /*
 page builder
@@ -12,6 +12,7 @@ gets all data needed for templating engine, sends object of that data back
 to router, router renders it with expressjs
 
 functions only need request as we retrieve all data from users session
+some also need an ID (e.g. for course page, the id of the course)
 */
 
 let dashboard = async (req: Request) => {
@@ -47,8 +48,9 @@ let dashboard = async (req: Request) => {
 
 };
 
-let createcourse = async (req: Request) => {
+let createCourse = async (req: Request) => {
 
+  //page base
   let pagedata = await common.pagebase(req);
   if(pagedata.error) return { error: pagedata.error };
 
@@ -60,9 +62,34 @@ let createcourse = async (req: Request) => {
 
   return pagedata;
 
-}
+};
+
+let coursePage = async (req: Request, id: number) => {
+
+  //page base
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+
+  //load course from ID given
+  let course: Course = new Course;
+  await course.loadCourseByID(id);
+  
+  //after course loads, get course data, title
+  pagedata.course = course.getColumns();
+  pagedata.title = course.getCourseTitle();
+
+  //load user, decide if user is instructor, if so, get all students
+  let user: User = new User;
+  user.loadtouser(pagedata.user);
+  if(user.isInstructor())
+    pagedata.students = await course.getStudents();
+  
+  return pagedata;
+
+};
 
 export {
   dashboard,
-  createcourse
+  createCourse,
+  coursePage
 };

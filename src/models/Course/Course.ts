@@ -2,6 +2,8 @@ import * as db from './queries';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 
+import { Student } from '../Student/Student';
+
 //user input errors when making this class
 interface Errors {
   name?: string;
@@ -84,7 +86,18 @@ class Course {
         if(result.error)
             return result.error;
 
-        this.loadCourseData(result.data);
+        this.loadFromObject(result.data);
+    }
+
+    //can also load course by ID
+    public async loadCourseByID(ID: number): Promise<string | void> {
+        this.id = ID;
+        let result: DBResult = await db.load(this);
+
+        if(result.error)
+            return result.error;
+
+        this.loadFromObject(result.data);
     }
 
     //get all departments available
@@ -169,7 +182,21 @@ class Course {
     }
 
     /*
-    for db interactions
+    for retrieving data on students
+    */
+
+    //get all students (users, so instructors included) for this course
+    //db search returns column data for all users in junction table
+    public async getStudents(): Promise<string | any> {
+        let dbres: DBResult = await db.getAllStudents(this);
+        if(dbres.error)
+            return dbres.error;
+
+        return dbres.data;
+    }
+
+    /*
+    for db/end user interactions
     */
 
     public getColumns(): any {
@@ -196,9 +223,20 @@ class Course {
         return this.id;
     }
 
+    //stricly only end-user interaction
+
+    public getCourseTitle(): string {
+        let title: string = this.department + ' ' + this.number + ': ' + this.name;
+        return title;
+    }
+
 }
 
+/*
+also export user subclasses for query builder
+*/
 export {
     Course,
-    DBResult
+    DBResult,
+    Student
 }

@@ -37,14 +37,16 @@ class User {
   protected password: string;
   protected firstname: string;
   protected lastname: string;
-  protected hash: string;     //hashed password
+  protected instructor: number;
+  protected hash: string; //hashed password
   protected id: number;
 
-  constructor(email?:string, password?:string, firstname?:string, lastname?:string){
+  constructor(email?:string, password?:string, firstname?:string, lastname?:string, instructor?: number){
     this.email = email;
     this.password = password;
     this.firstname = firstname;
     this.lastname = lastname;
+    this.instructor = instructor;
   }
 
   /*
@@ -69,6 +71,7 @@ class User {
     let sess: UserSession = {
       id: this.getID()
     };
+
     session.user = sess;
   }
 
@@ -77,6 +80,7 @@ class User {
     this.firstname = data.firstname;
     this.lastname = data.lastname;
     this.id = data.id;
+    this.instructor = data.instructor;
   }
 
   /*
@@ -101,7 +105,7 @@ class User {
   public async save(): Promise<Errors | void> {
 
     let errs: Errors = {};
-    errs = await this.verify(); //first, see if we have any errors in user inputted data    
+    errs = await this.verify(); //first, see if we have any errors in user inputted data
     if(errs)
       return errs;
     
@@ -164,6 +168,7 @@ class User {
       password: this.hash, //when retrieving password to store, only retrieve hash
       firstname: this.firstname,
       lastname: this.lastname,
+      instructor: this.instructor,
       id: this.id
     };
 
@@ -175,6 +180,13 @@ class User {
 
   public getID(): number {
     return this.id;
+  }
+
+  //determine if instructor or not
+  public isInstructor(): boolean {
+    if(this.instructor == 1)
+      return true;
+    return false;
   }
 
   public credentials(): any { //login credentials
