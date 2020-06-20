@@ -65,21 +65,20 @@ let tables: any = {
         questionpoints: `int`,
         attempts: `int`,
         randomize: `bit`,
-        questions: `text`,
         latepenalty: `int`,
         category: `int`,
         prompt: `text`,
         CONSTRAINTS: [
             `FOREIGN KEY (course) REFERENCES course(id)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,
+            `FOREIGN KEY (category) REFERENCES assignment_categories(id)`
         ]
 
     },
 
     assignment_categories: {
-        id: `int NOT NULL PRIMARY KEY`,
+        name: `varchar(20) NOT NULL PRIMARY KEY`,
         course: `int`,
-        name: `varchar(20)`,
         percent: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (course) REFERENCES course(id)`
@@ -92,13 +91,19 @@ let tables: any = {
 
     questions: {
         id: `int NOT NULL PRIMARY KEY`,
-        type: `int`,
-        authorID: `int`,
+        type: `varchar(20)`,
+        author: `int`,
         question: `text`,
         hint: `varchar(200)`,
-        subject: `int`,
-        topic: `int`,
-        public: `bit`
+        subject: `varchar(20)`,
+        topic: `varchar(20)`,
+        public: `bit`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (type) REFERENCES question_types(type)`,
+            `FOREIGN KEY (author) REFERENCES users(id)`,
+            `FOREIGN KEY (subjects) REFERENCES question_subjects(subject)`,
+            `FOREIGN KEY (topics) REFERENCES question_topics(topic)`
+        ]
     },
 
     answers: {
@@ -109,7 +114,63 @@ let tables: any = {
         CONSTRAINTS: [
             `FOREIGN KEY (question) REFERENCES questions(id)`
         ]
+    },
+
+    question_types: {
+        type: `varchar(20) NOT NULL PRIMARY KEY`
+    },
+
+    question_subjects: {
+        subject: `varchar(20) NOT NULL PRIMARY KEY`
+    },
+
+    question_topics: {
+        topic: `varchar(20) NOT NULL PRIMARY KEY`
+    },
+
+    /*
+    code questions/labs
+    */
+
+    programs: {
+
+        id: `int NOT NULL PRIMARY KEY`,
+        type: `varchar(20)`,
+        author: `int`,
+        question: `text`,
+        hint: `varchar(200)`,
+        subject: `varchar(20)`,
+        topic: `varchar(20)`,
+        public: `bit`,
+
+    },
+
+    testcases: {
+        assignment: `int`,
+        visible: `bit`,
+        input: `varchar(100)`,
+        output: `varchar(100)`
+    },
+
+    programfiles: {
+        language: `varchar(20)`,
+        filename: `varchar(40)`,
+        sourcecode: `text`,
+        assignment: `int`,
+        question: `int`,
+        author: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (language) REFERENCES languages(name)`,
+            `FOREIGN KEY (assignment) REFERENCES assignments(id)`,
+            `FOREIGN KEY (question) REFERENCES questions(id)`,
+            `FOREIGN KEY (author) REFERENCES users(id)`,
+        ]
+    },
+
+    languages: {
+        name: `varchar(20) NOT NULL PRIMARY KEY`
     }
+
 };
 
 let tableformat = (tables: any): string[] => {
