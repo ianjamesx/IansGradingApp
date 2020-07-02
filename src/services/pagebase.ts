@@ -21,7 +21,8 @@ let pagebase = async (req: Request): Promise<any> => {
 
   return {
       user: user.getColumns(),
-      courses: courses
+      courses: courses,
+      instructor: user.isInstructor()
   };
 
 };

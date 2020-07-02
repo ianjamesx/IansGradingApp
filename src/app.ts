@@ -17,6 +17,10 @@ routes(app);
 import { userapi as user } from './api/user';
 user(app);
 
+//course api
+import { courseapi as course } from './api/course';
+course(app);
+
 app.listen(8080, () => {
     console.log('xgrade running on port 8080');
 });

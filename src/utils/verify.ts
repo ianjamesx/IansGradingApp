@@ -88,6 +88,50 @@ let password = (password: string): string => {
 };
 
 /*
+course attributes
+*/
+
+let coursetitle = (title: string): string => {
+
+  if(!title)
+    return 'Please enter a title';
+  if(title.length > 50)
+    return 'Please enter a title less than 50 characters';
+
+  return '';
+};
+
+let courseyear = (year: number): string => {
+
+  let curryear: number = new Date().getFullYear();
+  if(!year)
+    return 'Please enter a year';
+  if(year > curryear+10 || year < curryear-1)
+    return 'Please enter year before ' + (curryear+10) + ' and after ' + (curryear-1);
+
+  return '';
+};
+
+
+let coursenumber = (numb: number): string => {
+  if(!numb)
+    return 'Please enter a number';
+  if(numb < 100 || numb > 9999){
+    return 'Course number must be between 100 and 9999';
+  }
+  return '';
+};
+
+let coursesection = (numb: number): string => {
+  if(!numb)
+    return 'Please enter a number';
+  if(numb < 0 || numb > 9999){
+    return 'Course section must be between 0 and 9999';
+  }
+  return '';
+};
+
+/*
 determine if we have any errors when passed an object of errors
 for example, this object has an error:
 {
@@ -100,7 +144,7 @@ object with all blank attributes is error free
 
 let anyerrors = (errs: any): any | null => {
 
-  let i;
+  let i: any;
   for(i in errs){
     if(errs[i]) return errs; //if we get an error, return entire object
   }
@@ -108,34 +152,17 @@ let anyerrors = (errs: any): any | null => {
   return null; //or just return null if we have no errors
 
 }
-/*
- let parseErrors = async (errors: any): Promise<any> => { //parse promises that resolve to errors
-
-  let errorProm = new Promise((resolve, reject) => {
-    let i;
-    for(i in errors){
-      if(typeof errors[i] == 'object'){
-        console.log('parsing prop ' + i);
-         Promise.resolve(errors[i]).then(err => {
-          errors[i] = err;
-        }).then(() => {
-          resolve(errors);
-        });
-        break;
-      }
-    }
-  });
-
-  return errorProm;
-}
-*/
 
 var all = async (fields: any): Promise<any | null> => { //<-- async as some utils do db searches for username/email availability
 
   let allroutines: any = { //all routines user can utilize
     email: emailinuse,
     name: name,
-    password: password
+    password: password,
+    courseyear: courseyear,
+    coursetitle: coursetitle,
+    coursenumber: coursenumber,
+    coursesection: coursesection
   }
 
   let errormessages: any = {}; //error messages we'll send back to client
@@ -143,10 +170,12 @@ var all = async (fields: any): Promise<any | null> => { //<-- async as some util
 
   for(i in fields){
     let data: any = fields[i][0], routine = fields[i][1]; //data (index 0) and verify function (index 1) to use from user
-    var errmsg: string;
+    let errmsg: string;
     errmsg = await allroutines[routine](data); //await as function may be async
     errormessages[i] = errmsg; //store the error message (or promise at this point)
   }
+
+  console.log(errormessages);
 
   return anyerrors(errormessages);
 

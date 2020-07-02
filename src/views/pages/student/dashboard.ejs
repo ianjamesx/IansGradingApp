@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <%- include('../../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
+      <div id="content">
+        <h1>Hello <%= user.firstname %></h1>
+
+        <div class="row">
+
+          <div class="col-md-5">
+            <h3>Courses</h3>
+            <%# generate a course card for each of the users courses %>
+            <% courses.forEach((course) => { %>
+            <%- include('../../partials/student/coursecard', {course: course}) %>
+            <% }); %>
+
+            <%# if no courses, offer them option to create or join course (depending on instructor status) %>
+            <% if(!courses.length){ %>
+              <%- '<h2>You have no courses</h2>' %>
+              <%- include('../../partials/btnlink', {link: '/createcourse', message: 'Create a Course'}) %>
+            <% } %>
+          </div>
+
+          <div class="col-md-5">
+            <h3>Upcoming Assignments</h3>
+            <%# generate assignment card for each of the users upcoming assignments %>
+            <% assignments.forEach((assignment) => { %>
+              <%- include('../../partials/student/assignmentcard', {assignment: assignment}) %>
+            <% }); %>
+          </div>
+
+        </div>
+
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+  </body>
+
+  <%- include('../../partials/scripts'); %>
+
+</html>

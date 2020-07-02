@@ -183,10 +183,8 @@ class User {
   }
 
   //determine if instructor or not
-  public isInstructor(): boolean {
-    if(this.instructor == 1)
-      return true;
-    return false;
+  public isInstructor(): number {
+    return this.instructor;
   }
 
   public credentials(): any { //login credentials

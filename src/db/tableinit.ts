@@ -66,12 +66,12 @@ let tables: any = {
         attempts: `int`,
         randomize: `bit`,
         latepenalty: `int`,
-        category: `int`,
+        category: `varchar(20)`,
         prompt: `text`,
         CONSTRAINTS: [
-            `FOREIGN KEY (course) REFERENCES course(id)`,
+            `FOREIGN KEY (course) REFERENCES courses(id)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,
-            `FOREIGN KEY (category) REFERENCES assignment_categories(id)`
+            `FOREIGN KEY (category) REFERENCES assignment_categories(name)`
         ]
 
     },
@@ -81,7 +81,7 @@ let tables: any = {
         course: `int`,
         percent: `int`,
         CONSTRAINTS: [
-            `FOREIGN KEY (course) REFERENCES course(id)`
+            `FOREIGN KEY (course) REFERENCES courses(id)`
         ]
     },
 
@@ -101,8 +101,8 @@ let tables: any = {
         CONSTRAINTS: [
             `FOREIGN KEY (type) REFERENCES question_types(type)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,
-            `FOREIGN KEY (subjects) REFERENCES question_subjects(subject)`,
-            `FOREIGN KEY (topics) REFERENCES question_topics(topic)`
+            `FOREIGN KEY (subject) REFERENCES question_subjects(subject)`,
+            `FOREIGN KEY (topic) REFERENCES question_topics(topic)`
         ]
     },
 
@@ -205,7 +205,9 @@ let init = async (): Promise<void> => {
         try {
             let res: any = await db.query(tablearray[i]);
         } catch(err){
+            console.log(tablearray[i]);
             console.log("ERROR ON TABLE INSERT: " + err);
+            console.log('------------------');
         }
     }
 

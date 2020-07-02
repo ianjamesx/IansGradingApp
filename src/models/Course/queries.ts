@@ -1,5 +1,7 @@
 import * as db from '../../db/dbquery';
-import { Course, Student, DBResult } from './Course';
+import { Course, DBResult } from './Course';
+import { Student } from '../Student/Student';
+
 import { keys, id, key } from '../../utils/utils';
 
 let tablename: string = 'courses';

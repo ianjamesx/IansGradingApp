@@ -16,11 +16,12 @@ let courseapi = (app: Application): void => {
         let name: string = req.body.name;
         let department: string = req.body.department;
         let season: string = req.body.season;
-        let year: number = req.body.year;
-        let number: number = req.body.number;
-        let section: number = req.body.number;
+        let year: number = Number(req.body.year);
+        let number: number = Number(req.body.number);
+        let section: number = Number(req.body.section);
 
         let course: Course = new Course(name, department, season, year, number, section);
+        console.log(course);
         let result: Result = {};
 
         course.save().then(err => {

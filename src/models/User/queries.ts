@@ -41,6 +41,8 @@ let login = async (user: User): Promise<DBResult> => {
         result.data = await db.query(loginquery);
         result.data = result.data[0]; //select first entry
 
+        console.log(result.data);
+
         if(!result.data){            //if no users found from email
             result.error = db.loginerr; //user email not registered, show error
             return result;           //return early as compare will break with no password

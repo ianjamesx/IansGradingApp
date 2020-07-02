@@ -2,8 +2,6 @@ import * as db from './queries';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 
-import { Student } from '../Student/Student';
-
 //user input errors when making this class
 interface Errors {
   name?: string;
@@ -152,15 +150,14 @@ class Course {
     //dont verify data that is selected from a drop down menu, as user cannot enter incorrect data
     private async verify(): Promise<any | null> {
         let errs: any = await verify.all({
-            name:    [this.name, 'title'],
-            year:    [this.year, 'year'],
+            name:    [this.name, 'coursetitle'],
+            year:    [this.year, 'courseyear'],
             number:  [this.number, 'coursenumber'],
-            section: [this.section, 'coursenumber'],
+            section: [this.section, 'coursesection'],
           });
       
           return errs;
     }
-    
 
     //verify data and save in database, return any uesr input errors if any occurred
     //if course does not have an ID or key, generate them
@@ -175,6 +172,8 @@ class Course {
 
         if(!this.coursekey)
             await this.generateKey();
+
+        console.log(this);
 
         let dberr: DBResult = await db.save(this);
         if(dberr.error)
@@ -237,6 +236,5 @@ also export user subclasses for query builder
 */
 export {
     Course,
-    DBResult,
-    Student
+    DBResult
 }
