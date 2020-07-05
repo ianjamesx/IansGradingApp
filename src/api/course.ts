@@ -47,6 +47,53 @@ let courseapi = (app: Application): void => {
         });
     });
 
+    app.post('/course/searchbykey', (req: Request, res: Response) => {
+
+        let key: string = req.body.key;
+
+        let course: Course = new Course();
+        let result: Result = {};
+
+        course.loadCourseByKey(key).then(err => {
+            if(err){
+                result.error = err;
+            } else {
+                result.success = course.dataView();
+            }
+            res.send(result);
+        });
+    });
+
+    app.post('/course/join', (req: Request, res: Response) => {
+
+        let id: number = Number(req.body.id);
+        let course: Course = new Course();
+        let result: Result = {};
+
+        //get user id for course to add connection
+        let user: User = new User();
+        let userID: number = user.getIDFromSession(req.session);
+
+        course.loadCourseByID(id).then(err => {
+
+            if(err){
+                result.error = err;
+                res.send(result);
+            }
+
+            course.joinCourse(userID).then(err => {
+                if(err){
+                    result.error = err;
+                } else {
+                    result.success = true;
+                }
+                res.send(result);
+            });
+
+        });
+
+    });
+
 };
 
 export {

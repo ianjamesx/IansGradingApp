@@ -37,7 +37,7 @@ let id = (): number => {
 //generate course key
 let key = (): string => {
 
-    let possible: string = '0123456789ABCDEFGHJKMNOPQRSTUVWXYZ';
+    let possible: string = '0123456789BCDFGHJKMNPQRSTVWXZ';
     let key: string = '';
     let keylength: number = 8;
     let i: number;

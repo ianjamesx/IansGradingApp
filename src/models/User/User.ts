@@ -175,7 +175,7 @@ class User {
       password: this.hash, //when retrieving password to store, only retrieve hash
       firstname: this.firstname,
       lastname: this.lastname,
-      instructor: this.instructor,
+      instructor: this.instructor ? 1 : 0,
       id: this.id
     };
 

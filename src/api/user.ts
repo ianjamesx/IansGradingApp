@@ -28,13 +28,6 @@ let userapi = (app: Application): void => {
         });
     });
 
-    //to logout, just destroy session and redir to /
-    app.post('/logout', (req: Request, res: Response) => {
-        req.session.destroy(() => {
-            res.redirect('/'); //redirect to homepage
-        });
-    });
-
     //create new user
     //with email, pass, fn, ln
     app.post('/user/create', (req: Request, res: Response) => {
@@ -42,9 +35,9 @@ let userapi = (app: Application): void => {
         let password: string = req.body.password;
         let firstname: string = req.body.firstname;
         let lastname: string = req.body.lastname;
-        let instructor: boolean = req.body.instructor;
+        let instructor: number = Number(req.body.instructor);
 
-        let user: User = new User(email, password, firstname, lastname);
+        let user: User = new User(email, password, firstname, lastname, instructor);
         let result: Result = {};
 
         user.save().then(err => { //attempt to save user

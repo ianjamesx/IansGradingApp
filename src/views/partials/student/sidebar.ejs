@@ -1,0 +1,27 @@
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>Ian's Grading App</h3>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="active">
+            <a href="/">Dashboard</a>
+        </li>
+        <li>
+            <a href="#courselinks" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">My Courses</a>
+            <div id="coursemenu">
+                <ul class="collapse list-unstyled" id="courselinks">
+                    <% courses.forEach((course) => { %>
+                        <a href="/course/<%= course.id %>"><%= course.department %> <%= course.number %></a>
+                    <% }); %>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <a href="/joincourse">Join Course</a>
+        </li>
+        <li>
+            <a href="/logout">Logout</a>
+        </li>
+    </ul>
+</nav>

@@ -77,7 +77,12 @@ class Course {
     }
 
     //attempt to load course data into this object from a key given
-    public async loadCourseByKey(): Promise<string | void> {
+    public async loadCourseByKey(key?: string): Promise<string | void> {
+
+        //optionally pass in course key if not already set
+        if(!this.coursekey)
+            this.coursekey = key;
+
         let result: DBResult = await db.loadFromKey(this);
 
         if(result.error)
@@ -226,12 +231,28 @@ class Course {
             season: this.getSeasonName(),
             year: this.year,
             number: this.number,
-            section: this.formatSection(),
+            section: this.section,
             id: this.id,
             coursekey: this.coursekey,
             instructor: this.instructor
         };
     
+    }
+
+    public dataView(): any {
+
+        return {
+            name: this.name,
+            department: this.department,
+            season: this.getSeasonName() ? this.getSeasonName() : this.season,
+            year: this.year,
+            number: this.number,
+            section: this.formatSection(),
+            id: this.id,
+            coursekey: this.coursekey,
+            instructor: this.instructor
+        };
+
     }
 
     public getKey(): string {

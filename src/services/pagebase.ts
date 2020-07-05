@@ -9,6 +9,7 @@ if user has to do more operations besides that of building essential content
 */
 
 let pagebase = async (req: Request): Promise<any> => {
+  
   //load user
   let user: User = new User();
   let error: any = await user.sessionLoad(req.session);

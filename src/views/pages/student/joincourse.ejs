@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <%- include('../../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../../partials/student/sidebar', {courses: courses}) %>
+      <div id="content">
+        <h1>Enter key for a course to join</h1>
+
+        <div class="form-row">
+            <div class="form-group col-md-10">
+              <input type="TEXT" class="form-control" id="course_key" placeholder="Course Key">
+            </div>
+        </div>
+
+        <button type="button" class="appbtn" id="search">Search for Course</button>
+
+        <div id="searchresult"></div>
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+  </body>
+
+  <%- include('../../partials/scripts'); %>
+  <script type="text/javascript" src="../public/js/joincourse.js"></script>
+
+</html>

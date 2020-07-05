@@ -82,10 +82,8 @@ let coursePage = async (req: Request) => {
   pagedata.course = course.getColumns();
   pagedata.title = course.getCourseTitle();
 
-  //load user, decide if user is instructor, if so, get all students
-  let user: User = new User;
-  user.loadtouser(pagedata.user);
-  if(user.isInstructor()){
+  //if instructor, get all students
+  if(pagedata.instructor){
     let student: Student = new Student();
     pagedata.students = await course.getStudents(student);
   }
@@ -94,8 +92,18 @@ let coursePage = async (req: Request) => {
 
 };
 
+let joinCourse = async(req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+  pagedata.title = 'Join Course';
+  return pagedata;
+
+};
+
 export {
   dashboard,
   createCourse,
-  coursePage
+  coursePage,
+  joinCourse
 };

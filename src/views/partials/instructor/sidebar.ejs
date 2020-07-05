@@ -8,18 +8,18 @@
             <a href="/">Dashboard</a>
         </li>
         <li>
-            <a href="#assignSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Add New Assignment</a>
+            <a href="#assignmentlinks" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Add New Assignment</a>
             <div>
-                <ul class="collapse list-unstyled" id="assignSubmenu">
+                <ul class="collapse list-unstyled" id="assignmentlinks">
                 <li><a href="/createassignment"><span class="tab">Create Assignment</span></a></li>
                 <li><a href="/findassignment"><span class="tab">Find Pre-Made Assignment</span></a></li>
                 </ul>
             </div>
         </li>
         <li>
-            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">My Courses</a>
+            <a href="#courselinks" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">My Courses</a>
             <div id="coursemenu">
-                <ul class="collapse list-unstyled" id="pageSubmenu">
+                <ul class="collapse list-unstyled" id="courselinks">
                     <% courses.forEach((course) => { %>
                         <a href="/course/<%= course.id %>"><%= course.department %> <%= course.number %></a>
                     <% }); %>
@@ -36,7 +36,7 @@
             </div>
         </li>
         <li>
-            <a href="/newcourse">Create New Course</a>
+            <a href="/createcourse">Create New Course</a>
         </li>
         <li>
             <a href="/logout">Logout</a>

@@ -28,7 +28,13 @@ let loadFromKey = async (course: Course): Promise<DBResult> => {
     let loadquery = db.format(`SELECT ?? FROM ${tablename} WHERE coursekey = ?`, [keys(course.getColumns()), course.getKey()]);
     try {
         result.data = await db.query(loadquery);
-        result.data = result.data[0];
+
+        //see if we found any courses of that key, if we didnt, put in error
+        if(result.data.length == 0){
+            result.error = db.unknownerr;
+        } else {
+            result.data = result.data[0];
+        }
     } catch(err){
         db.errorsave(err);
         result.error = db.unknownerr;

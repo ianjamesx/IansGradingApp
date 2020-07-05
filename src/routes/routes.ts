@@ -14,6 +14,13 @@ let routes = (app: Application): void => {
     }
   });
 
+  //to logout, just destroy session and redir to /
+  app.get('/logout', (req: Request, res: Response) => {
+    req.session.destroy(() => {
+        res.redirect('/'); //redirect to homepage
+    });
+  });
+
   app.get('/dashboard', (req: Request, res: Response) => {
     pb.dashboard(req).then(content => {
       if(content.error) return err(req, res); //<-- error check, if we get an error from pagebuilder, send user a 404
@@ -26,6 +33,10 @@ let routes = (app: Application): void => {
     });
   });
 
+  /*
+  course releated routes
+  */
+
   app.get('/createcourse', (req: Request, res: Response) => {
     pb.createCourse(req).then(content => {
       if(content.error) return err(req, res);
@@ -33,6 +44,13 @@ let routes = (app: Application): void => {
       let page: string = userpage(content.instructor, 'createcourse');
       res.render(page, content);
 
+    });
+  });
+
+  app.get('/joincourse', (req: Request, res: Response) => {
+    pb.joinCourse(req).then(content => {
+      if(content.error) return err(req, res);
+      res.render('student/joincourse', content);
     });
   });
 
@@ -55,7 +73,7 @@ let err = (req: any, res: any): void => {
 };
 
 //decide which page to get depending on if user is instructor or not
-//NOTE do error catching here eventually
+//NOTE do error catching here eventually (if student tries to access instructor page, etc)
 let userpage = (instructor: number, page: string): string => {
 
   if(instructor){

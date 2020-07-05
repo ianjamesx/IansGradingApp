@@ -35,7 +35,11 @@ let load = async (obj: any, table: string): Promise<DBResult> => {
     
     try {
         result.data = await query(loadquery);
-        result.data = result.data[0];
+        if(result.data.length == 0){
+            result.error = 'None found';
+        } else {
+            result.data = result.data[0];
+        }
     } catch(err){
         errorsave(err);
         result.error = unknownerr;
