@@ -1,20 +1,18 @@
 import * as db from './queries';
 
 import { User, DBResult } from '../User/User';
-import { Course } from '../Course/Course';
 
 class Student extends User {
 
     //attempt to join course with certain course key
     //return string on error, void on success
-    public async joinCourse(coursekey: string): Promise<string | void> {
-        let course: Course = new Course;
+    public async joinCourse(Course: any): Promise<string | void> {
 
-        let keyerror: any = await course.loadCourseByKey(coursekey);
+        let keyerror: any = await Course.loadCourseByKey();
         if(keyerror)
             return keyerror;
 
-        let joinerror: any = db.joinCourse(this.id, course.getID());
+        let joinerror: any = db.joinCourse(this.id, Course.getID());
         if(joinerror)
             return joinerror;
     }

@@ -36,7 +36,7 @@ class Course {
     private name: string;
     private department: string;
 
-    private season: string;
+    private season: number;
     private year: number;
 
     private number: number;
@@ -44,9 +44,9 @@ class Course {
 
     private id: number;
     private coursekey: string;
-    private instructor: string;
+    private instructor: number;
 
-    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: string){
+    constructor(name?: string, department?: string, season?: number, year?: number, number?: number, section?: number, instructor?: number, id?: number, coursekey?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -59,7 +59,7 @@ class Course {
     }
 
     //load data after loaded from database
-    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: string){
+    public loadCourseData(name?: string, department?: string, season?: number, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -77,8 +77,7 @@ class Course {
     }
 
     //attempt to load course data into this object from a key given
-    public async loadCourseByKey(coursekey: string): Promise<string | void> {
-        this.coursekey = coursekey;
+    public async loadCourseByKey(): Promise<string | void> {
         let result: DBResult = await db.loadFromKey(this);
 
         if(result.error)
@@ -181,17 +180,38 @@ class Course {
     }
 
     /*
+    adding connection to course in junction table
+    */
+    public async joinCourse(userID: number): Promise<string | void> {
+
+        let dberr: DBResult = await db.joinCourse(this.getID(), userID);
+        if(dberr.error){
+            return dberr.error;
+        }
+
+    }
+
+    /*
     for retrieving data on students
     */
 
     //get all students (users, so instructors included) for this course
     //db search returns column data for all users in junction table
-    public async getStudents(): Promise<string | any> {
-        let dbres: DBResult = await db.getAllStudents(this);
+    public async getStudents(Student: any): Promise<string | any> {
+        let dbres: DBResult = await db.getAllStudents(this, Student);
         if(dbres.error)
             return dbres.error;
 
         return dbres.data;
+    }
+
+    private getSeasonName(): string {
+        let i: string;
+        for(i in Season){
+            if(Season[i] == this.season){
+                return i;
+            }
+        }
     }
 
     /*
@@ -203,10 +223,10 @@ class Course {
         return {
             name: this.name,
             department: this.department,
-            season: this.season,
+            season: this.getSeasonName(),
             year: this.year,
             number: this.number,
-            section: this.section,
+            section: this.formatSection(),
             id: this.id,
             coursekey: this.coursekey,
             instructor: this.instructor

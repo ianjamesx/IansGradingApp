@@ -1,5 +1,9 @@
 /*
 Gradux.io
+
+SQL DATABASE INFO
+user: root
+password: password
 */
 
 import express = require('express');
@@ -20,6 +24,9 @@ user(app);
 //course api
 import { courseapi as course } from './api/course';
 course(app);
+
+//import playground for testing/debugging
+let playground = require('./utils/playground');
 
 app.listen(8080, () => {
     console.log('xgrade running on port 8080');

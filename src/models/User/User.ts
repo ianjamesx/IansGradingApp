@@ -55,6 +55,13 @@ class User {
 
   */
 
+  public getIDFromSession(session: any): number {
+    if(!session.user){
+      return null;
+    }
+    return session.user.id;
+  }
+
   //load user from an id stored in session
   public async sessionLoad(session: any): Promise<string | void>{
     

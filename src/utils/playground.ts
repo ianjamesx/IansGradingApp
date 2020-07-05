@@ -58,18 +58,3 @@ setTimeout(() => {
     console.log(res.length);
   });
 }, 2000);*/
-
-let f = async () => {
-  let errorProm = new Promise((resolve, reject) => {
-    resolve('hey');
-  });
-  return errorProm;
-};
-
-let n = () => {
-  return 5;
-};
-
-const AsyncFunction = (async () => {}).constructor;
-console.log(typeof f);
-console.log(typeof n);

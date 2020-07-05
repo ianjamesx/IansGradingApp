@@ -57,14 +57,14 @@ let save = async (obj: any, table: string): Promise<DBResult> => {
 
     let result: DBResult = {};
 
-    let existsquery: string = format(`SELECT id FROM users WHERE id = ?`, [obj.getID()]);
+    let existsquery: string = format(`SELECT id FROM ${table} WHERE id = ?`, [obj.getID()]);
     let exists: any[] = await query(existsquery);
     let savequery: string;
 
     if(exists.length > 0)
-        savequery = format(`UPDATE users SET ?? WHERE id = ?`, [obj.getColumns(), obj.id]);
+        savequery = format(`UPDATE ${table} SET ?? WHERE id = ?`, [obj.getColumns(), obj.id]);
      else 
-        savequery = format(`INSERT INTO users (??) VALUES (?)`, [keys(obj.getColumns()), vals(obj.getColumns())]);
+        savequery = format(`INSERT INTO ${table} (??) VALUES (?)`, [keys(obj.getColumns()), vals(obj.getColumns())]);
 
     //run, return errors if any are encountered
     try {

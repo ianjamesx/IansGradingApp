@@ -5,7 +5,7 @@
 
     <ul class="list-unstyled components">
         <li class="active">
-            <a href="">Dashboard</a>
+            <a href="/">Dashboard</a>
         </li>
         <li>
             <a href="#assignSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Add New Assignment</a>
@@ -21,7 +21,7 @@
             <div id="coursemenu">
                 <ul class="collapse list-unstyled" id="pageSubmenu">
                     <% courses.forEach((course) => { %>
-                    <%- include('./courselink', {course: course}) %>
+                        <a href="/course/<%= course.id %>"><%= course.department %> <%= course.number %></a>
                     <% }); %>
                 </ul>
             </div>

@@ -31,9 +31,16 @@ let routes = (app: Application): void => {
       if(content.error) return err(req, res);
 
       let page: string = userpage(content.instructor, 'createcourse');
+      res.render(page, content);
 
-      console.log(content);
-      console.log(content.instructor);
+    });
+  });
+
+  app.get('/course/:id', (req: Request, res: Response) => {
+    pb.coursePage(req).then(content => {
+      if(content.error) return err(req, res);
+      
+      let page: string = userpage(content.instructor, 'course');
       res.render(page, content);
 
     });

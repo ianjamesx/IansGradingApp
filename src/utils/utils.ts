@@ -38,7 +38,7 @@ let id = (): number => {
 let key = (): string => {
 
     let possible: string = '0123456789ABCDEFGHJKMNOPQRSTUVWXYZ';
-    let key: string;
+    let key: string = '';
     let keylength: number = 8;
     let i: number;
 

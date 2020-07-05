@@ -1,5 +1,6 @@
 //var render = require('../utils/render');
 import { User } from '../models/User/User';
+import { Student } from '../models/Student/Student';
 import { Course } from '../models/Course/Course';
 import { Request } from 'express';
 
@@ -64,11 +65,14 @@ let createCourse = async (req: Request) => {
 
 };
 
-let coursePage = async (req: Request, id: number) => {
+let coursePage = async (req: Request) => {
 
   //page base
   let pagedata = await common.pagebase(req);
   if(pagedata.error) return { error: pagedata.error };
+
+  //get course id from request params
+  let id: number = Number(req.params.id);
 
   //load course from ID given
   let course: Course = new Course;
@@ -81,8 +85,10 @@ let coursePage = async (req: Request, id: number) => {
   //load user, decide if user is instructor, if so, get all students
   let user: User = new User;
   user.loadtouser(pagedata.user);
-  if(user.isInstructor())
-    pagedata.students = await course.getStudents();
+  if(user.isInstructor()){
+    let student: Student = new Student();
+    pagedata.students = await course.getStudents(student);
+  }
   
   return pagedata;
 
