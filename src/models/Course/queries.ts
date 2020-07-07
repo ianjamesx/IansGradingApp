@@ -6,7 +6,16 @@ import { keys, id, key } from '../../utils/utils';
 let tablename: string = 'courses';
 
 let load = async (course: Course): Promise<DBResult> => {
-    return await db.load(course, tablename);
+    //load course data
+    let dbres: DBResult = await db.load(course, tablename);
+    //load instructors data
+    if(!dbres.error){
+        let instData: DBResult = await db.load('users', dbres.data.instructor);
+        if(!instData.error){
+            dbres.data.instructor = instData;
+        }
+    }
+    return dbres;
 };
 
 let save = async (course: Course): Promise<DBResult> => {

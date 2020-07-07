@@ -30,9 +30,6 @@ let Season: any = {
 
 class Course {
 
-    //NOTE
-    //department and season will pass in strings that are object keys to their respective enums
-
     private name: string;
     private department: string;
 
@@ -44,9 +41,10 @@ class Course {
 
     private id: number;
     private coursekey: string;
-    private instructor: number;
 
-    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, id?: number, coursekey?: string){
+    private instructor: any;
+
+    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: any, id?: number, coursekey?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -59,7 +57,7 @@ class Course {
     }
 
     //load data after loaded from database
-    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number){
+    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: any){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -209,12 +207,7 @@ class Course {
 
         return dbres.data;
     }
-
-    private async getInstructorName(user: any): Promise<string> {
-        await user.loadFromID(this.instructor);
-        return (user.getFN() + user.getLN());
-    }
-
+    
     /*
     for db/end user interactions
     */
@@ -230,12 +223,12 @@ class Course {
             section: this.section,
             id: this.id,
             coursekey: this.coursekey,
-            instructor: this.instructor
+            instructor: this.instructor.getID()
         };
     
     }
 
-    public async dataView(instructor: any): Promise<any> {
+    public async dataView(): Promise<any> {
 
         return {
             name: this.name,
@@ -246,7 +239,7 @@ class Course {
             section: this.formatSection(),
             id: this.id,
             coursekey: this.coursekey,
-            instructor: await this.getInstructorName(instructor)
+            instructor: (this.instructor.getFN() + this.instructor.getLN())
         };
 
     }

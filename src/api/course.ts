@@ -21,10 +21,11 @@ let courseapi = (app: Application): void => {
         let number: number = Number(req.body.number);
         let section: number = Number(req.body.section);
 
-        //get id of user creating course from session to set them as instructor
-        let user: User = new User();
-        let instructor: number = user.getIDFromSession(req.session);
+        //load instructor data
+        let instructor: User = new User();
+        instructor.sessionLoad(req.session);
 
+        //load new course
         let course: Course = new Course(name, department, season, year, number, section, instructor);
         let result: Result = {};
 
@@ -36,8 +37,9 @@ let courseapi = (app: Application): void => {
                 result.error = err;
                 res.send(result);
             } else {
-                //put course id in result object, add connection between instructor and course
-                course.joinCourse(instructor).then(joinerr => {
+                
+                //add connection between instructor and course
+                course.joinCourse(instructor.getID()).then(joinerr => {
                     if(joinerr){
                         result.error = joinerr;
                     } else {
@@ -46,6 +48,7 @@ let courseapi = (app: Application): void => {
                     res.send(result);
                 });
             }
+
         });
     });
 

@@ -63,9 +63,8 @@ let login = async (user: User): Promise<DBResult> => {
 //get all courses this user is enrolled in/instructing
 let getAllCourses = async (user: User): Promise<DBResult> => {
     
-    let course: Course = new Course;
     let result: DBResult = {};
-    
+    let course: Course = new Course();
     let select = `SELECT ?? FROM courses WHERE id IN (SELECT course FROM usercourse WHERE user = ?)`;
     let coursequery = db.format(select, [keys(course.getColumns()), user.getID()]);
 

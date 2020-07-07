@@ -164,10 +164,6 @@ class User {
     
   }
 
-  public async getSidebarInfo(): Promise<any> {
-
-  }
-
   /*
 
   general getters, for db inserts, or interfaces
@@ -179,6 +175,18 @@ class User {
     return {
       email: this.email,
       password: this.hash, //when retrieving password to store, only retrieve hash
+      firstname: this.firstname,
+      lastname: this.lastname,
+      instructor: this.instructor ? 1 : 0,
+      id: this.id
+    };
+
+  }
+
+  public dataView(): any {
+
+    return {
+      email: this.email,
       firstname: this.firstname,
       lastname: this.lastname,
       instructor: this.instructor ? 1 : 0,

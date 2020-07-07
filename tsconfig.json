@@ -4,6 +4,8 @@
     "removeComments": true,
     "outDir": "./build",
     "allowJs": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["./src/**/*"]
 }
