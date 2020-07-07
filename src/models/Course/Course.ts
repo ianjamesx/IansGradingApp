@@ -22,11 +22,11 @@ using traditional JS based enum logic so client can pass in string correlating t
 */
 
 let Season: any = {
-    Spring: 0,
-    Summer: 1,
-    Fall: 2,
-    Winter: 3
-}
+    Spring: 'Spring',
+    Summer: 'Summer',
+    Fall: 'Fall',
+    Winter: 'Winter'
+};
 
 class Course {
 
@@ -36,7 +36,7 @@ class Course {
     private name: string;
     private department: string;
 
-    private season: number;
+    private season: string;
     private year: number;
 
     private number: number;
@@ -46,7 +46,7 @@ class Course {
     private coursekey: string;
     private instructor: number;
 
-    constructor(name?: string, department?: string, season?: number, year?: number, number?: number, section?: number, instructor?: number, id?: number, coursekey?: string){
+    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, id?: number, coursekey?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -59,7 +59,7 @@ class Course {
     }
 
     //load data after loaded from database
-    public loadCourseData(name?: string, department?: string, season?: number, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number){
+    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -210,13 +210,9 @@ class Course {
         return dbres.data;
     }
 
-    private getSeasonName(): string {
-        let i: string;
-        for(i in Season){
-            if(Season[i] == this.season){
-                return i;
-            }
-        }
+    private async getInstructorName(user: any): Promise<string> {
+        await user.loadFromID(this.instructor);
+        return (user.getFN() + user.getLN());
     }
 
     /*
@@ -228,7 +224,7 @@ class Course {
         return {
             name: this.name,
             department: this.department,
-            season: this.getSeasonName(),
+            season: this.season,
             year: this.year,
             number: this.number,
             section: this.section,
@@ -239,18 +235,18 @@ class Course {
     
     }
 
-    public dataView(): any {
+    public async dataView(instructor: any): Promise<any> {
 
         return {
             name: this.name,
             department: this.department,
-            season: this.getSeasonName() ? this.getSeasonName() : this.season,
+            season: this.season,
             year: this.year,
             number: this.number,
             section: this.formatSection(),
             id: this.id,
             coursekey: this.coursekey,
-            instructor: this.instructor
+            instructor: await this.getInstructorName(instructor)
         };
 
     }

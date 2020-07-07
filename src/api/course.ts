@@ -16,7 +16,7 @@ let courseapi = (app: Application): void => {
 
         let name: string = req.body.name;
         let department: string = req.body.department;
-        let season: number = Number(req.body.season);
+        let season: string = req.body.season;
         let year: number = Number(req.body.year);
         let number: number = Number(req.body.number);
         let section: number = Number(req.body.section);
@@ -27,6 +27,8 @@ let courseapi = (app: Application): void => {
 
         let course: Course = new Course(name, department, season, year, number, section, instructor);
         let result: Result = {};
+
+        console.log(course);
 
         //save users data on this course in database
         course.save().then(err => {

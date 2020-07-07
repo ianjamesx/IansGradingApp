@@ -15,7 +15,7 @@ let tables: any = {
         password: `varchar(256)`,
         firstname: `varchar(30)`,
         lastname: `varchar(30)`,
-        instructor: `bit`,
+        instructor: `int`,
         id: `int NOT NULL PRIMARY KEY`
     },
 

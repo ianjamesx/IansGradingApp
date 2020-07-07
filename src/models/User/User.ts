@@ -63,15 +63,21 @@ class User {
   }
 
   //load user from an id stored in session
-  public async sessionLoad(session: any): Promise<string | void>{
+  public async sessionLoad(session: any): Promise<string | void> {
     
     if(!session.user) return 'Error: user has no session'; //<-- this error never displayed to client, they only get a 404
+    return await this.loadFromID(session.user.id);
 
-    this.id = session.user.id;
+  }
+
+  public async loadFromID(id: number): Promise<string | void> {
+
+    this.id = id;
     let result: DBResult = await db.load(this);
 
     if(result.error) return result.error; //error here most likely caused by user having no active session
     this.loadtouser(result.data);
+
   }
 
   public setSession(session: any): void {
@@ -183,6 +189,10 @@ class User {
 
   public getFN(): string {
     return this.firstname;
+  }
+
+  public getLN(): string {
+    return this.lastname;
   }
 
   public getID(): number {

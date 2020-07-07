@@ -6,13 +6,34 @@ import mysql = require('mysql'); //db module
 
 /*
 MySQL database configuration
-*/
+
+for DarkRock:
 
 let sqlconfig: any = {
   connectionLimit: 100,
   host: '127.0.0.1',
   user: 'root',
   password: 'password',
+  database: 'grade_db'
+};
+
+for SUSE III:
+
+let sqlconfig: any = {
+  connectionLimit: 100,
+  host: '127.0.0.1',
+  user: 'root',
+  password: '',
+  database: 'grade_db'
+};
+
+*/
+
+let sqlconfig: any = {
+  connectionLimit: 100,
+  host: '127.0.0.1',
+  user: 'root',
+  password: '',
   database: 'grade_db'
 };
 
