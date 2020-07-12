@@ -7,11 +7,10 @@
 
   <body>
     <div class="wrapper">
-      <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
+      <%- include('../../partials/student/sidebar', {courses: courses}) %>
       <div id="content">
         <h1><%= course.department %> <%= course.number %> - <%= course.section %></h1>
         <h2><%= course.name %></h2>
-        <h3>Course Key: <%= course.coursekey %></h3>
 
         <table class="table">
             <thead>
@@ -22,16 +21,8 @@
               </tr>
             </thead>
             <tbody>
-                <%# load all students into the table %>
-            <% students.forEach((student) => { %>
-                <tr>
-                    <td><%= student.firstname %> <%= student.lastname %></td>
-                    <td><%= student.email %></td>
-                    <td><a href="/studentreport/<%= student.id %>">Full Report</a></td>
-                </tr>
-            <% }); %>
             </tbody>
-          </table>
+        </table>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>
@@ -40,3 +31,4 @@
   <%- include('../../partials/scripts'); %>
 
 </html>
+ 

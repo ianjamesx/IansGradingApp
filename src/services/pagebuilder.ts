@@ -79,7 +79,7 @@ let coursePage = async (req: Request) => {
   await course.loadCourseByID(id);
   
   //after course loads, get course data, title
-  pagedata.course = course.getColumns();
+  pagedata.course = await course.dataView();
   pagedata.title = course.getCourseTitle();
 
   //if instructor, get all students
