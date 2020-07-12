@@ -19,7 +19,28 @@
 
         <button type="button" class="appbtn" id="search">Search for Course</button>
 
-        <div id="searchresult"></div>
+        <%# error div if no course found%>
+        <div id="searcherror"></div>
+
+        <%# modal with course content upon searching by course key%>
+        <div class="modal fade" id="course_modal" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Join This Course?</h4>
+              </div>
+              <div class="modal-body" id="course_info">
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="appbtn" id="join" data-dismiss="modal">Join Course</button>
+                <button type="button" id="confirmdelete" class="appbtn deletebtn" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </div> <%# close content %>
     </div> <%# close wrapper %>
   </body>

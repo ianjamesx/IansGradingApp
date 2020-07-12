@@ -9,12 +9,12 @@ let load = async (course: Course): Promise<DBResult> => {
     //load course data
     let dbres: DBResult = await db.load(course, tablename);
     //load instructors data
-    if(!dbres.error){
+    /*if(!dbres.error){
         let instData: DBResult = await db.load('users', dbres.data.instructor);
         if(!instData.error){
             dbres.data.instructor = instData;
         }
-    }
+    }*/
     return dbres;
 };
 
@@ -106,9 +106,39 @@ let getAllStudents = async (course: Course, student: any): Promise<DBResult> => 
 
 };
 
+let userInCourse = async(courseID: number, userID: number): Promise<boolean> => {
+
+    let result: boolean;
+
+    //add users connection to course through junction table
+    let connquery = db.format(`SELECT * FROM usercourse WHERE user = ? AND course = ?`, [userID, courseID]);
+
+    try {
+        console.log(connquery);
+        let dbres: any = await db.query(connquery);
+        if(dbres.length > 0){
+            result = true;
+        } else {
+            result = false;
+        }
+    } catch(err){
+        db.errorsave(err);
+    }
+
+    return result;
+
+};
+
 let joinCourse = async(courseID: number, userID: number): Promise<DBResult> => {
 
     let result: DBResult = {};
+
+    //see if user is already in course
+    let incourse: boolean = await userInCourse(courseID, userID);
+    if(incourse){
+        result.error = 'User already in course';
+        return result;
+    }
 
     //add users connection to course through junction table
     let connquery = db.format(`INSERT INTO usercourse (user, course) VALUES (?, ?)`, [userID, courseID]);
@@ -125,6 +155,27 @@ let joinCourse = async(courseID: number, userID: number): Promise<DBResult> => {
 
 }
 
+let getInstructorName = async(instructorID: number): Promise<DBResult> => {
+    let result: DBResult = {};
+
+    //add users connection to course through junction table
+    let connquery = db.format(`SELECT firstname, lastname FROM users WHERE id = ?`, [instructorID]);
+
+    try {
+        result.data = await db.query(connquery);
+        if(result.data.length < 1){
+            result.error = db.unknownerr;
+        } else {
+            result.data = result.data[0].firstname + ' ' + result.data[0].lastname;
+        }  
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+
+    return result;
+}
+
 
 export {
     loadFromKey,
@@ -134,5 +185,6 @@ export {
     generateID,
     generateKey,
     getAllStudents,
-    joinCourse
+    joinCourse,
+    getInstructorName
 }

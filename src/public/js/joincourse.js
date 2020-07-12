@@ -1,3 +1,33 @@
+function joincourse(id){
+
+    $.ajax('/course/join', {
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            id: id
+        }),
+        success: function(data){
+
+            if(data.error){
+                
+                //couldnt join, put error on modal
+                var err = Components.error({
+                    message: 'Could not join that course'
+                });
+                $('#searcherror').html(err);
+
+            } else if(data.success){
+
+                //redirect to course page after joining
+                location.href = ('/course/' + id);
+            }
+
+        }
+
+    });
+
+}
+//9M0356VC
 function coursesearch(key){
 
     $.ajax('/course/searchbykey', {
@@ -7,16 +37,17 @@ function coursesearch(key){
             key: key,
         }),
         success: function(data){
-            console.log(data);
             if(data.error){
                 
                 //render error message, could not find course
                 var err = Components.error({
                     message: 'Could not find course with that key'
                 });
-                $('#searchresult').html(err);
+                $('#searcherror').html(err);
 
             } else if(data.success){
+
+                //create success content and modal to prompt user
                 var success = Components.coursesearchsuccess({
                     name: data.success.name,
                     department: data.success.department,
@@ -27,8 +58,16 @@ function coursesearch(key){
                     instructor: data.success.instructor,
                     id: data.success.id
                 });
-                console.log(data);
-                $('#searchresult').html(success);
+
+                //write data to modal, and show to user
+                $('#course_info').html(success);
+                $('#course_modal').modal('show');
+
+                //add event listener to join course button
+                $('#join').click(function(){
+                    alert(data.success.id);
+                    joincourse(data.success.id);
+                });
 
             }
 
@@ -38,7 +77,6 @@ function coursesearch(key){
 
 }
 
-
 //page start
 
 $(document).ready(function(){
@@ -47,14 +85,5 @@ $(document).ready(function(){
         var key = $('#course_key').val();
         coursesearch(key);
     });
-
-    $('#join').click(function(){
-        alert("HEELO!");
-        var id = $('#join').attr("value");
-        alert(id);
-        //coursesearch(key);
-    });
-
-    [id]
 
 });

@@ -2,6 +2,8 @@ import * as db from './queries';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 
+import { User } from '../User/User';
+
 //user input errors when making this class
 interface Errors {
   name?: string;
@@ -42,9 +44,9 @@ class Course {
     private id: number;
     private coursekey: string;
 
-    private instructor: any;
+    private instructor: number;
 
-    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: any, id?: number, coursekey?: string){
+    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, id?: number, coursekey?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -57,7 +59,7 @@ class Course {
     }
 
     //load data after loaded from database
-    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: any){
+    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -223,13 +225,16 @@ class Course {
             section: this.section,
             id: this.id,
             coursekey: this.coursekey,
-            instructor: this.instructor.getID()
+            instructor: this.instructor
         };
     
     }
 
     public async dataView(): Promise<any> {
 
+        //get instructors first, last name
+        let instructorname: DBResult = await db.getInstructorName(this.instructor);
+        
         return {
             name: this.name,
             department: this.department,
@@ -239,7 +244,7 @@ class Course {
             section: this.formatSection(),
             id: this.id,
             coursekey: this.coursekey,
-            instructor: (this.instructor.getFN() + this.instructor.getLN())
+            instructor: instructorname.data 
         };
 
     }
