@@ -29,8 +29,6 @@ let courseapi = (app: Application): void => {
         let course: Course = new Course(name, department, season, year, number, section, instructorID);
         let result: Result = {};
 
-        console.log(course);
-
         //save users data on this course in database
         course.save().then(err => {
             if(err) {
@@ -39,7 +37,7 @@ let courseapi = (app: Application): void => {
             } else {
                 
                 //add connection between instructor and course
-                course.joinCourse(instructor.getID()).then(joinerr => {
+                course.joinCourse(instructorID).then(joinerr => {
                     if(joinerr){
                         result.error = joinerr;
                     } else {

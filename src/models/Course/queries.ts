@@ -144,7 +144,6 @@ let joinCourse = async(courseID: number, userID: number): Promise<DBResult> => {
     let connquery = db.format(`INSERT INTO usercourse (user, course) VALUES (?, ?)`, [userID, courseID]);
 
     try {
-        console.log(connquery);
         result.data = await db.query(connquery);
     } catch(err){
         db.errorsave(err);
@@ -154,28 +153,6 @@ let joinCourse = async(courseID: number, userID: number): Promise<DBResult> => {
     return result;
 
 }
-
-let getInstructorName = async(instructorID: number): Promise<DBResult> => {
-    let result: DBResult = {};
-
-    //add users connection to course through junction table
-    let connquery = db.format(`SELECT firstname, lastname FROM users WHERE id = ?`, [instructorID]);
-
-    try {
-        result.data = await db.query(connquery);
-        if(result.data.length < 1){
-            result.error = db.unknownerr;
-        } else {
-            result.data = result.data[0].firstname + ' ' + result.data[0].lastname;
-        }  
-    } catch(err){
-        db.errorsave(err);
-        result.error = db.unknownerr;
-    }
-
-    return result;
-}
-
 
 export {
     loadFromKey,
@@ -185,6 +162,5 @@ export {
     generateID,
     generateKey,
     getAllStudents,
-    joinCourse,
-    getInstructorName
+    joinCourse
 }

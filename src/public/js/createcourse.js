@@ -14,10 +14,10 @@ function createCourse(name, department, number, section, season, year){
       success: function(data){
 
           if(data.error){
-              $('#course_name_error').val(data.error.name);
-              $('#course_number_error').val(data.error.number);
-              $('#course_section_error').val(data.error.section);
-              $('#course_year_error').val(data.error.year);
+              $('#course_name_error').text(data.error.name);
+              $('#course_number_error').text(data.error.number);
+              $('#course_section_error').text(data.error.section);
+              $('#course_year_error').text(data.error.year);
           } else if(data.success){
               location.href='/course/' + data.success;
           }

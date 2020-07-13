@@ -16,10 +16,7 @@ import passwordValidator = require('password-validator');
 import { query, format, escape } from '../db/dbquery';
 
 /*
-conditions to use email:
-  must be in email format
-
-emailinuse checks condition and if email is currently in database (for making new users)
+user attributes
 */
 
 let email = (email: string): string => {
@@ -39,12 +36,6 @@ let emailinuse = async (email) => {
   return '';
 };
 
-
-/*
-first/last names
-  alphabetic chars only
-  between 2 - 30 chars
-*/
 let name = (name: string): string => {
 
   if(!name)
@@ -91,7 +82,17 @@ let password = (password: string): string => {
 course attributes
 */
 
-let coursetitle = (title: string): string => {
+let range = (val: number, low: number, high: number): string => {
+
+  if(!val)
+    return 'Please enter a number';
+  if(val < low || val > high){
+    return 'Must be between ' + low + ' and ' + high;
+  }
+  return '';
+};
+
+let title = (title: string): string => {
 
   if(!title)
     return 'Please enter a title';
@@ -101,7 +102,7 @@ let coursetitle = (title: string): string => {
   return '';
 };
 
-let courseyear = (year: number): string => {
+let year = (year: number): string => {
 
   let curryear: number = new Date().getFullYear();
   if(!year)
@@ -112,24 +113,11 @@ let courseyear = (year: number): string => {
   return '';
 };
 
+/*
+assignment attributes
+*/
 
-let coursenumber = (numb: number): string => {
-  if(!numb)
-    return 'Please enter a number';
-  if(numb < 100 || numb > 9999){
-    return 'Course number must be between 100 and 9999';
-  }
-  return '';
-};
 
-let coursesection = (numb: number): string => {
-  if(!numb)
-    return 'Please enter a number';
-  if(numb < 0 || numb > 9999){
-    return 'Course section must be between 0 and 9999';
-  }
-  return '';
-};
 
 /*
 determine if we have any errors when passed an object of errors
@@ -159,10 +147,9 @@ var all = async (fields: any): Promise<any | null> => { //<-- async as some util
     email: emailinuse,
     name: name,
     password: password,
-    courseyear: courseyear,
-    coursetitle: coursetitle,
-    coursenumber: coursenumber,
-    coursesection: coursesection
+    courseyear: year,
+    title: title,
+    range: range
   }
 
   let errormessages: any = {}; //error messages we'll send back to client
@@ -183,8 +170,12 @@ var all = async (fields: any): Promise<any | null> => { //<-- async as some util
 
 export { 
   email,
+  emailinuse,
   name,
   password,
+  range,
+  title,
+  year,
   anyerrors,
   all 
 };

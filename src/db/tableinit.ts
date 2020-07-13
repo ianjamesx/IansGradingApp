@@ -56,7 +56,6 @@ let tables: any = {
 
     assignments: {
         id: `int NOT NULL PRIMARY KEY`,
-        course: `int`,
         author: `int`,
         name: `varchar(30)`,
         open: `varchar(15)`,
@@ -69,11 +68,22 @@ let tables: any = {
         category: `varchar(20)`,
         prompt: `text`,
         CONSTRAINTS: [
-            `FOREIGN KEY (course) REFERENCES courses(id)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,
             `FOREIGN KEY (category) REFERENCES assignment_categories(name)`
         ]
 
+    },
+
+    /*
+    junction table between assignments and courses assignment is for
+    */
+    assignmentcourse: {
+        assignment: `int`,
+        course: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (assignment) REFERENCES assignments(id)`,
+            `FOREIGN KEY (course) REFERENCES courses(id)`
+        ]
     },
 
     assignment_categories: {

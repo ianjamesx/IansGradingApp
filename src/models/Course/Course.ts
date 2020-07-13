@@ -153,14 +153,15 @@ class Course {
     //verify all user inputted fields
     //dont verify data that is selected from a drop down menu, as user cannot enter incorrect data
     private async verify(): Promise<any | null> {
-        let errs: any = await verify.all({
-            name:    [this.name, 'coursetitle'],
-            year:    [this.year, 'courseyear'],
-            number:  [this.number, 'coursenumber'],
-            section: [this.section, 'coursesection'],
-          });
+
+        let errs: Errors = {
+            name: verify.title(this.name),
+            year: verify.year(this.year),
+            number: verify.range(this.number, 100, 9999),
+            section: verify.range(this.section, 0, 999)
+        };
       
-          return errs;
+        return verify.anyerrors(errs);
     }
 
     //verify data and save in database, return any uesr input errors if any occurred
@@ -232,8 +233,10 @@ class Course {
 
     public async dataView(): Promise<any> {
 
-        //get instructors first, last name
-        let instructorname: DBResult = await db.getInstructorName(this.instructor);
+        //get instructors first, last name from id
+        let inst: User = new User;
+        await inst.loadFromID(this.instructor);
+        let instructorname: string = inst.getFN() + ' ' + inst.getLN();
         
         return {
             name: this.name,
@@ -244,7 +247,7 @@ class Course {
             section: this.formatSection(),
             id: this.id,
             coursekey: this.coursekey,
-            instructor: instructorname.data 
+            instructor: instructorname
         };
 
     }

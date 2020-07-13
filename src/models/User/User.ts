@@ -103,15 +103,15 @@ class User {
   */
 
   private async verify(): Promise<any | null> {
+    
+    let errs: Errors = {
+      email: await verify.emailinuse(this.email),
+      firstname: verify.name(this.firstname),
+      lastname: verify.name(this.lastname),
+      password: verify.password(this.password)
+    };
 
-    let errs: any = await verify.all({
-      email:    [this.email, 'email'],
-      firstname:[this.firstname, 'name'],
-      lastname: [this.lastname, 'name'],
-      password: [this.password, 'password']
-    });
-
-    return errs;
+    return verify.anyerrors(errs);
 
   }
 
@@ -148,7 +148,7 @@ class User {
     this.id = await db.generateID();
   }
 
-  async encryptPassword(): Promise<void> {
+  private async encryptPassword(): Promise<void> {
     let saltRounds: number = 5;
     this.hash = await generatehash(this.password, saltRounds);
   }

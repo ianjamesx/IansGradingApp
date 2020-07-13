@@ -10,21 +10,24 @@
       <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
       <div id="content">
 
-        <h2>Enter information for new course</h2>
+        <h2>Enter information for the assignment</h2>
 
-        <%# ROW 1 - Name Department %>
+        <%# ROW 1 - Name %>
         <div class="form-row">
-          <div class="form-group col-md-5">
-            <input type="text" class="form-control" id="course_name" placeholder="Course Name">
-            <small class="text-danger" id="course_name_error"></small>
+          <div class="form-group col-md-7">
+            <input type="text" class="form-control" id="assignment_name" placeholder="Assignment Name">
+            <small class="text-danger" id="assignment_name_error"></small>
           </div>
-          <div class="form-group col-md-5">
-            <select id="course_department" class="form-control">
-              <% departments.forEach((department) => { %>
-                <option value="<%= department.abbreviation %>"><%= department.name %></option>
-              <% }); %>
-            </select>
-          </div>
+        </div>
+
+        <span style="display:block; height: 20px;"></span>
+
+        <%# ROW 2 - Prompt %>
+        <div class="form-row">
+            <div class="form-group col-md-7">
+                <label for="assignment_prompt">Assignment Prompt</label>
+                <textarea type="text" class="form-control" id="assignment_prompt" placeholder="Enter the prompt for the assignment here...">
+            </div>
         </div>
 
         <span style="display:block; height: 20px;"></span>
