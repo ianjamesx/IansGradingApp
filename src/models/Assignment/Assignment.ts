@@ -15,70 +15,79 @@ interface Errors {
     prompt?: string;
     attempts?: string;
     latepenalty?: string;
-    questioncount?: string;
     points?: string;
     dates?: string;
-  }
+}
 
 class Assignment {
 
-    //name, category, etc
+    //name, category, ids of author/course
     private name: string;
-    private author: number; //id of author
+    private author: number;
+    private course: number;
     private category: string; //category (e.g. lab, hw)
+    private active: number;
     private prompt: string; //prompt for assignment (e.g 'this test is...')
     
     private attempts: number;
     private randomize: number;
     private latepenalty: number;
-    private questioncount: number;
     private points: number;
 
-    //dates, will be sent to server in ms (Date.now() on client)
-    private open: number;
-    private close: number;
-    private cutoff: number;
+    //dates for assignment
+    private open: string;
+    private close: string;
+    private cutoff: string;
 
     private id: number;
 
-    constructor(name?: string, author?: number, category?: string, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, questioncount?: number, points?: number, open?: number, close?: number, cutoff?: number){
+    constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, id?: number){
 
         this.name = name;
         this.author = author;
-        this.category = category;
+        this.course = course;
         this.prompt = prompt;
         
         this.attempts = attempts;
         this.randomize = randomize;
         this.latepenalty = latepenalty;
-        this.questioncount = questioncount;
         this.points = points;
 
         this.open = open;
         this.close = close;
         this.cutoff = cutoff;
+
+        this.active = active;
+        this.category = category;
+
+        this.id = id;
     }
 
-    public loadAssignmentData(name?: string, author?: number, category?: string, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, questioncount?: number, points?: number, open?: number, close?: number, cutoff?: number): void {
+    public loadAssignmentData(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, id?: number): void {
 
         this.name = name;
         this.author = author;
+        this.course = course;
         this.category = category;
         this.prompt = prompt;
         
         this.attempts = attempts;
         this.randomize = randomize;
         this.latepenalty = latepenalty;
-        this.questioncount = questioncount;
         this.points = points;
 
         this.open = open;
         this.close = close;
         this.cutoff = cutoff;
+
+        this.active = active;
+        this.category = category;
+
+        this.id = id;
     }
 
     public loadFromObject(a: any): void{
-        this.loadAssignmentData(a.name, a.author, a.category, a.prompt, a.attempts, a.randomize, a.latepenalty, a.questioncount, a.points, a.open, a.close, a.cutoff);
+        this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.active, a.category, a.id);
     }
 
     public async loadFromID(ID: number): Promise<string | void> {
@@ -99,18 +108,17 @@ class Assignment {
 
         if(!this.id)
             await this.generateID();
-
+/*
         let dberr: DBResult = await db.save(this);
         if(dberr.error)
             return { any: dberr.error };
-    }
+    */   }
 
     private async verify(): Promise<any | null> {
 
         let errs: Errors = {
             name: verify.title(this.name),
             attempts: verify.range(this.attempts, 0, 9999),
-            questioncount: verify.range(this.questioncount, 0, 9999),
             points: verify.range(this.points, 0, 9999),
             latepenalty: verify.range(this.latepenalty, 0, this.points),
 
@@ -124,12 +132,18 @@ class Assignment {
         this.id = await db.generateID();
     }
 
+    public getID(): number {
+        return this.id;
+    }
+
     public getColumns(): any{
         
         return {
             name: this.name,
             author: this.author,
+            course: this.course,
             category: this.category,
+            active: this.active,
             prompt: this.prompt,
             attempts: this.attempts,
             randomize: this.randomize,
@@ -137,7 +151,8 @@ class Assignment {
             points: this.points,
             open: this.open,
             close: this.close,
-            cutoff: this.cutoff
+            cutoff: this.cutoff,
+            id: this.id
 
         }
     }
@@ -152,16 +167,18 @@ class Assignment {
         return {
             name: this.name,
             author: this.author,
+            course: this.course,
             category: this.category,
+            active: this.active,
             prompt: this.prompt,
             attempts: this.attempts,
             randomize: this.randomize,
             latepenalty: this.latepenalty,
-            questioncount: this.questioncount,
             points: this.points,
             open: this.open,
             close: this.close,
-            cutoff: this.cutoff
+            cutoff: this.cutoff,
+            id: this.id
 
         }
 

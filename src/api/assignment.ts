@@ -13,49 +13,45 @@ let assignmentapi = (app: Application): void => {
 
     //create a course with user entered properties
     //send generated ID of course on success
-    app.post('/api/assignment/create', (req: Request, res: Response) => {
+    app.post('/api/assignment/create', async (req: Request, res: Response) => {
+
+        console.log(req.body);
 
         let name: string = req.body.name;
-        let category: string = req.body.name;
-        let prompt: string = req.body.name;
+        let prompt: string = req.body.prompt;
+        let course: number = Number(req.body.course);
+        let category: string = req.body.category;
 
-        let attempts: number = req.body.name;
-        let randomize: number = req.body.name;
-        let latepenalty: number = req.body.name;
-        let questionpoints: number = req.body.name;
+        let attempts: number = Number(req.body.attempts);
+        let randomize: number = Number(req.body.randomize);
+        let latepenalty: number = Number(req.body.latepenalty);
+        let points: number = Number(req.body.points);
 
-        let open: number = req.body.name;
-        let close: number = req.body.name;
-        let cutoff: number = req.body.name;
+        let open: string = req.body.open;
+        let close: string = req.body.close;
+        let cutoff: string = req.body.cutoff;
 
         //load instructor data
         let author: User = new User();
         let authorID: number = author.getIDFromSession(req.session);
-/*
-        let assignment: Assignment = new Assignment(name, authorID, category, prompt, attempts, randomize, latepenalty, questioncount, questionpoints, open, close, cutoff);
+
+        //set as not active yet (as its only a draft)
+        let active: number = 0;
+
+        let assignment: Assignment = new Assignment(name, authorID, course, prompt, attempts, randomize, latepenalty, points, open, close, cutoff, active, category);
+
+        //save users data on this assignment
         let result: Result = {};
+        let err: any = await assignment.save();
 
         console.log(assignment);
-/*
-        //save users data on this course in database
-        assignment.save().then(err => {
-            if(err) {
-                result.error = err;
-                res.send(result);
-            } else {
-                
-                //add connection between instructor and course
-                course.joinCourse(instructor.getID()).then(joinerr => {
-                    if(joinerr){
-                        result.error = joinerr;
-                    } else {
-                        result.success = course.getID();
-                    }
-                    res.send(result);
-                });
-            }
 
-        });*/
+        if(err) {
+            result.error = err;
+        } else {
+            result.success = assignment.getID();
+        }
+        res.send(result);
     });
 
 

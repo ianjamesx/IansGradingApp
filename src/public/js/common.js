@@ -24,5 +24,14 @@ var common = {
             message: 'An unknown error occured, we are looking into it, try again later'
         });
         $('#' + div).append(err);
+    },
+
+    /*
+    get time in ms from date string
+    */
+    getMS: function(datestring){
+        var date = new Date(datestring);
+        var ms = date.getTime();
+        return ms;
     }
 };

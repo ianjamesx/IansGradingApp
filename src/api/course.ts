@@ -106,6 +106,28 @@ let courseapi = (app: Application): void => {
 
     });
 
+    app.post('/course/getcategories', async (req: Request, res: Response) => {
+
+        let id: number = Number(req.body.id);
+        let course: Course = new Course();
+        let result: Result = {};
+
+        //try to load course by that id
+        let loaderr: any = await course.loadCourseByID(id);
+
+        if(loaderr){
+            result.error = loaderr;
+            res.send(result);
+        } else {
+
+            let categories: any = await course.getCategories();
+            result.success = categories;
+            res.send(result);
+
+        }
+
+    });
+
 };
 
 export {

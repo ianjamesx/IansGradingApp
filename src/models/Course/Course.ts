@@ -134,7 +134,7 @@ class Course {
         let categories: any = [];
         let dbres: DBResult = await db.getAllCategories(this);
 
-        if(dbres.error) return dbres.error;
+        if(dbres.error) return []; //return error message here eventually
         let catdata: any = dbres.data;
 
         //get abbreviation and name for each department to feed into array

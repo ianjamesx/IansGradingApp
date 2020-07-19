@@ -16,7 +16,7 @@
         <div class="form-row">
           <div class="form-group col-md-7">
             <span style="display:block; height: 40px;"></span>
-            <h4>Assignment Name/Course</h4>
+            <h4>Assignment Name/Type</h4>
             <hr>
           </div>
         </div>
@@ -29,11 +29,39 @@
             <small class="text-danger" id="assignment_name_error"></small>
           </div>
           <div class="form-group col-md-3">
+            <label for="assignment_type">Type of assignment:</label>
+            <select id="assignment_type" class="form-control">
+              <option value="Test">Test</option>
+              <option value="Homework">Homework</option>
+              <option value="Program">Coding Program</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-7">
+            <span style="display:block; height: 40px;"></span>
+            <h4>Assignment Course/Category</h4>
+            <hr>
+          </div>
+        </div>
+
+        <%# ROW 1 - Name %>
+        <div class="form-row">
+          <div class="form-group col-md-3">
             <label for="assignment_course">This assignment is for the course:</label>
             <select id="assignment_course" class="form-control">
               <% courses.forEach((course) => { %>
                 <option value="<%= course.id %>"><%= course.department %> <%= course.number %> - <%= course.name %></option>
               <% }); %>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="assignment_category">Assignment Category:</label>
+            <select id="assignment_category" class="form-control">
+              <option value="Test">Test</option>
+              <option value="Homework">Homework</option>
+              <option value="Program">Coding Program</option>
             </select>
           </div>
         </div>
@@ -75,7 +103,7 @@
           <small class="text-danger" id="assignment_close_error"></small>
         </div>
         <div class="form-group col-md-3">
-         <label for="assignment_close">Cutoff Date</label>
+         <label for="assignment_cutoff">Cutoff Date</label>
          <input type="datetime-local" class="form-control" id="assignment_cutoff">
          <small class="text-danger" id="assignment_cutoff_error"></small>
        </div>
@@ -108,22 +136,30 @@
           <div class="form-group col-md-3">
             <label for="assignment_latepenalty">Late Penalty</label>
             <input type="text" class="form-control" id="assignment_latepenalty" placeholder="e.g. 10... (Must be less than Total Points)">
-            <small class="text-danger" id="assignment_points_error"></small>
+            <small class="text-danger" id="assignment_latepenalty_error"></small>
           </div>
        </div>
        <div class="form-check">
         <input type="checkbox" class="form-check-input" id="randomize">
-        <label class="form-check-label" for="randomize">Randomize Questions</label>
+        <label class="form-check-label" for="randomize">Randomize Question Ordering</label>
       </div>
 
+      <div class="form-row">
+        <div class="form-group col-md-7">
+          <span style="display:block; height: 40px;"></span>
+          <hr>
+        </div>
+      </div>
+
+       <div id="unknownerr"></div>
        <span style="display:block; height: 20px;"></span>
-       <button id="createCourse" class="appbtn" type="button">Choose Questions</button>
+       <button id="createAssignment" class="appbtn" type="button">Choose Questions</button>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>
   </body>
 
   <%- include('../../partials/scripts'); %>
-  <script type="text/javascript" src="../public/js/createcourse.js"></script>
+  <script type="text/javascript" src="../public/js/createassignment.js"></script>
 
 </html>
