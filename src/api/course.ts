@@ -20,13 +20,14 @@ let courseapi = (app: Application): void => {
         let year: number = Number(req.body.year);
         let number: number = Number(req.body.number);
         let section: number = Number(req.body.section);
+        let categories: any = req.body.categories;
 
         //load instructor data
         let instructor: User = new User();
         let instructorID: number = instructor.getIDFromSession(req.session);
 
         //load new course
-        let course: Course = new Course(name, department, season, year, number, section, instructorID);
+        let course: Course = new Course(name, department, season, year, number, section, instructorID, categories);
         let result: Result = {};
 
         //save users data on this course in database

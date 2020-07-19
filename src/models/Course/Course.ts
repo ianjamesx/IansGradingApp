@@ -46,7 +46,9 @@ class Course {
 
     private instructor: number;
 
-    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, id?: number, coursekey?: string){
+    private categories: any;
+
+    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, categories?: any, id?: number, coursekey?: string){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -56,10 +58,11 @@ class Course {
         this.id = id;
         this.coursekey = coursekey;
         this.instructor = instructor;
+        this.categories = categories;
     }
 
     //load data after loaded from database
-    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number){
+    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number, categories?: any){
         this.name = name;
         this.department = department;
         this.season = season;
@@ -69,6 +72,7 @@ class Course {
         this.id = id;
         this.coursekey = coursekey;
         this.instructor = instructor;
+        this.categories = categories
     }
 
     //load data into this object from another object (e.g. anonymous object from database)
@@ -124,6 +128,41 @@ class Course {
         }
 
         return deptartments;
+    }
+    
+    public async getCategories(): Promise<any> {
+        let categories: any = [];
+        let dbres: DBResult = await db.getAllCategories(this);
+
+        if(dbres.error) return dbres.error;
+        let catdata: any = dbres.data;
+
+        //get abbreviation and name for each department to feed into array
+        let i: number;
+        for(i = 0; i < catdata.length; i++){
+            let name: string = catdata[i].name;
+            let points: number = catdata[i].points;
+            
+            categories.push({
+                name: name,
+                points: points
+            });
+        }
+
+        return categories;
+    }
+
+    public async saveCategories(): Promise<void | string> {
+
+        //see if any categories were listed, if none, then dont save
+        if(vals(this.categories).length == 0){
+            return;
+        }
+
+        let dberr: DBResult = await db.saveCategories(this.categories, this.getID());
+        if(dberr.error)
+            return dberr.error;
+
     }
 
     //store section number as int in database, turn into 3 char string when showing to client
@@ -183,6 +222,13 @@ class Course {
         let dberr: DBResult = await db.save(this);
         if(dberr.error)
             return { any: dberr.error };
+
+        //save categories as well
+        let caterr: any = await this.saveCategories();
+        if(caterr){
+            return { any: caterr }
+        }
+
     }
 
     /*
@@ -237,6 +283,8 @@ class Course {
         let inst: User = new User;
         await inst.loadFromID(this.instructor);
         let instructorname: string = inst.getFN() + ' ' + inst.getLN();
+
+        let categories: any[] = await this.getCategories();
         
         return {
             name: this.name,
@@ -247,7 +295,8 @@ class Course {
             section: this.formatSection(),
             id: this.id,
             coursekey: this.coursekey,
-            instructor: instructorname
+            instructor: instructorname,
+            categories: categories
         };
 
     }

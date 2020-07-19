@@ -12,13 +12,26 @@
 
         <h2>Enter information for new course</h2>
 
+        <div class="form-row">
+          <div class="form-group col-md-7">
+            <span style="display:block; height: 40px;"></span>
+            <h4>Course Name/Department</h4>
+            <hr>
+          </div>
+        </div>
+
         <%# ROW 1 - Name Department %>
         <div class="form-row">
-          <div class="form-group col-md-5">
-            <input type="text" class="form-control" id="course_name" placeholder="Course Name">
+          <div class="form-group col-md-6">
+            <label for="course_name">Name</label>
+            <input type="text" class="form-control" id="course_name" placeholder="Course Name (e.g. Theory of Computation)">
             <small class="text-danger" id="course_name_error"></small>
           </div>
-          <div class="form-group col-md-5">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="course_department">Department</label>
             <select id="course_department" class="form-control">
               <% departments.forEach((department) => { %>
                 <option value="<%= department.abbreviation %>"><%= department.name %></option>
@@ -27,26 +40,40 @@
           </div>
         </div>
 
-        <span style="display:block; height: 20px;"></span>
+        <div class="form-row">
+          <div class="form-group col-md-7">
+            <span style="display:block; height: 40px;"></span>
+            <h4>Course Number/Section</h4>
+            <hr>
+          </div>
+        </div>
 
         <%# ROW 2 - Number Section %>
        <div class="form-row">
-         <div class="form-group col-md-5">
-           <input type="text" class="form-control" id="course_number" placeholder="Course Number">
+         <div class="form-group col-md-3">
+           <label for="course_number">Number</label>
+           <input type="text" class="form-control" id="course_number" placeholder="Course Number (e.g. 101)">
            <small class="text-danger" id="course_number_error"></small>
          </div>
-         <div class="form-group col-md-5">
-           <input type="text" class="form-control" id="course_section" placeholder="Course Section">
+         <div class="form-group col-md-3">
+           <label for="course_section">Section</label>
+           <input type="text" class="form-control" id="course_section" placeholder="Course Section (e.g. 001)">
            <small class="text-danger" id="course_section_error"></small>
          </div>
        </div>
 
-       <span style="display:block; height: 20px;"></span>
+       <div class="form-row">
+        <div class="form-group col-md-7">
+          <span style="display:block; height: 40px;"></span>
+          <h4>Course Semester</h4>
+          <hr>
+        </div>
+      </div>
 
         <%# ROW 3 - Semester Year %>
-       <h4>Course Semester</h4>
        <div class="form-row">
-         <div class="form-group col-md-5">
+         <div class="form-group col-md-3">
+           <label for="course_season">Season</label>
            <select id="course_season" class="form-control">
              <option value="Spring">Spring</option>
              <option value="Summer">Summer</option>
@@ -54,14 +81,46 @@
              <option value="Winter">Winter</option>
            </select>
          </div>
-         <div class="form-group col-md-5">
+         <div class="form-group col-md-3">
+           <label for="course_year">Year</label>
            <input type="text" class="form-control" id="course_year" placeholder="Year">
            <small class="text-danger" id="course_year_error"></small>
          </div>
        </div>
 
-       <span style="display:block; height: 20px;"></span>
-       <button id="createCourse" class="appbtn" type="button">Create Course</button>
+      <div class="form-row">
+        <div class="form-group col-md-7">
+          <span style="display:block; height: 40px;"></span>
+          <h4>(Optional) Course Categories</h4>
+          <hr>
+        </div>
+      </div>
+
+        <%# ROW 4 - Course Categories%>
+        <form class="form-inline">
+          <div class="form-group">
+            <input type="text" class="form-control mx-sm-3 mb-2" id="category_name" placeholder="Category Name (e.g. Labs, Tests)">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control mx-sm-3 mb-2" id="category_points" placeholder="Category Points (e.g. 35, 50)">
+          </div>
+          <button id="createCategory" class="appbtn mb-2" type="button">Add Category</button>
+        </form>
+
+        <span style="display:block; height: 20px;"></span>
+
+        <small class="text-danger" id="category_points_error"></small>
+        <div id="categories" class="col-md-5"></div>
+
+       <div class="form-row">
+        <div class="form-group col-md-7">
+          <span style="display:block; height: 40px;"></span>
+          <hr>
+        </div>
+      </div>
+
+      <button id="createCourse" class="appbtn" type="button">Create Course</button>
+      <div id="unknownerr"></div>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>

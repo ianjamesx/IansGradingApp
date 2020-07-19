@@ -65,7 +65,6 @@ function coursesearch(key){
 
                 //add event listener to join course button
                 $('#join').click(function(){
-                    alert(data.success.id);
                     joincourse(data.success.id);
                 });
 

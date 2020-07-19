@@ -12,59 +12,112 @@
 
         <h2>Enter information for the assignment</h2>
 
-        <%# ROW 1 - Name %>
+
         <div class="form-row">
           <div class="form-group col-md-7">
-            <input type="text" class="form-control" id="assignment_name" placeholder="Assignment Name">
-            <small class="text-danger" id="assignment_name_error"></small>
+            <span style="display:block; height: 40px;"></span>
+            <h4>Assignment Name/Course</h4>
+            <hr>
           </div>
         </div>
 
-        <span style="display:block; height: 20px;"></span>
+        <%# ROW 1 - Name %>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="assignment_name">Name</label>
+            <input type="text" class="form-control" id="assignment_name" placeholder="e.g. Homework 2...">
+            <small class="text-danger" id="assignment_name_error"></small>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="assignment_course">This assignment is for the course:</label>
+            <select id="assignment_course" class="form-control">
+              <% courses.forEach((course) => { %>
+                <option value="<%= course.id %>"><%= course.department %> <%= course.number %> - <%= course.name %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-7">
+            <span style="display:block; height: 40px;"></span>
+            <h4>Assignment Prompt</h4>
+            <hr>
+          </div>
+        </div>
 
         <%# ROW 2 - Prompt %>
         <div class="form-row">
-            <div class="form-group col-md-7">
-                <label for="assignment_prompt">Assignment Prompt</label>
-                <textarea type="text" class="form-control" id="assignment_prompt" placeholder="Enter the prompt for the assignment here...">
+            <div class="form-group col-md-9">
+                <label for="assignment_prompt">Prompt</label>
+                <textarea type="text" class="form-control" id="assignment_prompt" placeholder="e.g. Answer the questions relating to topic..."></textarea>
             </div>
         </div>
 
-        <span style="display:block; height: 20px;"></span>
+        <div class="form-row">
+          <div class="form-group col-md-7">
+            <span style="display:block; height: 40px;"></span>
+            <h4>Assignment Dates</h4>
+            <hr>
+          </div>
+        </div>
 
-        <%# ROW 2 - Number Section %>
+        <%# ROW 3 - Assignment Dates %>
        <div class="form-row">
-         <div class="form-group col-md-5">
-           <input type="text" class="form-control" id="course_number" placeholder="Course Number">
-           <small class="text-danger" id="course_number_error"></small>
-         </div>
-         <div class="form-group col-md-5">
-           <input type="text" class="form-control" id="course_section" placeholder="Course Section">
-           <small class="text-danger" id="course_section_error"></small>
-         </div>
+        <div class="form-group col-md-3">
+          <label for="assignment_open">Opening Date</label>
+          <input type="datetime-local" class="form-control" id="assignment_open">
+          <small class="text-danger" id="assignment_open_error"></small>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="assignment_close">Closing Date</label>
+          <input type="datetime-local" class="form-control" id="assignment_close">
+          <small class="text-danger" id="assignment_close_error"></small>
+        </div>
+        <div class="form-group col-md-3">
+         <label for="assignment_close">Cutoff Date</label>
+         <input type="datetime-local" class="form-control" id="assignment_cutoff">
+         <small class="text-danger" id="assignment_cutoff_error"></small>
        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-7">
+          <span style="display:block; height: 40px;"></span>
+          <h4>Assignment Scoring Info</h4>
+          <hr>
+        </div>
+      </div>
+
+        <%# ROW 4 - Number Section %>
+       <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="assignment_attempts">Attempts Allowed</label>
+            <input type="text" class="form-control" id="assignment_attempts" placeholder="e.g. 5...">
+            <small class="text-danger" id="assignment_attempts_error"></small>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="assignment_points">Total Points</label>
+            <input type="text" class="form-control" id="assignment_points" placeholder="e.g. 20....">
+            <small class="text-danger" id="assignment_points_error"></small>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="assignment_latepenalty">Late Penalty</label>
+            <input type="text" class="form-control" id="assignment_latepenalty" placeholder="e.g. 10... (Must be less than Total Points)">
+            <small class="text-danger" id="assignment_points_error"></small>
+          </div>
+       </div>
+       <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="randomize">
+        <label class="form-check-label" for="randomize">Randomize Questions</label>
+      </div>
 
        <span style="display:block; height: 20px;"></span>
-
-        <%# ROW 3 - Semester Year %>
-       <h4>Course Semester</h4>
-       <div class="form-row">
-         <div class="form-group col-md-5">
-           <select id="course_season" class="form-control">
-             <option value="Spring">Spring</option>
-             <option value="Summer">Summer</option>
-             <option value="Fall">Fall</option>
-             <option value="Winter">Winter</option>
-           </select>
-         </div>
-         <div class="form-group col-md-5">
-           <input type="text" class="form-control" id="course_year" placeholder="Year">
-           <small class="text-danger" id="course_year_error"></small>
-         </div>
-       </div>
-
-       <span style="display:block; height: 20px;"></span>
-       <button id="createCourse" class="appbtn" type="button">Create Course</button>
+       <button id="createCourse" class="appbtn" type="button">Choose Questions</button>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>

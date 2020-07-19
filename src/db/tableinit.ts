@@ -34,6 +34,15 @@ let tables: any = {
         ]
     },
 
+    course_categories: {
+        name: `varchar(30)`,
+        points: `int`,
+        course: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (course) REFERENCES courses(id)`
+        ]
+    },
+
     //junction table for users and courses
     usercourse: {
         user: `int`,
@@ -65,34 +74,16 @@ let tables: any = {
         attempts: `int`,
         randomize: `bit`,
         latepenalty: `int`,
-        category: `varchar(20)`,
+        category: `varchar(30)`,
         prompt: `text`,
+        active: `int`,
+        course: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (author) REFERENCES users(id)`,
-            `FOREIGN KEY (category) REFERENCES assignment_categories(name)`
+            `FOREIGN KEY (category) REFERENCES course_categories(name)`,
+            `FOREIGN KEY (course) REFERENCES course(id)`
         ]
 
-    },
-
-    /*
-    junction table between assignments and courses assignment is for
-    */
-    assignmentcourse: {
-        assignment: `int`,
-        course: `int`,
-        CONSTRAINTS: [
-            `FOREIGN KEY (assignment) REFERENCES assignments(id)`,
-            `FOREIGN KEY (course) REFERENCES courses(id)`
-        ]
-    },
-
-    assignment_categories: {
-        name: `varchar(20) NOT NULL PRIMARY KEY`,
-        course: `int`,
-        percent: `int`,
-        CONSTRAINTS: [
-            `FOREIGN KEY (course) REFERENCES courses(id)`
-        ]
     },
 
     /*
@@ -123,6 +114,16 @@ let tables: any = {
         question: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (question) REFERENCES questions(id)`
+        ]
+    },
+
+    //junction table between assignments and questions
+    assignmentquestions: {
+        question: `int`,
+        assignment: `int`,
+        CONSTRAINTS: [
+            `FOREIGN KEY (question) REFERENCES questions(id)`,
+            `FOREIGN KEY (assignment) REFERENCES assignment(id)`
         ]
     },
 

@@ -58,3 +58,20 @@ setTimeout(() => {
     console.log(res.length);
   });
 }, 2000);*/
+
+/*
+import { saveCategories } from '../models/Course/queries';
+
+let examp: any = {
+  21312: {name: 'test', points: 12},
+  95435: {name: 'hello', points: 53}
+}
+
+saveCategories(examp, 543341).then();*/
+/*
+import * as db from '../db/dbquery';
+let arr: any[] = [[43,1], [64, 23]];
+let savequery = db.format(`INSERT INTO course_categories (name, points, course) VALUES ?`, [arr]);
+console.log(savequery);
+
+*/

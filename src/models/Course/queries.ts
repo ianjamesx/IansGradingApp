@@ -1,7 +1,7 @@
 import * as db from '../../db/dbquery';
 import { Course, DBResult } from './Course';
 
-import { keys, id, key } from '../../utils/utils';
+import { keys, id, key, vals } from '../../utils/utils';
 
 let tablename: string = 'courses';
 
@@ -87,7 +87,46 @@ let getAllDepartments = async (): Promise<DBResult> => {
     return result;
 };
 
-//dependency inject students
+let getAllCategories = async (course: Course): Promise<DBResult> => {
+
+    let result: DBResult = {};
+    let loadquery = db.format(`SELECT name, points FROM course_categories WHERE course = ?`, [course.getID()]);
+    
+    try {
+        result.data = await db.query(loadquery);
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+
+    return result;
+};
+
+let saveCategories = async (categories: any, courseid: number): Promise<DBResult> => {
+
+    //to perform a bulk insert, we have to turn array of objects into nested array first
+    let i: any;
+    let categorynest: any = [];
+    for(i in categories){
+        let curr: any[] = vals(categories[i]);
+        curr.push(courseid); //also push id of course
+        categorynest.push(curr);
+    }
+
+    let result: DBResult = {};
+    let savequery = db.format(`INSERT INTO course_categories (name, points, course) VALUES ?`, [categorynest]);
+    
+    try {
+        result.data = await db.query(savequery);
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+
+    return result;
+};
+
+//get everyone connected to a course
 let getAllStudents = async (course: Course, student: any): Promise<DBResult> => {
 
     let result: DBResult = {};
@@ -159,6 +198,8 @@ export {
     save,
     load,
     getAllDepartments,
+    getAllCategories,
+    saveCategories,
     generateID,
     generateKey,
     getAllStudents,

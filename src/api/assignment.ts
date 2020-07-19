@@ -22,7 +22,6 @@ let assignmentapi = (app: Application): void => {
         let attempts: number = req.body.name;
         let randomize: number = req.body.name;
         let latepenalty: number = req.body.name;
-        let questioncount: number = req.body.name;
         let questionpoints: number = req.body.name;
 
         let open: number = req.body.name;
@@ -32,7 +31,7 @@ let assignmentapi = (app: Application): void => {
         //load instructor data
         let author: User = new User();
         let authorID: number = author.getIDFromSession(req.session);
-
+/*
         let assignment: Assignment = new Assignment(name, authorID, category, prompt, attempts, randomize, latepenalty, questioncount, questionpoints, open, close, cutoff);
         let result: Result = {};
 

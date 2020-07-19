@@ -64,6 +64,19 @@ let routes = (app: Application): void => {
     });
   });
 
+  /*
+  assignment pages
+  */
+ app.get('/createassignment', (req: Request, res: Response) => {
+  pb.createAssignment(req).then(content => {
+    if(content.error) return err(req, res);
+    
+    let page: string = userpage(content.instructor, 'createassignment');
+    res.render(page, content);
+
+  });
+});
+
 }
 
 //on error, redirect to homepage

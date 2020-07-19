@@ -17,7 +17,7 @@ some also need an ID (e.g. for course page, the id of the course)
 */
 
 let dashboard = async (req: Request) => {
-
+  
   let pagedata = await common.pagebase(req);
   if(pagedata.error) return { error: pagedata.error };
 
@@ -101,9 +101,23 @@ let joinCourse = async(req: Request) => {
 
 };
 
+let createAssignment = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+  pagedata.title = 'Create Assignment';
+  return pagedata;
+
+
+};
+
+/*
+export all page functions
+*/
 export {
   dashboard,
   createCourse,
   coursePage,
-  joinCourse
+  joinCourse,
+  createAssignment
 };
