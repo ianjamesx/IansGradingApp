@@ -15,12 +15,11 @@ let assignmentapi = (app: Application): void => {
     //send generated ID of course on success
     app.post('/api/assignment/create', async (req: Request, res: Response) => {
 
-        console.log(req.body);
-
         let name: string = req.body.name;
         let prompt: string = req.body.prompt;
         let course: number = Number(req.body.course);
         let category: string = req.body.category;
+        let type: string = req.body.type;
 
         let attempts: number = Number(req.body.attempts);
         let randomize: number = Number(req.body.randomize);
@@ -38,13 +37,11 @@ let assignmentapi = (app: Application): void => {
         //set as not active yet (as its only a draft)
         let active: number = 0;
 
-        let assignment: Assignment = new Assignment(name, authorID, course, prompt, attempts, randomize, latepenalty, points, open, close, cutoff, active, category);
+        let assignment: Assignment = new Assignment(name, authorID, course, prompt, attempts, randomize, latepenalty, points, open, close, cutoff, active, category, type);
 
         //save users data on this assignment
         let result: Result = {};
         let err: any = await assignment.save();
-
-        console.log(assignment);
 
         if(err) {
             result.error = err;
@@ -53,8 +50,6 @@ let assignmentapi = (app: Application): void => {
         }
         res.send(result);
     });
-
-
 
 };
 

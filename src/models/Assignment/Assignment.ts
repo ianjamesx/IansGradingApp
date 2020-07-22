@@ -28,6 +28,7 @@ class Assignment {
     private category: string; //category (e.g. lab, hw)
     private active: number;
     private prompt: string; //prompt for assignment (e.g 'this test is...')
+    private type: string;
     
     private attempts: number;
     private randomize: number;
@@ -41,7 +42,7 @@ class Assignment {
 
     private id: number;
 
-    constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, id?: number){
+    constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, type?: string, id?: number){
 
         this.name = name;
         this.author = author;
@@ -59,16 +60,18 @@ class Assignment {
 
         this.active = active;
         this.category = category;
+        this.type = type;
 
         this.id = id;
     }
 
-    public loadAssignmentData(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, id?: number): void {
+    public loadAssignmentData(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, type?: string, id?: number): void {
 
         this.name = name;
         this.author = author;
         this.course = course;
         this.category = category;
+        this.type = type;
         this.prompt = prompt;
         
         this.attempts = attempts;
@@ -87,7 +90,7 @@ class Assignment {
     }
 
     public loadFromObject(a: any): void{
-        this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.active, a.category, a.id);
+        this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.active, a.category, a.type, a.id);
     }
 
     public async loadFromID(ID: number): Promise<string | void> {
@@ -108,11 +111,11 @@ class Assignment {
 
         if(!this.id)
             await this.generateID();
-/*
+
         let dberr: DBResult = await db.save(this);
         if(dberr.error)
             return { any: dberr.error };
-    */   }
+    }
 
     private async verify(): Promise<any | null> {
 
@@ -121,7 +124,7 @@ class Assignment {
             attempts: verify.range(this.attempts, 0, 9999),
             points: verify.range(this.points, 0, 9999),
             latepenalty: verify.range(this.latepenalty, 0, this.points),
-
+            dates: verify.dateorder([this.open, this.close, this.cutoff], ['opening', 'closing', 'cutoff'])
         };
       
         return verify.anyerrors(errs);
@@ -143,6 +146,7 @@ class Assignment {
             author: this.author,
             course: this.course,
             category: this.category,
+            type: this.type,
             active: this.active,
             prompt: this.prompt,
             attempts: this.attempts,
@@ -166,9 +170,10 @@ class Assignment {
 
         return {
             name: this.name,
-            author: this.author,
+            author: authorname,
             course: this.course,
             category: this.category,
+            type: this.type,
             active: this.active,
             prompt: this.prompt,
             attempts: this.attempts,

@@ -117,7 +117,23 @@ let year = (year: number): string => {
 assignment attributes
 */
 
+//make sure all dates in array are in order
+let dateorder = (dates: any[], names: string[]): string => {
 
+  let i: number;
+  for(i = 0; i < (dates.length-1); i++){
+    
+    let curr: Date = new Date(dates[i]);
+    let next: Date = new Date(dates[i+1]);
+    
+    if(curr.getTime() > next.getTime()){
+      return (names[i] + ' date must occur before ' + names[i+1] + ' date');
+    }
+  }
+
+  return '';
+
+};
 
 /*
 determine if we have any errors when passed an object of errors
@@ -176,6 +192,7 @@ export {
   range,
   title,
   year,
+  dateorder,
   anyerrors,
   all 
 };

@@ -1,4 +1,4 @@
-function createAssignment(name, type, course, category, prompt, open, close, cutoff, attempts, points, latepenalty, randomize){
+function createAssignment(name, course, category, prompt, open, close, cutoff, attempts, points, latepenalty, randomize, type){
 
     $.ajax('/api/assignment/create', {
         type: 'POST',
@@ -7,6 +7,7 @@ function createAssignment(name, type, course, category, prompt, open, close, cut
             name: name,
             type: type,
             course: course,
+            type: type,
             category: category,
             prompt: prompt,
             open: open,
@@ -25,6 +26,7 @@ function createAssignment(name, type, course, category, prompt, open, close, cut
                 $('#assignment_points_error').text(data.error.points);
                 $('#assignment_latepenalty_error').text(data.error.latepenalty);
                 $('#assignment_attempts_error').text(data.error.attempts);
+                $('#assignment_date_error').text(data.error.dates);
   
                 //error if unknown err occurs
                 if(data.error.any){
@@ -72,7 +74,6 @@ function createAssignment(name, type, course, category, prompt, open, close, cut
     //init course categories to whatever course its selected to
     getCategories($('#assignment_course').val());
   
-  
       $('#createAssignment').click(function(){
           var name = $('#assignment_name').val();
           var type = $('#assignment_type').val();
@@ -87,7 +88,7 @@ function createAssignment(name, type, course, category, prompt, open, close, cut
           var latepenalty = $('#assignment_latepenalty').val();
           var randomize = $('#check_id').is(":checked");
   
-          createAssignment(name, type, course, category, prompt, open, close, cutoff, attempts, points, latepenalty, randomize);
+          createAssignment(name, course, category, prompt, open, close, cutoff, attempts, points, latepenalty, randomize, type);
       });
   
       //keep track of categories user makes
