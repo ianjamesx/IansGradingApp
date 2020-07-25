@@ -1,4 +1,5 @@
 import db = require('./dbconfig');
+import { tablecheck } from './tableman';
 
 /*
 all database table declarations
@@ -85,7 +86,9 @@ let tables: any = {
         ]
 
     },
-
+    
+    //SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_NAME = 'assignments';
+    
     /*
     question tables
     */
@@ -221,6 +224,8 @@ let init = async (): Promise<void> => {
             console.log('------------------');
         }
     }
+
+    tablecheck(tables);
 
 };
 

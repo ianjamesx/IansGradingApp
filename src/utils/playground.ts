@@ -75,3 +75,17 @@ let savequery = db.format(`INSERT INTO course_categories (name, points, course) 
 console.log(savequery);
 
 */
+
+import * as db from '../db/dbquery';
+
+let test = async function(){
+
+  let quer: string = 'describe assignments';
+
+  let output = await db.query(quer);
+
+  //console.log(output);
+
+}
+
+//test();
