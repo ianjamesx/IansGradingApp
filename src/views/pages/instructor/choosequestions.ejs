@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <%- include('../../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
+      <div id="content">
+
+        <h2>Choose Questions</h2>
+ 
+       <div id="unknownerr"></div>
+       <span style="display:block; height: 20px;"></span>
+       <button id="createAssignment" class="appbtn" type="button">Save Assignment</button>
+       <button id="createAssignment" class="appbtn" type="button">Publish Assignment</button>
+
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+  </body>
+
+  <%- include('../../partials/scripts'); %>
+  <script type="text/javascript" src="../public/js/choosequestions.js"></script>
+
+</html>

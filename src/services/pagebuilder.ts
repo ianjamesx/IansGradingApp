@@ -108,6 +108,32 @@ let createAssignment = async (req: Request) => {
   pagedata.title = 'Create Assignment';
   return pagedata;
 
+};
+
+let editAssignment = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+  pagedata.title = 'Edit Assignment';
+  return pagedata;
+
+};
+
+let chooseQuestions = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+  pagedata.title = 'Choose Questions';
+  return pagedata;
+
+};
+
+let createQuestion = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+  pagedata.title = 'Create Questions';
+  return pagedata;
 
 };
 
@@ -119,5 +145,8 @@ export {
   createCourse,
   coursePage,
   joinCourse,
-  createAssignment
+  createAssignment,
+  chooseQuestions,
+  createQuestion,
+  editAssignment
 };

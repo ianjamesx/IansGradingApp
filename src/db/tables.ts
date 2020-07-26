@@ -1,5 +1,3 @@
-import db = require('./dbconfig');
-import { tablecheck } from './tableman';
 
 /*
 all database table declarations
@@ -71,7 +69,8 @@ let tables: any = {
         open: `varchar(20)`,
         close: `varchar(20)`,
         cutoff: `varchar(20)`,
-        questionpoints: `int`,
+        points: `int`,
+        type: `int`,
         attempts: `int`,
         randomize: `bit`,
         latepenalty: `int`,
@@ -126,7 +125,7 @@ let tables: any = {
         assignment: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (question) REFERENCES questions(id)`,
-            `FOREIGN KEY (assignment) REFERENCES assignment(id)`
+            `FOREIGN KEY (assignment) REFERENCES assignments(id)`
         ]
     },
 
@@ -187,48 +186,6 @@ let tables: any = {
 
 };
 
-let tableformat = (tables: any): string[] => {
-    
-    let queries: any = [];
-    let i: string; //loop through tables
-    let j: string; //loop through each table columns
-
-    for(i in tables){
-        let tablequery: string = `CREATE TABLE IF NOT EXISTS ` + i + `(`;
-        for(j in tables[i]){
-            if(typeof tables[i][j] != 'string'){ //if list of constraints, ignore the object property for each
-                let l: number;
-                for(l = 0; l < tables[i][j].length; l++){
-                    tablequery += tables[i][j][l] + `, `;
-                }
-            } else {
-                tablequery += j + ` ` + tables[i][j] + `, `;
-            }
-        }
-        tablequery = tablequery.substring(0, tablequery.length - 2); //trim off last space/comma
-        tablequery += `)`;
-        queries.push(tablequery);
-    }
-    return queries;
-};
-
-let init = async (): Promise<void> => {
-    let tablearray: string[] = tableformat(tables);
-    let i: number;
-    for(i = 0; i < tablearray.length; i++){
-        try {
-            let res: any = await db.query(tablearray[i]);
-        } catch(err){
-            console.log(tablearray[i]);
-            console.log("ERROR ON TABLE INSERT: " + err);
-            console.log('------------------');
-        }
-    }
-
-    tablecheck(tables);
-
-};
-
 export {
-    init
+    tables
 }
