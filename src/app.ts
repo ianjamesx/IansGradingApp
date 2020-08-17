@@ -25,10 +25,13 @@ user(app);
 import { courseapi as course } from './api/course';
 course(app);
 
-//course api
+//assignment api
 import { assignmentapi as assignment } from './api/assignment';
 assignment(app);
 
+//question api
+import { questionapi as question } from './api/question';
+question(app);
 
 //import playground for testing/debugging
 let playground = require('./utils/playground');

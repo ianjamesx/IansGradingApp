@@ -16,18 +16,16 @@ interface Answer {
 }
 
 interface Errors {
-    name?: string;
-    prompt?: string;
-    attempts?: string;
-    latepenalty?: string;
-    points?: string;
-    dates?: string;
+    question?: string;
+    hint?: string;
+    answer?: string;
 }
 
 class Question {
 
     private question: string;
     private answers: Answer[];
+    private hint: string;
 
     private author: number;
     private subject: string;
@@ -76,7 +74,7 @@ class Question {
 
         this.loadFromObject(result.data);
     }
-/*
+
     public async save(): Promise<any | void> {
         let errs: Errors = {};
         errs = await this.verify();   
@@ -91,20 +89,14 @@ class Question {
             return { any: dberr.error };
     }
 
-    /*
-
+    
     private async verify(): Promise<any | null> {
 
         let errs: Errors = {
-            name: verify.title(this.name),
-            attempts: verify.range(this.attempts, 0, 9999),
-            points: verify.range(this.points, 0, 9999),
-            latepenalty: verify.range(this.latepenalty, 0, this.points),
-            dates: verify.dateorder([this.open, this.close, this.cutoff], ['opening', 'closing', 'cutoff'])
+            question: verify.custom(this.question, 'question')
         };
       
         return verify.anyerrors(errs);
-
     }
 
     private async generateID(): Promise<void> {
@@ -115,11 +107,24 @@ class Question {
         return this.id;
     }
 
-    public getColumns(): any{
-        
-        return {
-            
+    public getAnswers(): any {
+        return this.answers;
+    }
 
+    public getColumns(): any {
+
+        //dont return answers in column data
+        //we'll return that in a seperate function to save
+
+        return {
+            question: this.question,
+            hint: this.hint,
+            author: this.author,
+            subject: this.subject,
+            topic: this.topic,
+            type: this.type,
+            ispublic: this.ispublic,
+            id: this.id
         }
     }
 
@@ -135,7 +140,7 @@ class Question {
         }
 
     }
-    */
+    
 
 }
 

@@ -35,7 +35,7 @@ let sqlconfig: any = {
   connectionLimit: 100,
   host: '127.0.0.1',
   user: 'root',
-  password: '',
+  password: 'password',
   database: 'grade_db'
 };
 

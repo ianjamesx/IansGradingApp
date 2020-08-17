@@ -100,7 +100,7 @@ let tables: any = {
         hint: `varchar(200)`,
         subject: `varchar(20)`,
         topic: `varchar(20)`,
-        public: `bit`,
+        public: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (type) REFERENCES question_types(type)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,

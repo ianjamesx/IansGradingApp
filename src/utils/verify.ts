@@ -102,6 +102,14 @@ let title = (title: string): string => {
   return '';
 };
 
+let custom = (input: string, name: string): string => {
+
+  if(!input)
+    return `Please enter a ${name}`;
+
+  return '';
+};
+
 let year = (year: number): string => {
 
   let curryear: number = new Date().getFullYear();
@@ -191,6 +199,7 @@ export {
   password,
   range,
   title,
+  custom,
   year,
   dateorder,
   anyerrors,

@@ -15,29 +15,30 @@ let questionapi = (app: Application): void => {
     //send generated ID of course on success
     app.post('/api/question/create', async (req: Request, res: Response) => {
 
-
         let question: string = req.body.question;
         let answers: any[] = req.body.answers;
         let subject: string = req.body.subject;
         let topic: string = req.body.topic;
         let type: string = req.body.type;
-        let ispublic: string = req.body.ispublic;
+        let ispublic: number = Number(req.body.ispublic);
+
+        console.log(req.body);
 
         //load instructor data
         let author: User = new User();
         let authorID: number = author.getIDFromSession(req.session);
 
-        //set as not active yet (as its only a draft)
-        let active: number = 0;
+        //create question object
+        let quest: Question = new Question(question, answers, authorID, subject, topic, type, ispublic);
 
         //save users data on this assignment
         let result: Result = {};
-        let err: any = await assignment.save();
+        let err: any = await quest.save();
 
         if(err) {
             result.error = err;
         } else {
-            result.success = assignment.getID();
+            result.success = quest.getID();
         }
         res.send(result);
     });
@@ -45,5 +46,5 @@ let questionapi = (app: Application): void => {
 };
 
 export {
-    assignmentapi
+    questionapi
 }

@@ -13,6 +13,8 @@ function switchQuestionUI(question){
                 addAnswer($('#answer_text').val(), $('input[name="answer_correct"]:checked').val(), allanswers);
             });
 
+            return allanswers;
+
         break;
         case 'Enter Answer Directly':
 
@@ -91,8 +93,9 @@ function getArrayforAnswers(allanswers){
     return ans;
 }
 
-function saveQuestion(question, allanswers, subject, topic, type){
+function saveQuestion(question, allanswers, subject, topic, type, public){
 
+    //transform into server friendly formats
     var answers = getArrayforAnswers(allanswers);
 
     $.ajax('api/question/create', {
@@ -103,7 +106,8 @@ function saveQuestion(question, allanswers, subject, topic, type){
             answers: answers,
             subject: subject,
             topic: topic,
-            type: type
+            type: type,
+            public: public
         }),
         success: function(data){
   
@@ -129,10 +133,14 @@ function saveQuestion(question, allanswers, subject, topic, type){
 
 $(document).ready(function(){
 
-    switchQuestionUI($('#question_type').val());
-
+    var allanswers = switchQuestionUI($('#question_type').val());
+    
     $('#question_type').change(function(){
-        switchQuestionUI($('#question_type').val());
+        allanswers = switchQuestionUI($('#question_type').val());
+    });
+
+    $('#saveQuestion').click(function(){
+        saveQuestion($('#question_text').val(), allanswers, $('#question_subject').val(), $('#question_topic').val(), $('#question_type').val(), $('#public').is(":checked"));
     });
 
 });
