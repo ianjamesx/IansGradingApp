@@ -80,9 +80,19 @@ import * as db from '../db/dbquery';
 
 let test = async function(){
 
-  let quer: string = 'describe assignments';
+  try {
+
+    let quer: string = 'ALTER TABLE assignments DROP COLUMN course';
 
   let output = await db.query(quer);
+
+  } catch(err){
+    console.log(err);
+    console.log(err.sqlMessage);
+    let constriant: any = (err.sqlMessage.split(' '));
+    constriant = constriant[constriant.length-1];
+    console.log(constriant);
+  }
 
   //console.log(output);
 

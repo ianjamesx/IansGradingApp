@@ -9,7 +9,8 @@ import session = require('express-session');
 import bodyparser = require('body-parser');
 import fileupload = require('express-fileupload');
 
-import { init as dbinit } from '../db/tableinit';
+import { init as dbinit } from '../db/tableman';
+import { tables } from '../db/tables';
 import { load as componentload } from '../clientviews/componentloader'
 
 let init = (app: express.Application): void => {
@@ -43,7 +44,7 @@ let init = (app: express.Application): void => {
   init DB tables
   */
   
-  dbinit();
+  dbinit(tables);
 
   /*
   render components for client

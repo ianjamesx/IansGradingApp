@@ -95,5 +95,27 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
       $('#assignment_course').change(function(){
         getCategories($('#assignment_course').val());
       });
-  
+
+      $("#assignment_open").flatpickr({
+        altInput: true,
+        enableTime: true,
+        altFormat: "F j, Y H:i",
+        dateFormat: "Y-m-d H:i",
+      });
+
+      $("#assignment_close").flatpickr({
+        altInput: true,
+        enableTime: true,
+        altFormat: "F j, Y H:i",
+        dateFormat: "Y-m-d H:i",
+      });
+
+      $("#assignment_cutoff").flatpickr({
+        altInput: true,
+        enableTime: true,
+        altFormat: "F j, Y H:i",
+        dateFormat: "Y-m-d H:i",
+      });
+
+
   });
