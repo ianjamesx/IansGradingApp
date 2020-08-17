@@ -7,7 +7,9 @@ import mysql = require('mysql'); //db module
 /*
 MySQL database configuration
 
-for DarkRock:
+for DarkRock/Silver:
+
+also, cmd for silver mySQL access: /usr/local/mysql/bin/mysql -u root -p
 
 let sqlconfig: any = {
   connectionLimit: 100,
