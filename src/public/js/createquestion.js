@@ -95,19 +95,16 @@ function getArrayforAnswers(allanswers){
 
 function saveQuestion(question, allanswers, subject, topic, type, public){
 
-    //transform into server friendly formats
-    var answers = getArrayforAnswers(allanswers);
-
     $.ajax('api/question/create', {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
             question: question,
-            answers: answers,
+            answers: getArrayforAnswers(allanswers),
             subject: subject,
             topic: topic,
             type: type,
-            public: public
+            public: (public == true ? 1 : 0)
         }),
         success: function(data){
   

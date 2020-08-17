@@ -20,7 +20,7 @@ let questionapi = (app: Application): void => {
         let subject: string = req.body.subject;
         let topic: string = req.body.topic;
         let type: string = req.body.type;
-        let ispublic: number = Number(req.body.ispublic);
+        let ispublic: number = req.body.public;
 
         console.log(req.body);
 

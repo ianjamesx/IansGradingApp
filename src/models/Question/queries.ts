@@ -23,7 +23,7 @@ let saveAnswers = async (quest: Question): Promise<DBResult> => {
     let answernest: any = [];
     let answers = quest.getAnswers();
 
-    for(i = 0; i < answers; i++){
+    for(i = 0; i < answers.length; i++){
 
         let curr: any[] = vals(answers[i]);
         curr.push(quest.getID()); //also push id of question
@@ -35,16 +35,14 @@ let saveAnswers = async (quest: Question): Promise<DBResult> => {
 
     let result: DBResult = {};
     let savequery = db.format(`INSERT INTO answers (ans, correct, question, id) VALUES ?`, [answernest]);
-    console.log(savequery);
-    /*
+    
     try {
         result.data = await db.query(savequery);
     } catch(err){
         db.errorsave(err);
         result.error = db.unknownerr;
     }
-    */
-
+    
     return result;
 
 }
@@ -52,5 +50,6 @@ let saveAnswers = async (quest: Question): Promise<DBResult> => {
 export {
     load,
     save,
+    saveAnswers,
     generateID
 }

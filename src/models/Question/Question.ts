@@ -87,6 +87,11 @@ class Question {
         let dberr: DBResult = await db.save(this);
         if(dberr.error)
             return { any: dberr.error };
+
+        //also save answers seperately
+        let anserr: DBResult = await db.saveAnswers(this);
+        if(anserr.error)
+            return { any: dberr.error };
     }
 
     
@@ -123,7 +128,7 @@ class Question {
             subject: this.subject,
             topic: this.topic,
             type: this.type,
-            ispublic: this.ispublic,
+            public: this.ispublic,
             id: this.id
         }
     }
