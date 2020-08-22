@@ -2,6 +2,7 @@
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 import * as db from './queries';
+import moment = require('moment');
 
 import { User } from '../User/User';
 
@@ -139,6 +140,19 @@ class Assignment {
         return this.id;
     }
 
+    //determine if this assignment is coming up this week
+    public isUpcoming(): boolean {
+        let weeklater: any = new Date(this.close);
+        let msinday: number = 86400000; //around this many ms in one day
+        let weekms: number = weeklater.getTime() + (msinday * 7); //get ms date one week ahead
+
+        let closedate: any = new Date(this.close);
+        if(weekms > closedate.getTime() && Date.now() < closedate.getTime()){ //if date is within a week, and hasent closed yet
+            return true;
+        }
+        return false;
+    }
+
     public getColumns(): any{
         
         return {
@@ -157,8 +171,7 @@ class Assignment {
             close: this.close,
             cutoff: this.cutoff,
             id: this.id
-
-        }
+        };
     }
 
     public async dataView(): Promise<any> {
@@ -180,12 +193,11 @@ class Assignment {
             randomize: this.randomize,
             latepenalty: this.latepenalty,
             points: this.points,
-            open: this.open,
-            close: this.close,
-            cutoff: this.cutoff,
+            open: moment(this.open).format("dddd, MMMM Do YYYY, h:mm a"),
+            close: moment(this.close).format("dddd, MMMM Do YYYY, h:mm a"),
+            cutoff: moment(this.cutoff).format("dddd, MMMM Do YYYY, h:mm a"),
             id: this.id
-
-        }
+        };
 
     }
 

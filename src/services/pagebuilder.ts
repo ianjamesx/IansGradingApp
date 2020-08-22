@@ -21,29 +21,17 @@ let dashboard = async (req: Request) => {
   let pagedata = await common.pagebase(req);
   if(pagedata.error) return { error: pagedata.error };
 
-  let assignments = [
-    {
-      name: 'lab1',
-      open: 'Dec 10, 2020',
-      close: 'Dec 15, 2020',
-      id: 2012931,
-
-    },
-    {
-      name: 'hw4',
-      open: 'Sep 10, 2020',
-      close: 'Sep 15, 2020',
-      id: 20153931,
-
-    },
-  ];
-
   pagedata.title = 'Your Dashboard';
-  pagedata.assignments = assignments;
 
   //load raw course objects and user objectfrom pagedata
   let courses: Course[] = common.loadCourses(pagedata.course);
-  let user: User = new User(pagedata.user);
+
+  //reload user from column data
+  let user: User = new User();
+  user.loadtouser(pagedata.user);
+
+  //load upcoming assignments
+  pagedata.assignments = await common.upcomingAssignments(user);
 
   return pagedata;
 

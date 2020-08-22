@@ -98,7 +98,7 @@ let routes = (app: Application): void => {
   });
 
   app.get('/createquestion', (req: Request, res: Response) => {
-    pb.chooseQuestions(req).then(content => {
+    pb.createQuestion(req).then(content => {
       if(content.error) return err(req, res);
 
       let page: string = userpage(content.instructor, 'createquestion');

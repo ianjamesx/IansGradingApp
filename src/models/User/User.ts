@@ -157,11 +157,19 @@ class User {
   for getting course content
   */
 
-  public async getAllCourses(): Promise<any> {
+  public async getAllCourses(): Promise<DBResult> {
 
     let coursedata: DBResult = await db.getAllCourses(this);
     return coursedata;
     
+  }
+
+  /*
+  for getting assignments for this user
+  */
+  public async getAllAssignments(): Promise<DBResult> {
+    let coursedata: DBResult = await db.getAllAssignments(this);
+    return coursedata;
   }
 
   /*

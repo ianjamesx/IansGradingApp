@@ -34,7 +34,7 @@ let tables: any = {
     },
 
     course_categories: {
-        name: `varchar(30)`,
+        name: `varchar(30) NOT NULL PRIMARY KEY`,
         points: `int`,
         course: `int`,
         CONSTRAINTS: [
@@ -70,9 +70,9 @@ let tables: any = {
         close: `varchar(20)`,
         cutoff: `varchar(20)`,
         points: `int`,
-        type: `int`,
+        type: `varchar(30)`,
         attempts: `int`,
-        randomize: `bit`,
+        randomize: `int`,
         latepenalty: `int`,
         category: `varchar(30)`,
         prompt: `text`,
@@ -80,8 +80,8 @@ let tables: any = {
         course: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (author) REFERENCES users(id)`,
-            `FOREIGN KEY (category) REFERENCES course_categories(name)`,
-            `FOREIGN KEY (course) REFERENCES course(id)`
+            //`FOREIGN KEY (category) REFERENCES course_categories(name)`,
+            `FOREIGN KEY (course) REFERENCES courses(id)`
         ]
 
     },
@@ -111,7 +111,7 @@ let tables: any = {
 
     answers: {
         id: `int NOT NULL PRIMARY KEY`,
-        correct: `bit`,
+        correct: `int`,
         ans: `varchar(200)`,
         question: `int`,
         CONSTRAINTS: [

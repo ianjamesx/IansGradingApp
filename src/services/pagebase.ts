@@ -1,5 +1,6 @@
 import { User } from '../models/User/User';
 import { Course } from '../models/Course/Course';
+import { Assignment } from '../models/Assignment/Assignment';
 import { Request } from 'express';
 
 /*
@@ -41,7 +42,39 @@ let loadCourses = (coursedata: any[]): Course[] => {
   return courses;
 };
 
+/*
+get all assignments that are due soon
+for a specific user
+*/
+let upcomingAssignments = async (user: User) => {
+
+  //get all assignments this user has coming up
+  let assignmentdata: any = await user.getAllAssignments();
+  if(assignmentdata.error){
+    return assignmentdata.error;
+  }
+
+  let assign = assignmentdata.data;
+  let i: number;
+
+  let upcoming: any[] = [];
+
+  for(i = 0; i < assign.length; i++){
+    let assignment: Assignment = new Assignment();
+    assignment.loadFromObject(assign[i]);
+
+    if(assignment.isUpcoming()){
+      //push dataview of assignment into array
+      upcoming.push(await assignment.dataView());
+    }
+  }
+
+  return upcoming;
+
+}
+
 export {
     pagebase,
-    loadCourses
+    loadCourses,
+    upcomingAssignments
 }

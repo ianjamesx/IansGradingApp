@@ -22,8 +22,6 @@ let questionapi = (app: Application): void => {
         let type: string = req.body.type;
         let ispublic: number = req.body.public;
 
-        console.log(req.body);
-
         //load instructor data
         let author: User = new User();
         let authorID: number = author.getIDFromSession(req.session);

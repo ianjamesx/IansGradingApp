@@ -8,6 +8,7 @@ import { User, DBResult, Credentials } from './User';
 import { compare } from 'bcrypt';
 
 import { Course } from '../Course/Course';
+import { Assignment } from '../Assignment/Assignment';
 
 let tablename: string = 'users';
 
@@ -79,10 +80,30 @@ let getAllCourses = async (user: User): Promise<DBResult> => {
 
 };
 
+//get all assignents this user has coming up
+let getAllAssignments = async (user: User): Promise<DBResult> => {
+    
+    let result: DBResult = {};
+    let assingment: Assignment = new Assignment();
+    let select = `SELECT ?? FROM assignments WHERE course IN (SELECT course FROM usercourse WHERE user = ?)`;
+    let assignmentquery = db.format(select, [keys(assingment.getColumns()), user.getID()]);
+
+    try {
+        result.data = await db.query(assignmentquery);
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+
+    return result;
+
+}; 
+
 export { 
     load,
     login,
     save,
     generateID,
-    getAllCourses
+    getAllCourses,
+    getAllAssignments
 };

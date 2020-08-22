@@ -9,29 +9,17 @@ password: password
 import express = require('express');
 const app = express();
 
-//all our configuration code
+//all our configuration code (express, database, public files)
 import { init } from './init/config';
 init(app);
 
-//all our routes
+//all our page routes
 import { routes } from './routes/routes';
 routes(app);
 
-//user api
-import { userapi as user } from './api/user';
-user(app);
-
-//course api
-import { courseapi as course } from './api/course';
-course(app);
-
-//assignment api
-import { assignmentapi as assignment } from './api/assignment';
-assignment(app);
-
-//question api
-import { questionapi as question } from './api/question';
-question(app);
+//all api routes
+import { init as api } from './api/apiconfig';
+api(app);
 
 //import playground for testing/debugging
 let playground = require('./utils/playground');
