@@ -87,7 +87,7 @@ let routes = (app: Application): void => {
     });
   });
 
-  app.get('/choosequestions', (req: Request, res: Response) => {
+  app.get('/assignment/choosequestions/:id', (req: Request, res: Response) => {
     pb.chooseQuestions(req).then(content => {
       if(content.error) return err(req, res);
 

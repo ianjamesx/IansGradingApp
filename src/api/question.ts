@@ -1,6 +1,7 @@
 import { Application, Request, Response } from 'express';
 import { Question } from '../models/Question/Question';
 import { User } from '../models/User/User';
+import { key } from '../utils/utils';
 
 
 //result interface for an API call
@@ -39,6 +40,20 @@ let questionapi = (app: Application): void => {
             result.success = quest.getID();
         }
         res.send(result);
+    });
+
+    app.post('/api/question/search', async (req: Request, res: Response) => {
+        
+        let subject: string = req.body.subject;
+        let topic: string = req.body.topic;
+        let type: string = req.body.type;
+        let keywords: string = req.body.keywords;
+
+        //search for all questions based on this criteria
+        let questions: Question[] = await Question.allQuestionsBy(subject, topic, type, keywords);
+
+        console.log(questions);
+
     });
 
 };

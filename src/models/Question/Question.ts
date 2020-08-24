@@ -116,6 +116,59 @@ class Question {
         return this.answers;
     }
 
+    /*
+    see if this question contains any of the keywords entered by user
+    count how many keywords entered match question body
+    will be sorted and displayed to user
+    */
+    public containsKeywords(keywords: string[]): number {
+
+        let keywordCount: number = 0;
+        let i: number;
+
+        //count how many keywords entered appear in this question
+        for(i = 0; i < keywords.length; i++){
+            if(this.question.includes(keywords[i])){
+                keywordCount++;
+            }
+        }
+
+        return keywordCount;
+
+    }
+
+    public static async allQuestionsBy(subject: string, topic: string, type: string, keywordlist: string): Promise<Question[]> {
+        let result: DBResult = await db.allQuestionsByCriteria(subject, topic, type);
+
+        //on error, return empty array of questions, signifying none found
+        if(result.error) return [];
+
+        //split keywords into list of keywords to search for
+        let keywords: string[] = keywordlist.split(' ');
+
+        //convert to question objects, then see how many contain keywords
+        let i: number;
+        let questionlist: any[] = [];
+        for(i = 0; i < result.data.length; i++){
+
+            //load question
+            let currquest: Question = new Question();
+            currquest.loadFromObject(result.data[i]);
+
+            //get score of keywords, populate list
+            let keycount: number = currquest.containsKeywords(keywords);
+            questionlist.push(currquest);
+            questionlist[i].keycount = keycount;
+        }
+
+        //sort by keycount
+        questionlist.sort(function(a, b) { 
+            return b.keycount - a.keycount;
+        })
+
+        return questionlist;
+    }
+
     public getColumns(): any {
 
         //dont return answers in column data
@@ -141,7 +194,15 @@ class Question {
         let authorname: string = author.getFN() + ' ' + author.getLN();
 
         return {
-
+            question: this.question,
+            hint: this.hint,
+            author: authorname,
+            subject: this.subject,
+            topic: this.topic,
+            type: this.type,
+            public: this.ispublic,
+            id: this.id,
+            answers: this.answers
         }
 
     }

@@ -142,7 +142,7 @@ class Assignment {
 
     //determine if this assignment is coming up this week
     public isUpcoming(): boolean {
-        let weeklater: any = new Date(this.close);
+        let weeklater: any = new Date(Date.now());
         let msinday: number = 86400000; //around this many ms in one day
         let weekms: number = weeklater.getTime() + (msinday * 7); //get ms date one week ahead
 

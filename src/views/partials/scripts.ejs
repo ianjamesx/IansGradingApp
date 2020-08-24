@@ -7,5 +7,8 @@
 <script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <%# custom scripts: %>
-<script type="text/javascript" src="../public/js/render.js"></script>
-<script type="text/javascript" src="../public/js/common.js"></script>
+
+<% var host = 'http://localhost:8080' %>
+
+<script type="text/javascript" src="<%= host %>/public/js/render.js"></script>
+<script type="text/javascript" src="<%= host %>/public/js/common.js"></script>

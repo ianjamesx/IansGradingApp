@@ -2,6 +2,8 @@
 import { User } from '../models/User/User';
 import { Student } from '../models/Student/Student';
 import { Course } from '../models/Course/Course';
+import { Assignment } from '../models/Assignment/Assignment';
+
 import { Request } from 'express';
 
 import common = require('./pagebase');
@@ -102,7 +104,7 @@ let editAssignment = async (req: Request) => {
 
   let pagedata = await common.pagebase(req);
   if(pagedata.error) return { error: pagedata.error };
-  pagedata.title = 'Edit Assignment';
+  pagedata.title = 'Choose Assignment Questions';
   return pagedata;
 
 };
@@ -111,7 +113,17 @@ let chooseQuestions = async (req: Request) => {
 
   let pagedata = await common.pagebase(req);
   if(pagedata.error) return { error: pagedata.error };
+  
   pagedata.title = 'Choose Questions';
+
+  //get assignment id from request params
+  let id: number = Number(req.params.id);
+
+  let assignment: Assignment = new Assignment();
+  await assignment.loadFromID(id);
+
+  pagedata.assignment = await assignment.dataView();
+
   return pagedata;
 
 };

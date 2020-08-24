@@ -33,8 +33,7 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
                   common.unknownerr('unknownerr');
                 }
             } else if(data.success){
-                alert('success! ' + data.success);
-                //location.href='/course/' + data.success;
+                location.href='/assignment/' + data.success + '/choosequestions';
             }
   
         }
@@ -116,6 +115,5 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
         altFormat: "F j, Y H:i",
         dateFormat: "Y-m-d H:i",
       });
-
 
   });
