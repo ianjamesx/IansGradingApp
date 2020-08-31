@@ -12,7 +12,7 @@
         <h2>Choose Questions for:</h2>
         <h1><%= assignment.name %></h1>
         <hr>
-
+<%#
         <h4>Select Questions to Add</h4>
         <div class="form-row">
           <div class="form-group col-md-3">
@@ -42,8 +42,12 @@
           </div>          
         </div>
         <button id="search" class="appbtn" type="button">Search</button>
-
+%>
         <hr>
+
+        <% questions.forEach((question) => { %>
+          <%- include('../../partials/instructor/questionselect', {question: question}) %>
+        <% }); %>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>

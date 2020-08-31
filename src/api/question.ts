@@ -50,9 +50,11 @@ let questionapi = (app: Application): void => {
         let keywords: string = req.body.keywords;
 
         //search for all questions based on this criteria
-        let questions: Question[] = await Question.allQuestionsBy(subject, topic, type, keywords);
+        /*let questions: Question[] = await Question.allQuestionsBy(subject, topic, type, keywords);
 
         console.log(questions);
+
+        res.send(questions);*/
 
     });
 

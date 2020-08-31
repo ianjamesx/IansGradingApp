@@ -7,6 +7,7 @@ import { Assignment } from '../models/Assignment/Assignment';
 import { Request } from 'express';
 
 import common = require('./pagebase');
+import { Question } from '../models/Question/Question';
 
 /*
 page builder
@@ -121,6 +122,10 @@ let chooseQuestions = async (req: Request) => {
 
   let assignment: Assignment = new Assignment();
   await assignment.loadFromID(id);
+
+  //get all questions made by this instructor (by user id)
+  let userquestions: Question[] = await Question.allQuestionsBy(pagedata.user.id);
+  pagedata.questions = userquestions;
 
   pagedata.assignment = await assignment.dataView();
 

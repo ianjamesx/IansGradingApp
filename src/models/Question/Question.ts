@@ -137,6 +137,16 @@ class Question {
 
     }
 
+    public static async allQuestionsBy(userID: number){
+
+        let result: DBResult = await db.allQuestionsByUser(userID);
+
+        //on error, return empty array of questions, signifying none found
+        if(result.error) return [];
+        return result.data;
+
+    }
+/*
     public static async allQuestionsBy(subject: string, topic: string, type: string, keywordlist: string): Promise<Question[]> {
         let result: DBResult = await db.allQuestionsByCriteria(subject, topic, type);
 
@@ -168,6 +178,7 @@ class Question {
 
         return questionlist;
     }
+    */
 
     public getColumns(): any {
 

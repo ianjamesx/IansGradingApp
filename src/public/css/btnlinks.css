@@ -59,3 +59,21 @@
 .editbtn:hover {
     background-color: #8859b7;
 }
+
+/* selecting questions to have on assignments */
+.question-select {
+    transition: 0.2s;
+}
+
+.question-select:hover {
+    background-color: #d5edff;
+    cursor: pointer;
+}
+
+.question-selected {
+    background-color: #addcff;
+}
+
+.question-selected:hover {
+    background-color: #addcff;
+}

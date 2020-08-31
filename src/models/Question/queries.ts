@@ -47,6 +47,26 @@ let saveAnswers = async (quest: Question): Promise<DBResult> => {
 
 }
 
+let allQuestionsByUser = async (userID: number): Promise<DBResult> => {
+
+    let result: DBResult = {};
+    let quest: Question = new Question();
+
+    let searchquery: string = db.format(`SELECT ?? FROM questions WHERE author = ?`, [keys(quest.getColumns()), userID]);
+
+    console.log(searchquery);
+    
+    try {
+        result.data = await db.query(searchquery);
+    } catch(err){
+        db.errorsave(err);
+        result.error = db.unknownerr;
+    }
+    
+    return result;
+
+};
+
 /*
 select questions given a certain criteria
 determine if subject, topic, or type are given, if so, include in search
@@ -56,7 +76,7 @@ let allQuestionsByCriteria = async (subject: string, topic: string, type: string
     let result: DBResult = {};
     let quest: Question = new Question();
 
-    let searchquery: string = db.format(`SELECT ?? FROM questions WHERE public = 1 subject = ? AND topic = ? AND type = ?`, [quest.getColumns(), subject, topic, type]);
+    let searchquery: string = db.format(`SELECT ?? FROM questions WHERE public = 1 subject = ? AND topic = ? AND type = ?`, [keys(quest.getColumns()), subject, topic, type]);
 
     console.log(searchquery);
     
@@ -76,5 +96,6 @@ export {
     save,
     saveAnswers,
     generateID,
-    allQuestionsByCriteria
+    allQuestionsByCriteria,
+    allQuestionsByUser
 }
