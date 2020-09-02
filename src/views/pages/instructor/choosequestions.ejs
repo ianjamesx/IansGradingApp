@@ -45,9 +45,15 @@
 %>
         <hr>
 
-        <% questions.forEach((question) => { %>
-          <%- include('../../partials/instructor/questionselect', {question: question}) %>
-        <% }); %>
+        <ul id="questions">
+          <% questions.forEach((question) => { %>
+            <%- include('../../partials/instructor/questionselect', {question: question}) %>
+          <% }); %>
+        </ul>
+
+        <hr>
+
+        <button id="publish" class="appbtn" type="button">Publish Assignment</button>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>

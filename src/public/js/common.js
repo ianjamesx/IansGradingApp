@@ -33,5 +33,19 @@ var common = {
         var date = new Date(datestring);
         var ms = date.getTime();
         return ms;
+    },
+
+    /*
+    get values of object
+    */
+
+    values: function(obj){
+        var i;
+        var arr = [];
+        for(i in obj){
+            arr.push(obj[i]);
+        }
+
+        return arr;
     }
 };

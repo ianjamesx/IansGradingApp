@@ -153,6 +153,10 @@ class Assignment {
         return false;
     }
 
+    public static async saveQuestions(assignmentID: number, questionIDs: string[]): Promise<void> {
+        await db.saveQuestions(assignmentID, questionIDs);
+    }
+
     public getColumns(): any{
         
         return {
