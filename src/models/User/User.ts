@@ -1,4 +1,5 @@
-import * as db from './queries';
+//import * as db from './queries';
+import * as db from '../../db/dbquery';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
 import { hash as generatehash } from 'bcrypt';    //password encryption
@@ -40,6 +41,8 @@ class User {
   protected instructor: number;
   protected hash: string; //hashed password
   protected id: number;
+
+  protected static table = `users`;
 
   constructor(email?:string, password?:string, firstname?:string, lastname?:string, instructor?: number){
     this.email = email;

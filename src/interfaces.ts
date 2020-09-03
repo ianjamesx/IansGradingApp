@@ -9,3 +9,8 @@ interface Result {
     error?: string | any;
     success?: any;
 }
+
+export {
+    DBResult,
+    Result
+}

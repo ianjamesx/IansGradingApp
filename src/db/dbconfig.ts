@@ -3,6 +3,7 @@ connection pooling/promise wrapper for mysql
 */
 
 import mysql = require('mysql'); //db module
+import { DBResult } from './dbquery';
 
 /*
 MySQL database configuration
@@ -63,8 +64,27 @@ let errorsave = (error: string): void => {
   console.log(error);
 };
 
+/*
+wrapper for returning results from a database query
+*/
+let dbquery = async (sqlquery): Promise<DBResult> => {
+
+  let result: DBResult = {};
+
+  try {
+    result.data = await query(sqlquery);
+  } catch(err){
+    errorsave(err);
+    result.error = unknownerr;
+  }
+
+  return result;
+
+}
+
 export {
   query,
+  dbquery,
   errorsave,
   unknownerr,
   loginerr,
