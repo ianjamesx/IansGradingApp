@@ -1,5 +1,4 @@
 
-
 //only get values from an object, put in array
 let vals = (obj: any): any[] => {
     var i, arr = [];

@@ -1,7 +1,8 @@
 
-import { query, unknownerr, loginerr, errorsave } from './dbconfig';
+import { query, dbquery, unknownerr, loginerr, errorsave } from './dbconfig';
 import { id, vals, keys } from '../utils/utils';
 import { format, escape } from 'sqlstring';
+import { DBResult } from '../interfaces';
 
 /*
 
@@ -11,16 +12,6 @@ e.g. save, load, generateid
 */
 
 /*
-this interface will be used for all db queries
-with some exceptions for, say, generateID functions
-*/
-
-interface DBResult {
-    error?: string;
-    data?: any;
-}
-
-/*
 load single record from database
 correlating to the object passed in, by ID
 
@@ -28,10 +19,10 @@ get what to load based on object's getColumns function
 load based on ID
 */
 
-let load = async (obj: any, table: string): Promise<DBResult> => {
+let load = async (obj: any): Promise<DBResult> => {
 
     let result: DBResult = {};
-    let loadquery = format(`SELECT ?? FROM ${table} WHERE id = ?`, [keys(obj.getColumns()), obj.getID()]);
+    let loadquery = format(`SELECT ?? FROM ${obj.table} WHERE id = ?`, [keys(obj.getColumns()), obj.getID()]);
     
     try {
         result.data = await query(loadquery);
@@ -57,18 +48,18 @@ if updating, get all column data through getColumns(), set to match objects ID
 if we're inserting, get keys and vals from columns for insert query
 */
 
-let save = async (obj: any, table: string): Promise<DBResult> => {
+let save = async (obj: any): Promise<DBResult> => {
 
     let result: DBResult = {};
 
-    let existsquery: string = format(`SELECT id FROM ${table} WHERE id = ?`, [obj.getID()]);
+    let existsquery: string = format(`SELECT id FROM ${obj.table} WHERE id = ?`, [obj.getID()]);
     let exists: any[] = await query(existsquery);
     let savequery: string;
 
     if(exists.length > 0)
-        savequery = format(`UPDATE ${table} SET ?? WHERE id = ?`, [obj.getColumns(), obj.id]);
+        savequery = format(`UPDATE ${obj.table} SET ?? WHERE id = ?`, [obj.getColumns(), obj.id]);
      else 
-        savequery = format(`INSERT INTO ${table} (??) VALUES (?)`, [keys(obj.getColumns()), vals(obj.getColumns())]);
+        savequery = format(`INSERT INTO ${obj.table} (??) VALUES (?)`, [keys(obj.getColumns()), vals(obj.getColumns())]);
 
     //run, return errors if any are encountered
     try {
@@ -106,13 +97,13 @@ export everything from db module as well so models only need this file
 */
 export {
     query,
+    dbquery,
     errorsave,
     unknownerr,
     loginerr,
     format,
     escape,
 
-    DBResult,
     load,
     save,
     generateID

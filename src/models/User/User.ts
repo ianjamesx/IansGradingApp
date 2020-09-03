@@ -2,7 +2,11 @@
 import * as db from '../../db/dbquery';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
-import { hash as generatehash } from 'bcrypt';    //password encryption
+import { hash as generatehash, compare } from 'bcrypt';    //password encryption
+import { DBResult } from '../../interfaces';
+
+import { Course } from '../Course/Course';
+import { Assignment } from '../Assignment/Assignment';
 
 /*
 interfaces for this class
@@ -15,12 +19,6 @@ interface Errors {
   firstname?: string;
   lastname?: string;
   any?: string; //<-- errors when inserting into db, not based on user input
-}
-
-//DB results for select quieries
-interface DBResult {
-  error?: string; //any db errors
-  data?: any;     //result from db
 }
 
 interface Credentials {
@@ -42,7 +40,7 @@ class User {
   protected hash: string; //hashed password
   protected id: number;
 
-  protected static table = `users`;
+  public static table = `users`;
 
   constructor(email?:string, password?:string, firstname?:string, lastname?:string, instructor?: number){
     this.email = email;
@@ -134,21 +132,38 @@ class User {
   }
 
   public async login(req: any): Promise<string | void> {
-    let result: DBResult = {};
-    result = await db.login(this);
-    if(result.error) return result.error; //if we get an error
-    this.loadtouser(result.data);         //save all data in this object
-    this.setSession(req);                 //load data to session
+
+    //build query to search by email only (we'll compare to password later)
+    let loginquery: string = db.format(`SELECT ?? FROM ${User.table} WHERE email = ?`, [keys(this.getColumns()), this.email]);
+    let result: DBResult = await db.dbquery(loginquery);
+
+    if(result.error) return result.error;
+
+    //select first entry
+    result.data = result.data[0];
+
+    console.log(result.data);
+
+    //if no users found from email, return a login error message
+    if(!result.data){
+      return `Email or password incorrect`;
+    }
+
+    //if we found a user, compare the encrypted password to the one entered
+    let passwordmatched: boolean = await compare(this.password, result.data.password); //compare users password to hash in db
+    if(!passwordmatched) return `Email or password incorrect`;
+
+    //save data to this object and to session
+    this.loadtouser(result.data);
+    this.setSession(req);
   }
 
   /*
-
   ID generation/password encryption
-
   */
 
   private async generateID(): Promise<void> {
-    this.id = await db.generateID();
+    this.id = await db.generateID(User.table);
   }
 
   private async encryptPassword(): Promise<void> {
@@ -162,7 +177,10 @@ class User {
 
   public async getAllCourses(): Promise<DBResult> {
 
-    let coursedata: DBResult = await db.getAllCourses(this);
+    let course: Course = new Course();
+    let coursequery = db.format(`SELECT ?? FROM courses WHERE id IN (SELECT course FROM usercourse WHERE user = ?)`, [keys(course.getColumns()), this.id]);
+
+    let coursedata: DBResult = await db.dbquery(coursequery);
     return coursedata;
     
   }
@@ -171,8 +189,12 @@ class User {
   for getting assignments for this user
   */
   public async getAllAssignments(): Promise<DBResult> {
-    let coursedata: DBResult = await db.getAllAssignments(this);
-    return coursedata;
+
+    let assignment: Assignment = new Assignment();
+    let assignmentquery = db.format(`SELECT ?? FROM assignments WHERE course IN (SELECT course FROM usercourse WHERE user = ?)`, [keys(assignment.getColumns()), this.id]);
+
+    let assignmentdata: DBResult = await db.dbquery(assignmentquery);
+    return assignmentdata;
   }
 
   /*

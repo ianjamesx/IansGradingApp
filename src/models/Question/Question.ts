@@ -1,14 +1,10 @@
 //import * as db from './queries';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
-import * as db from './queries';
+import * as db from '../../db/dbquery';
+import { DBResult } from '../../interfaces';
 
 import { User } from '../User/User';
-
-interface DBResult {
-    error?: string;
-    data?: any;
-}
 
 interface Answer {
     answer: string;
@@ -34,6 +30,8 @@ class Question {
     private ispublic: number;
 
     private id: number;
+
+    public static table = `questions`;
 
     constructor(question?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
 
@@ -89,9 +87,32 @@ class Question {
             return { any: dberr.error };
 
         //also save answers seperately
-        let anserr: DBResult = await db.saveAnswers(this);
+        let anserr: DBResult = await this.saveAnswers();
         if(anserr.error)
             return { any: dberr.error };
+    }
+
+    public async saveAnswers(): Promise<DBResult>{
+
+        //to perform a bulk insert, we have to turn array of objects into nested array first
+        let i: number;
+        let answernest: any = [];
+        let answers = this.answers;
+
+        for(i = 0; i < answers.length; i++){
+
+            let curr: any[] = vals(answers[i]);
+            curr.push(this.id);                         //also push id of this question
+            curr.push(await db.generateID(`answers`)); //and id generated for this answer
+            
+            answernest.push(curr);
+
+        }
+
+        let savequery = db.format(`INSERT INTO answers (ans, correct, question, id) VALUES ?`, [answernest]);
+
+        let result: DBResult = await db.dbquery(savequery);
+        return result;
     }
 
     
@@ -105,7 +126,7 @@ class Question {
     }
 
     private async generateID(): Promise<void> {
-        this.id = await db.generateID();
+        this.id = await db.generateID(Question.table);
     }
 
     public getID(): number {
@@ -137,11 +158,17 @@ class Question {
 
     }
 
-    public static async allQuestionsBy(userID: number){
+    /*
+    get all questions by a specific author
+    */
+    public static async allQuestionsBy(userID: number): Promise<any[]>{
 
-        let result: DBResult = await db.allQuestionsByUser(userID);
+        let question: Question = new Question();
+        let searchquery: string = db.format(`SELECT ?? FROM questions WHERE author = ?`, [keys(question.getColumns()), userID]);
 
-        //on error, return empty array of questions, signifying none found
+        let result: DBResult = await db.dbquery(searchquery);
+
+        //on error, return empty array of questions
         if(result.error) return [];
         return result.data;
 
