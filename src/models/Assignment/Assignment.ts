@@ -1,7 +1,7 @@
 //import * as db from './queries';
 import verify = require('../../utils/verify');       //validator wrapper
 import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
-import * as db from './queries';
+import * as db from '../../db/dbquery';
 import moment = require('moment');
 
 import { User } from '../User/User';
@@ -42,6 +42,8 @@ class Assignment {
     private cutoff: string;
 
     private id: number;
+
+    public table: string = `assignments`;
 
     constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, type?: string, id?: number){
 
@@ -133,7 +135,7 @@ class Assignment {
     }
 
     private async generateID(): Promise<void> {
-        this.id = await db.generateID();
+        this.id = await db.generateID(`questions`);
     }
 
     public getID(): number {
@@ -154,7 +156,16 @@ class Assignment {
     }
 
     public static async saveQuestions(assignmentID: number, questionIDs: string[]): Promise<void> {
-        await db.saveQuestions(assignmentID, questionIDs);
+
+        //to perform bulk insert, we must add id of assignment to each element (and cast question ids to numbers)
+        let i: number;
+        let questionnest = [];
+        for(i = 0; i < questionIDs.length; i++){
+            questionnest[i] = [assignmentID, Number(questionIDs[i])];
+        }
+
+        let savequery = db.format(`INSERT INTO assignmentquestions (assignment, question) VALUES ?`, [questionnest]);
+        let result: DBResult = await db.dbquery(savequery);
     }
 
     public getColumns(): any{

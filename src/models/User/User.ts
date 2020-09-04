@@ -40,7 +40,7 @@ class User {
   protected hash: string; //hashed password
   protected id: number;
 
-  public static table = `users`;
+  public table = `users`;
 
   constructor(email?:string, password?:string, firstname?:string, lastname?:string, instructor?: number){
     this.email = email;
@@ -134,8 +134,10 @@ class User {
   public async login(req: any): Promise<string | void> {
 
     //build query to search by email only (we'll compare to password later)
-    let loginquery: string = db.format(`SELECT ?? FROM ${User.table} WHERE email = ?`, [keys(this.getColumns()), this.email]);
+    let loginquery: string = db.format(`SELECT ?? FROM users WHERE email = ?`, [keys(this.getColumns()), this.email]);
     let result: DBResult = await db.dbquery(loginquery);
+
+    console.log(result);
 
     if(result.error) return result.error;
 
@@ -163,7 +165,7 @@ class User {
   */
 
   private async generateID(): Promise<void> {
-    this.id = await db.generateID(User.table);
+    this.id = await db.generateID(`users`);
   }
 
   private async encryptPassword(): Promise<void> {

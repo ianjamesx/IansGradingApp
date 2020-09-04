@@ -1,13 +1,12 @@
 //var render = require('../utils/render');
 import { User } from '../models/User/User';
-import { Student } from '../models/Student/Student';
 import { Course } from '../models/Course/Course';
 import { Assignment } from '../models/Assignment/Assignment';
+import { Question } from '../models/Question/Question';
 
 import { Request } from 'express';
 
 import common = require('./pagebase');
-import { Question } from '../models/Question/Question';
 
 /*
 page builder
@@ -75,7 +74,7 @@ let coursePage = async (req: Request) => {
 
   //if instructor, get all students
   if(pagedata.instructor){
-    let student: Student = new Student();
+    let student: User = new User();
     pagedata.students = await course.getStudents(student);
   }
   

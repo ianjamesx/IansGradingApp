@@ -1,6 +1,5 @@
 import pb = require('../services/pagebuilder');
 import { Application, Request, Response } from 'express';
-import { Instructor } from '../models/Instructor/Instructor';
 
 let routes = (app: Application): void => {
 

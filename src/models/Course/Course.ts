@@ -1,6 +1,7 @@
-import * as db from './queries';
+import * as db from '../../db/dbquery';
 import verify = require('../../utils/verify');       //validator wrapper
-import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
+import { vals, keys, key } from '../../utils/utils';      //some utils for restructuring data
+import { DBResult } from '../../interfaces';
 
 import { User } from '../User/User';
 
@@ -13,9 +14,14 @@ interface Errors {
   any?: string;
 }
 
-interface DBResult {
-  error?: string;
-  data?: any;
+interface Department {
+    name?: string;
+    abbreviation?: string;
+}
+
+interface CourseCategory {
+    name?: string;
+    points?: number;
 }
 
 /*
@@ -43,10 +49,10 @@ class Course {
 
     private id: number;
     private coursekey: string;
-
     private instructor: number;
-
     private categories: any;
+
+    public table: string = `courses`;
 
     constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, categories?: any, id?: number, coursekey?: string){
         this.name = name;
@@ -87,11 +93,14 @@ class Course {
         if(!this.coursekey)
             this.coursekey = key;
 
-        let result: DBResult = await db.loadFromKey(this);
+        let loadquery = db.format(`SELECT ?? FROM courses WHERE coursekey = ?`, [keys(this.getColumns()), this.getKey()]);
+        let result: DBResult = await db.dbquery(loadquery);
 
-        if(result.error)
-            return result.error;
-
+        //return any errors
+        if(result.data.length == 0 || result.error) return db.unknownerr;
+        
+        //load to object if successful
+        result.data = result.data[0];
         this.loadFromObject(result.data);
     }
 
@@ -109,11 +118,15 @@ class Course {
     //get all departments available
     //run db query to get departments, turn into an enum style object
     public async getDepartments(): Promise<any> {
-        let deptartments: any = [];
-        let dbres: DBResult = await db.getAllDepartments();
 
-        if(dbres.error) return dbres.error;
-        let deptdata: any = dbres.data;
+        let loadquery = `SELECT abbreviation, name FROM departments`;
+        let result: DBResult = await db.dbquery(loadquery);
+
+        //on err return empty array
+        if(result.error) return [];
+
+        let deptdata: any = result.data;
+        let deptartments: Department[] = [];
 
         //get abbreviation and name for each department to feed into array
         let i: number;
@@ -131,11 +144,13 @@ class Course {
     }
     
     public async getCategories(): Promise<any> {
-        let categories: any = [];
-        let dbres: DBResult = await db.getAllCategories(this);
 
-        if(dbres.error) return []; //return error message here eventually
-        let catdata: any = dbres.data;
+        let loadquery = db.format(`SELECT name, points FROM course_categories WHERE course = ?`, [this.getID()]);
+        let result: DBResult = await db.dbquery(loadquery);
+
+        if(result.error) return [];
+        let catdata: any = result.data;
+        let categories: CourseCategory[] = [];
 
         //get abbreviation and name for each department to feed into array
         let i: number;
@@ -159,10 +174,19 @@ class Course {
             return;
         }
 
-        let dberr: DBResult = await db.saveCategories(this.categories, this.getID());
-        if(dberr.error)
-            return dberr.error;
+        let i: any;
+        let categorynest: any = [];
+        for(i in this.categories){
 
+            let curr: any[] = vals(this.categories[i]);
+            curr.push(this.getID()); //also push id of course
+
+            categorynest.push(curr);
+        }
+
+        let savequery = db.format(`INSERT INTO course_categories (name, points, course) VALUES ?`, [categorynest]);
+        let result: DBResult = await db.dbquery(savequery);
+        if(result.error) return result.error;
     }
 
     //store section number as int in database, turn into 3 char string when showing to client
@@ -182,11 +206,24 @@ class Course {
     }
 
     private async generateKey(): Promise<void> {
-        this.coursekey = await db.generateKey();
+
+        let coursekey: string;
+        let valid: boolean = false;
+
+        while(!valid){
+            //get new key, see if it exists for another course
+            coursekey = key();
+            let keysearch: string = db.format(`SELECT coursekey FROM courses WHERE coursekey = ?`, coursekey);
+
+            let results: DBResult = await db.dbquery(keysearch);
+            if(results.data.length == 0) valid = true;
+        }
+
+        this.coursekey = coursekey;
     }
 
     private async generateID(): Promise<void> {
-        this.id = await db.generateID();
+        this.id = await db.generateID(`courses`);
     }
 
     //verify all user inputted fields
@@ -234,27 +271,50 @@ class Course {
     /*
     adding connection to course in junction table
     */
-    public async joinCourse(userID: number): Promise<string | void> {
 
-        let dberr: DBResult = await db.joinCourse(this.getID(), userID);
-        if(dberr.error){
-            return dberr.error;
+    public async userInCourse(userID: number): Promise<boolean> {
+
+        //get users connection to course through junction table
+        let connquery = db.format(`SELECT * FROM usercourse WHERE user = ? AND course = ?`, [userID, this.getID()]);
+        let results: DBResult = await db.dbquery(connquery);
+
+        if(results.data.length == 0){
+            return true;
+        } else {
+            return false;
         }
 
     }
 
-    /*
-    for retrieving data on students
-    */
+    public async joinCourse(userID: number): Promise<string | void> {
+
+        let result: DBResult = {};
+
+        //see if user is already in course
+        let incourse: boolean = await this.userInCourse(userID);
+        if(incourse){
+            return `user already in course`;
+        }
+
+        //add users connection to course through junction table
+        let connquery = db.format(`INSERT INTO usercourse (user, course) VALUES (?, ?)`, [userID, this.getID()]);
+        let results: DBResult = await db.dbquery(connquery);
+
+        if(result.error) return result.error;
+
+    }
 
     //get all students (users, so instructors included) for this course
     //db search returns column data for all users in junction table
-    public async getStudents(Student: any): Promise<string | any> {
-        let dbres: DBResult = await db.getAllStudents(this, Student);
-        if(dbres.error)
-            return dbres.error;
+    public async getStudents(student: any): Promise<string | any> {
 
-        return dbres.data;
+        let loadquery = db.format(`SELECT ?? FROM users WHERE id IN (SELECT user FROM usercourse WHERE course = ?)`, [keys(student.getColumns()), this.getID()]);
+
+        let results: DBResult = await db.dbquery(loadquery);
+
+        if(results.error) return results.error;
+
+        return results.data;
     }
     
     /*

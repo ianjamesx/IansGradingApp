@@ -31,7 +31,7 @@ class Question {
 
     private id: number;
 
-    public static table = `questions`;
+    public table:string = `questions`;
 
     constructor(question?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
 
@@ -126,7 +126,7 @@ class Question {
     }
 
     private async generateID(): Promise<void> {
-        this.id = await db.generateID(Question.table);
+        this.id = await db.generateID(`questions`);
     }
 
     public getID(): number {
