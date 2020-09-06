@@ -16,18 +16,22 @@
         <table class="table">
             <thead>
               <tr>
-                <th scope="col">Student</th>
+                <th scope="col">Name</th>
+                <th scope="col">Role</th>
                 <th scope="col">Email</th>
                 <th scope="col">Report</th>
               </tr>
             </thead>
             <tbody>
-                <%# load all students into the table %>
-            <% students.forEach((student) => { %>
+            <%# load all enrolees into the table %>
+            <% enrolees.forEach((enrolee) => { %>
                 <tr>
-                    <td><%= student.firstname %> <%= student.lastname %></td>
-                    <td><%= student.email %></td>
-                    <td><a href="/studentreport/<%= student.id %>">Full Report</a></td>
+                    <td><%= enrolee.firstname %> <%= enrolee.lastname %></td>
+                    <td><%= enrolee.type %></td>
+                    <td><%= enrolee.email %></td>
+                    <% if(enrolee.type == 'Student'){ %> 
+                      <td><a href="/studentreport/<%= enrolee.id %>">Full Report</a></td>
+                    <% } %>
                 </tr>
             <% }); %>
             </tbody>

@@ -181,7 +181,7 @@ class User {
 
     let course: Course = new Course();
     let coursequery = db.format(`SELECT ?? FROM courses WHERE id IN (SELECT course FROM usercourse WHERE user = ?)`, [keys(course.getColumns()), this.id]);
-
+    
     let coursedata: DBResult = await db.dbquery(coursequery);
     return coursedata;
     

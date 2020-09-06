@@ -33,7 +33,7 @@ function saveQuestions(questions, assignment){
         }),
         success: function(data){
 
-            console.log(data);
+            location.href='/assignment/' + data.success;
   
         }
   

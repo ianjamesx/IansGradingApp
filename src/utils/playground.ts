@@ -75,27 +75,29 @@ let savequery = db.format(`INSERT INTO course_categories (name, points, course) 
 console.log(savequery);
 
 */
+/*
+import { Assignment } from '../models/Assignment/Assignment';
 
-import * as db from '../db/dbquery';
+let test = async (): Promise<void> => {
 
-let test = async function(){
+  let assign: Assignment = new Assignment();
+  assign.setID(4989299);
 
-  try {
-
-    let quer: string = 'ALTER TABLE assignments DROP COLUMN course';
-
-  let output = await db.query(quer);
-
-  } catch(err){
-    console.log(err);
-    console.log(err.sqlMessage);
-    let constriant: any = (err.sqlMessage.split(' '));
-    constriant = constriant[constriant.length-1];
-    console.log(constriant);
-  }
-
-  //console.log(output);
+  await assign.getQuestions();
 
 }
 
+test();
+*/
+
+/*
+import { tablekeys } from './utils';
+
+let x = {
+  prop1: 'he',
+  prop2: 'ka'
+};
+
+console.log(tablekeys(x, 'q'));
+*/
 //test();

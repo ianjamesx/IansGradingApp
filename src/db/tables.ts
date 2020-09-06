@@ -18,6 +18,10 @@ let tables: any = {
         id: `int NOT NULL PRIMARY KEY`
     },
 
+    usertypes: {
+        name: `varchar(20) NOT NULL PRIMARY KEY`,
+    },
+
     courses: {
         name: `varchar(30)`,
         department: `char(4)`,
@@ -27,9 +31,10 @@ let tables: any = {
         section: `int`,
         id: `int NOT NULL PRIMARY KEY`,
         coursekey: `varchar(12)`,
-        instructor: `varchar(30)`,
+        instructor: `int`,
         CONSTRAINTS: [
-            `FOREIGN KEY (department) REFERENCES departments(abbreviation)`
+            `FOREIGN KEY (department) REFERENCES departments(abbreviation)`,
+            `FOREIGN KEY (instructor) REFERENCES users(id)`
         ]
     },
 
@@ -46,9 +51,11 @@ let tables: any = {
     usercourse: {
         user: `int`,
         course: `int`,
+        type: `varchar(20)`,
         CONSTRAINTS: [
             `FOREIGN KEY (user) REFERENCES users(id)`,
-            `FOREIGN KEY (course) REFERENCES courses(id)`
+            `FOREIGN KEY (course) REFERENCES courses(id)`,
+            `FOREIGN KEY (type) REFERENCES usertypes(name)`
         ]
     },
 
@@ -96,7 +103,7 @@ let tables: any = {
         id: `int NOT NULL PRIMARY KEY`,
         type: `varchar(20)`,
         author: `int`,
-        question: `text`,
+        body: `text`,
         hint: `varchar(200)`,
         subject: `varchar(20)`,
         topic: `varchar(20)`,

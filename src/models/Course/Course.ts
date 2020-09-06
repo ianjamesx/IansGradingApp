@@ -279,14 +279,14 @@ class Course {
         let results: DBResult = await db.dbquery(connquery);
 
         if(results.data.length == 0){
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
 
     }
 
-    public async joinCourse(userID: number): Promise<string | void> {
+    public async joinCourse(userID: number, role: string): Promise<string | void> {
 
         let result: DBResult = {};
 
@@ -297,21 +297,26 @@ class Course {
         }
 
         //add users connection to course through junction table
-        let connquery = db.format(`INSERT INTO usercourse (user, course) VALUES (?, ?)`, [userID, this.getID()]);
+        let connquery = db.format(`INSERT INTO usercourse (user, course, type) VALUES (?, ?, ?)`, [userID, this.getID(), role]);
         let results: DBResult = await db.dbquery(connquery);
 
         if(result.error) return result.error;
 
     }
 
-    //get all students (users, so instructors included) for this course
+    //get all students/instructor/TAs for this course
     //db search returns column data for all users in junction table
-    public async getStudents(student: any): Promise<string | any> {
+    public async getEnrollees(): Promise<string | any> {
 
-        let loadquery = db.format(`SELECT ?? FROM users WHERE id IN (SELECT user FROM usercourse WHERE course = ?)`, [keys(student.getColumns()), this.getID()]);
+        let enrollee: User = new User();
+
+        //get type and all user data for enrollees in this course
+        let queryunformatted = `SELECT type, ?? FROM usercourse, users 
+                    WHERE usercourse.course = ? AND users.id = usercourse.user`;
+
+        let loadquery = db.format(queryunformatted, [keys(enrollee.getColumns()), this.getID()]);
 
         let results: DBResult = await db.dbquery(loadquery);
-
         if(results.error) return results.error;
 
         return results.data;
@@ -378,10 +383,6 @@ class Course {
 
 }
 
-/*
-also export user subclasses for query builder
-*/
 export {
-    Course,
-    DBResult
+    Course
 }

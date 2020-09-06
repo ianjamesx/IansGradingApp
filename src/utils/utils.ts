@@ -17,6 +17,17 @@ let keys = (obj: any): any[] => {
     return arr;
 };
 
+let tablekeys = (obj: any, letter: string): any[] => {
+    let objkeys = keys(obj);
+
+    let i: number;
+    for(i = 0; i < objkeys.length; i++){
+        objkeys[i] = letter + '.' + objkeys[i];
+    }
+
+    return objkeys;
+}
+
 //generate an id for database record
 let id = (): number => {
 
@@ -52,6 +63,7 @@ let key = (): string => {
 export {
     vals,
     keys,
+    tablekeys,
     id,
     key
 };

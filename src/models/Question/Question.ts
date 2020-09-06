@@ -19,7 +19,7 @@ interface Errors {
 
 class Question {
 
-    private question: string;
+    private body: string;
     private answers: Answer[];
     private hint: string;
 
@@ -33,9 +33,9 @@ class Question {
 
     public table:string = `questions`;
 
-    constructor(question?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
+    constructor(body?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
 
-        this.question = question;
+        this.body = body;
         this.answers = answers;
         this.author = author;
         this.subject = subject;
@@ -46,9 +46,9 @@ class Question {
 
     }
 
-    public loadAssignmentData(question?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number): void {
+    public loadQuestionData(body?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number): void {
 
-        this.question = question;
+        this.body = body;
         this.answers = answers;
         this.author = author;
         this.subject = subject;
@@ -60,7 +60,7 @@ class Question {
     }
 
     public loadFromObject(q: any): void{
-        this.loadAssignmentData(q.question, q.answers, q.author, q.subject, q.topic, q.type, q.ispublic, q.id);
+        this.loadQuestionData(q.body, q.answers, q.author, q.subject, q.topic, q.type, q.ispublic, q.id);
     }
 
     public async loadFromID(ID: number): Promise<string | void> {
@@ -69,6 +69,10 @@ class Question {
 
         if(result.error)
             return result.error;
+
+        //also load answers
+        await this.loadAnswers();
+        result.data.answers = this.answers;
 
         this.loadFromObject(result.data);
     }
@@ -119,7 +123,7 @@ class Question {
     private async verify(): Promise<any | null> {
 
         let errs: Errors = {
-            question: verify.custom(this.question, 'question')
+            question: verify.custom(this.body, 'question')
         };
       
         return verify.anyerrors(errs);
@@ -137,6 +141,14 @@ class Question {
         return this.answers;
     }
 
+    public async loadAnswers(): Promise<void> {
+
+        let loadquery: string = db.format(`SELECT id, correct, ans FROM answers WHERE question = ?`, this.getID());
+        let result: DBResult = await db.dbquery(loadquery);
+        this.answers = result.data;
+
+    }
+
     /*
     see if this question contains any of the keywords entered by user
     count how many keywords entered match question body
@@ -149,7 +161,7 @@ class Question {
 
         //count how many keywords entered appear in this question
         for(i = 0; i < keywords.length; i++){
-            if(this.question.includes(keywords[i])){
+            if(this.body.includes(keywords[i])){
                 keywordCount++;
             }
         }
@@ -213,7 +225,7 @@ class Question {
         //we'll return that in a seperate function to save
 
         return {
-            question: this.question,
+            body: this.body,
             hint: this.hint,
             author: this.author,
             subject: this.subject,
@@ -224,6 +236,17 @@ class Question {
         }
     }
 
+    public answerData(): any {
+        
+        //some sample data of what an answer would contain
+        return {
+            type: 0,
+            id: 0,
+            ans: 0
+        }
+    }
+
+
     public async dataView(): Promise<any> {
 
         //get instructors first, last name from id
@@ -232,7 +255,7 @@ class Question {
         let authorname: string = author.getFN() + ' ' + author.getLN();
 
         return {
-            question: this.question,
+            body: this.body,
             hint: this.hint,
             author: authorname,
             subject: this.subject,

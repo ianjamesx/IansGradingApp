@@ -33,7 +33,7 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
                   common.unknownerr('unknownerr');
                 }
             } else if(data.success){
-                location.href='/assignment/' + data.success + '/choosequestions';
+                location.href='/assignment/choosequestions/' + data.success;
             }
   
         }

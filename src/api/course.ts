@@ -38,7 +38,8 @@ let courseapi = (app: Application): void => {
             } else {
                 
                 //add connection between instructor and course
-                course.joinCourse(instructorID).then(joinerr => {
+                //if joining through create API, user is the instructor
+                course.joinCourse(instructorID, `Instructor`).then(joinerr => {
                     if(joinerr){
                         result.error = joinerr;
                     } else {
@@ -93,8 +94,8 @@ let courseapi = (app: Application): void => {
 
         } else {
 
-            //see if we get any errors joining (e.g. user already in course)
-            let joinerr: any = await course.joinCourse(userID);
+            //if joining through join API, user is a student (if not the instructor can upgrade them)
+            let joinerr: any = await course.joinCourse(userID, `Student`);
             if(joinerr){
                 result.error = joinerr;
             } else {

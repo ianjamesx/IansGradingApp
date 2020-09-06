@@ -72,10 +72,9 @@ let coursePage = async (req: Request) => {
   pagedata.course = await course.dataView();
   pagedata.title = course.getCourseTitle();
 
-  //if instructor, get all students
+  //if instructor, get all enrollees
   if(pagedata.instructor){
-    let student: User = new User();
-    pagedata.students = await course.getStudents(student);
+    pagedata.enrolees = await course.getEnrollees();
   }
   
   return pagedata;
@@ -132,6 +131,26 @@ let chooseQuestions = async (req: Request) => {
 
 };
 
+let assignment = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+
+  //get assignment id from request params
+  let id: number = Number(req.params.id);
+
+  let assignment: Assignment = new Assignment();
+  await assignment.loadFromID(id);
+
+  let some: any = await assignment.getQuestions();
+
+  pagedata.assignment = await assignment.dataView();
+  pagedata.title = pagedata.assignment.name;
+
+  return pagedata;
+
+};
+
 let createQuestion = async (req: Request) => {
 
   let pagedata = await common.pagebase(req);
@@ -146,6 +165,7 @@ export all page functions
 */
 export {
   dashboard,
+  assignment,
   createCourse,
   coursePage,
   joinCourse,

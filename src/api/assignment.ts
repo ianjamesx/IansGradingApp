@@ -54,12 +54,17 @@ let assignmentapi = (app: Application): void => {
     app.post('/api/assignment/addquestions', async (req: Request, res: Response) => {
 
         let questions: string[] = req.body.questions;
-        let assignment: number = Number(req.body.assignment);
+        let assignmentID: number = Number(req.body.assignment);
 
-        console.log(questions);
-        console.log(assignment);
+        let assign: Assignment = new Assignment();
+        assign.setID(assignmentID);
 
-        await Assignment.saveQuestions(assignment, questions);
+        await assign.saveQuestions(questions);
+
+        let result: Result = {
+            success: assignmentID
+        };
+        res.send(result);
 
     });
 

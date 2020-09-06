@@ -1,10 +1,11 @@
 //import * as db from './queries';
 import verify = require('../../utils/verify');       //validator wrapper
-import { vals, keys } from '../../utils/utils';      //some utils for restructuring data
+import { vals, keys, tablekeys } from '../../utils/utils';      //some utils for restructuring data
 import * as db from '../../db/dbquery';
 import moment = require('moment');
 
 import { User } from '../User/User';
+import { Question } from '../Question/Question';
 
 interface DBResult {
     error?: string;
@@ -155,17 +156,94 @@ class Assignment {
         return false;
     }
 
-    public static async saveQuestions(assignmentID: number, questionIDs: string[]): Promise<void> {
+    public async saveQuestions(questionIDs: string[]): Promise<void> {
 
         //to perform bulk insert, we must add id of assignment to each element (and cast question ids to numbers)
         let i: number;
         let questionnest = [];
         for(i = 0; i < questionIDs.length; i++){
-            questionnest[i] = [assignmentID, Number(questionIDs[i])];
+            questionnest[i] = [this.getID(), Number(questionIDs[i])];
         }
 
         let savequery = db.format(`INSERT INTO assignmentquestions (assignment, question) VALUES ?`, [questionnest]);
         let result: DBResult = await db.dbquery(savequery);
+    }
+
+    /*
+    get all question/answers for this assignment
+    */
+    public async getQuestions(): Promise<Question[]> {
+
+        let queryraw = `SELECT q.body, q.hint, q.type, q.id AS questID, a.id AS ansID, a.correct, a.ans 
+                        FROM questions AS q, answers AS a, assignmentquestions AS aq 
+                        WHERE aq.assignment = ? AND q.id = aq.question AND a.question = q.id`;
+        let loadquery = db.format(queryraw, [this.getID()]);
+
+        let result: DBResult = await db.dbquery(loadquery);
+
+        if(result.error){
+            return [];
+        }
+
+        //reform questions (to eliminate duplicates for answers)
+        let quests: any = this.reformQuestionData(result);
+        
+        let i: any;
+        let questions: Question[] = [];
+
+        for(i in quests){
+
+            let currquest = new Question();
+            currquest.loadFromObject(quests[i]);
+            questions.push(currquest);
+
+        }
+
+        return questions;
+
+    }
+
+    private reformQuestionData(result: any): any {
+
+        let i: number;
+        let quests: any = {};
+        for(i = 0; i < result.data.length; i++){
+
+            //save question (if not already saved) as object
+            let currquestionID: number = result.data[i].questID;
+            if(!quests[currquestionID]){
+                quests[currquestionID] = {
+                    body: result.data[i].body,
+                    hint: result.data[i].hint,
+                    type: result.data[i].type,
+                    id: result.data[i].questID,
+                    answers: []
+                };
+
+                //save current answer as well
+                quests[currquestionID].answers.push({
+                    answer: result.data[i].ans,
+                    correct: result.data[i].correct,
+                    id: result.data[i].ansID
+                });
+                
+            } else {
+
+                quests[currquestionID].answers.push({
+                    answer: result.data[i].ans,
+                    correct: result.data[i].correct,
+                    id: result.data[i].ansID
+                });
+
+            }
+        }
+
+        return quests;
+
+    }
+
+    public setID(id: number){
+        this.id = id;
     }
 
     public getColumns(): any{
