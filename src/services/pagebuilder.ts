@@ -7,6 +7,7 @@ import { Question } from '../models/Question/Question';
 import { Request } from 'express';
 
 import common = require('./pagebase');
+import { questionapi } from '../api/question';
 
 /*
 page builder
@@ -122,10 +123,13 @@ let chooseQuestions = async (req: Request) => {
   await assignment.loadFromID(id);
 
   //get all questions made by this instructor (by user id)
-  let userquestions: Question[] = await Question.allQuestionsBy(pagedata.user.id);
-  pagedata.questions = userquestions;
+  let userquestions: any[] = await Question.allQuestionsBy(pagedata.user.id);
+
+  //get questions already in assignment and remove them (so they cant be selected again)
+  await assignment.removeQuestionsIfExists(userquestions);
 
   pagedata.assignment = await assignment.dataView();
+  pagedata.questions = userquestions;
 
   return pagedata;
 
@@ -142,7 +146,13 @@ let assignment = async (req: Request) => {
   let assignment: Assignment = new Assignment();
   await assignment.loadFromID(id);
 
-  let some: any = await assignment.getQuestions();
+  //push all question views for this assignment into array (to render)
+  pagedata.questions = [];
+  let questions: Question[] = await assignment.getQuestions();
+  let i: number;
+  for(i = 0; i < questions.length; i++){
+    pagedata.questions.push(await questions[i].dataView());
+  }
 
   pagedata.assignment = await assignment.dataView();
   pagedata.title = pagedata.assignment.name;

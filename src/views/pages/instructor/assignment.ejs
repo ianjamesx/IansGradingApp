@@ -10,12 +10,32 @@
       <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
       <div id="content">
 
-      
+        <h1><%= assignment.name %> <small>| <%= assignment.category %></small></h1>
+        <h2>For <%= assignment.course %></h2>
+        <hr>
+        <p><small>Available: </small>&emsp; <%= assignment.open %>
+          <br><small>Due by: </small>&emsp;<%= assignment.close %>
+          <br><small>No longer available: </small>&emsp;<%= assignment.cutoff %></p>
+        <hr>
+
+        <p><%= assignment.points %> <small>Points</small> | <%= assignment.attempts %> <small>Attempts</small> | <%= assignment.latepenalty %> <small>Point Late Penalty</small></p>
+
+        <hr>
+
+        <ul id="questions">
+          <% questions.forEach((question) => { %>
+            <%- include('../../partials/instructor/questionview', {question: question}) %>
+          <% }); %>
+        </ul>
+        <hr>
+
+        <a id="addquestions" class="appbtn" type="button" href="/assignment/choosequestions/<%= assignment.id %>">Add More Questions</a>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>
   </body>
 
   <%- include('../../partials/scripts'); %>
+  <script type="text/javascript" src="http://localhost:8080/public/js/assignment.js"></script>
 
 </html>

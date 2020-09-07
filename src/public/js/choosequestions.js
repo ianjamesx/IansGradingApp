@@ -44,8 +44,7 @@ function saveQuestions(questions, assignment){
 $(document).ready(function(){
 
     //get id of assignment
-    var url = window.location.href;
-    var assignment = url.substring(url.lastIndexOf('/') + 1);
+    var assignment = common.getURLID();
 
     var questions = {};
 

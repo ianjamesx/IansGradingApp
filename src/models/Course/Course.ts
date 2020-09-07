@@ -326,6 +326,10 @@ class Course {
     for db/end user interactions
     */
 
+    public getNameFormatted(): string {
+        return this.department + ' ' + this.number + ': ' + this.name;
+    }
+
     public getColumns(): any {
 
         return {

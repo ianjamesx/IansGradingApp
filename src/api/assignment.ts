@@ -68,6 +68,23 @@ let assignmentapi = (app: Application): void => {
 
     });
 
+    app.post('/api/assignment/removequestion',  async (req: Request, res: Response) => {
+
+        let assignmentID: number = Number(req.body.assignment);
+        let questionID: number = Number(req.body.question);
+
+        let assign: Assignment = new Assignment();
+        assign.setID(assignmentID);
+
+        await assign.removeQuestion(questionID);
+
+        let result: Result = {
+            success: true
+        };
+        res.send(result);
+
+    });
+
 };
 
 export {

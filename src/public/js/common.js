@@ -47,5 +47,10 @@ var common = {
         }
 
         return arr;
+    },
+
+    getURLID: function(){
+        var url = window.location.href;
+        return url.substring(url.lastIndexOf('/') + 1);
     }
 };

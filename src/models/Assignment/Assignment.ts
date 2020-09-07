@@ -6,6 +6,8 @@ import moment = require('moment');
 
 import { User } from '../User/User';
 import { Question } from '../Question/Question';
+import { Course } from '../Course/Course';
+import { questionapi } from '../../api/question';
 
 interface DBResult {
     error?: string;
@@ -242,6 +244,29 @@ class Assignment {
 
     }
 
+    public async removeQuestion(questionID: number): Promise<void> {
+        let deletequery: string = db.format(`DELETE FROM assignmentquestions WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
+        await db.dbquery(deletequery);
+    }
+
+    //given a list of questions, remove any that exist currently in assignment
+    public async removeQuestionsIfExists(questions: any[]): Promise<void> {
+        let selectquery: string = db.format(`SELECT question FROM assignmentquestions WHERE assignment = ?`, [this.getID()]);
+        let result: DBResult = await db.dbquery(selectquery);
+
+        console.log(result.data);
+        let curr: any = result.data;
+        let i: number, j: number;
+
+        for(i = 0; i < curr.length; i++){
+          for(j = 0; j < questions.length; j++){
+            if(curr[i].question == questions[j].id){
+              questions.splice(j, 1);
+            }
+          }
+        }
+    }
+
     public setID(id: number){
         this.id = id;
     }
@@ -270,14 +295,20 @@ class Assignment {
     public async dataView(): Promise<any> {
 
         //get instructors first, last name from id
-        let author: User = new User;
+        let author: User = new User();
         await author.loadFromID(this.author);
         let authorname: string = author.getFN() + ' ' + author.getLN();
+
+        //also get readable name for course
+
+        let course: Course = new Course();
+        await course.loadCourseByID(this.course);
+        let coursename = course.getNameFormatted();
 
         return {
             name: this.name,
             author: authorname,
-            course: this.course,
+            course: coursename,
             category: this.category,
             type: this.type,
             active: this.active,
