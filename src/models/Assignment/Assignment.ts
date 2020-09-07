@@ -254,7 +254,6 @@ class Assignment {
         let selectquery: string = db.format(`SELECT question FROM assignmentquestions WHERE assignment = ?`, [this.getID()]);
         let result: DBResult = await db.dbquery(selectquery);
 
-        console.log(result.data);
         let curr: any = result.data;
         let i: number, j: number;
 
