@@ -46,13 +46,27 @@ let loginerr: string = `Email or password incorrect`;
 /*
 promise wrapper for performing SQL queries
 */
+
+//create pool of connections
+let pool = mysql.createPool(sqlconfig);
+
 let query = async (query): Promise<any> => {
 
-  let conn = mysql.createPool(sqlconfig);
   let promise = new Promise((resolve, reject) => {
-    conn.query(query, (err, rows, fields) => {
-      if (err) return reject(err);
-      resolve(rows);
+
+    //get a connection from connection pool
+    pool.getConnection((connerr, conn) => {
+      if (connerr) reject(connerr);
+
+      //run query passed
+      conn.query(query, (err, rows, fields) => {
+
+        if (err) reject(err);
+
+        resolve(rows);
+        conn.release();
+        
+      });
     });
   });
 
@@ -66,6 +80,7 @@ let errorsave = (error: string): void => {
 
 /*
 wrapper for returning results from a database query
+accounting for errors
 */
 let dbquery = async (sqlquery: string): Promise<DBResult> => {
 

@@ -7,7 +7,6 @@ import moment = require('moment');
 import { User } from '../User/User';
 import { Question } from '../Question/Question';
 import { Course } from '../Course/Course';
-import { questionapi } from '../../api/question';
 
 interface DBResult {
     error?: string;
@@ -30,7 +29,6 @@ class Assignment {
     private author: number;
     private course: number;
     private category: string; //category (e.g. lab, hw)
-    private active: number;
     private prompt: string; //prompt for assignment (e.g 'this test is...')
     private type: string;
     
@@ -48,7 +46,7 @@ class Assignment {
 
     public table: string = `assignments`;
 
-    constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, type?: string, id?: number){
+    constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, category?: string, type?: string, id?: number){
 
         this.name = name;
         this.author = author;
@@ -64,14 +62,13 @@ class Assignment {
         this.close = close;
         this.cutoff = cutoff;
 
-        this.active = active;
         this.category = category;
         this.type = type;
 
         this.id = id;
     }
 
-    public loadAssignmentData(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, active?: number, category?: string, type?: string, id?: number): void {
+    public loadAssignmentData(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, category?: string, type?: string, id?: number): void {
 
         this.name = name;
         this.author = author;
@@ -89,14 +86,13 @@ class Assignment {
         this.close = close;
         this.cutoff = cutoff;
 
-        this.active = active;
         this.category = category;
 
         this.id = id;
     }
 
     public loadFromObject(a: any): void{
-        this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.active, a.category, a.type, a.id);
+        this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.category, a.type, a.id);
     }
 
     public async loadFromID(ID: number): Promise<string | void> {
@@ -145,6 +141,43 @@ class Assignment {
         return this.id;
     }
 
+    /*
+    create records of progress for all questions for each student for this assignment
+    for each question, for each user in course
+    */
+    public async initStudentRecords(questionIDs: string[]): Promise<void> {
+
+        let i: any, j: any;
+
+        let course: Course = new Course();
+        course.loadCourseByID(this.course);
+        let students: any[] = await course.getEnrollees();
+
+        let correct: number = 0;
+        let attempts = this.attempts;
+
+        let records = [];
+
+        for(i = 0; i < questionIDs.length; i++){
+            for(j = 0; j < students.length; j++){
+
+                records.push([
+                    this.id,
+                    Number(questionIDs[i]), //cast question id to number
+                    students[j].id,
+                    correct,
+                    attempts
+                ]);
+
+            }
+            
+        }
+
+        let savequery = db.format(`INSERT INTO assignmentprogress (assignment, question, user, correct, attempts) VALUES ?`, [records]);
+        await db.dbquery(savequery);
+
+    }
+
     //determine if this assignment is coming up this week
     public isUpcoming(): boolean {
         let weeklater: any = new Date(Date.now());
@@ -169,12 +202,15 @@ class Assignment {
 
         let savequery = db.format(`INSERT INTO assignmentquestions (assignment, question) VALUES ?`, [questionnest]);
         let result: DBResult = await db.dbquery(savequery);
+
+        //also have to save question records for students
+        this.initStudentRecords(questionIDs);
     }
 
     /*
     get all question/answers for this assignment
     */
-    public async getQuestions(): Promise<Question[]> {
+    public async getQuestions(): Promise<any[]> {
 
         let queryraw = `SELECT q.body, q.hint, q.type, q.id AS questID, a.id AS ansID, a.correct, a.ans 
                         FROM questions AS q, answers AS a, assignmentquestions AS aq 
@@ -199,6 +235,11 @@ class Assignment {
             currquest.loadFromObject(quests[i]);
             questions.push(currquest);
 
+        }
+
+        //then, get the assignment view of each question
+        for(i = 0; i < questions.length; i++){
+            questions[i] = questions[i].assignmentView();
         }
 
         return questions;
@@ -278,7 +319,6 @@ class Assignment {
             course: this.course,
             category: this.category,
             type: this.type,
-            active: this.active,
             prompt: this.prompt,
             attempts: this.attempts,
             randomize: this.randomize,
@@ -310,7 +350,6 @@ class Assignment {
             course: coursename,
             category: this.category,
             type: this.type,
-            active: this.active,
             prompt: this.prompt,
             attempts: this.attempts,
             randomize: this.randomize,

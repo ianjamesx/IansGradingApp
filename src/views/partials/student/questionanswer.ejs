@@ -1,0 +1,7 @@
+<div id="<%= question.id %>" class="list-group-item question-view">
+    <h5 class="card-title"><%= question.body %></h5>
+    <p><% question.answers.forEach((answer) => { %>
+        <%= answer.answer %><br>
+    <% }); %></p>
+    <span style="display:block; height: 10px;"></span>
+</div>

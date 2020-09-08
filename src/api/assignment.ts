@@ -34,10 +34,7 @@ let assignmentapi = (app: Application): void => {
         let author: User = new User();
         let authorID: number = author.getIDFromSession(req.session);
 
-        //set as not active yet (as its only a draft)
-        let active: number = 0;
-
-        let assignment: Assignment = new Assignment(name, authorID, course, prompt, attempts, randomize, latepenalty, points, open, close, cutoff, active, category, type);
+        let assignment: Assignment = new Assignment(name, authorID, course, prompt, attempts, randomize, latepenalty, points, open, close, cutoff, category, type);
 
         //save users data on this assignment
         let result: Result = {};
@@ -57,7 +54,7 @@ let assignmentapi = (app: Application): void => {
         let assignmentID: number = Number(req.body.assignment);
 
         let assign: Assignment = new Assignment();
-        assign.setID(assignmentID);
+        await assign.loadFromID(assignmentID);
 
         await assign.saveQuestions(questions);
 

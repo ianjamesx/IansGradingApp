@@ -81,15 +81,16 @@ import { Assignment } from '../models/Assignment/Assignment';
 let test = async (): Promise<void> => {
 
   let assign: Assignment = new Assignment();
-  assign.setID(4989299);
+  await assign.loadFromID(65293285);
+  console.log(assign.getColumns());
 
-  await assign.getQuestions();
+  await assign.initStudentRecords([ '55600275', '94047721' ]);
 
 }
 
 test();
-*/
 
+*/
 /*
 import { tablekeys } from './utils';
 

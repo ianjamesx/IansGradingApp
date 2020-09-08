@@ -142,17 +142,10 @@ let assignment = async (req: Request) => {
 
   //get assignment id from request params
   let id: number = Number(req.params.id);
-
   let assignment: Assignment = new Assignment();
   await assignment.loadFromID(id);
 
-  //push all question views for this assignment into array (to render)
-  pagedata.questions = [];
-  let questions: Question[] = await assignment.getQuestions();
-  let i: number;
-  for(i = 0; i < questions.length; i++){
-    pagedata.questions.push(await questions[i].dataView());
-  }
+  pagedata.questions = await assignment.getQuestions();
 
   pagedata.assignment = await assignment.dataView();
   pagedata.title = pagedata.assignment.name;
@@ -160,6 +153,24 @@ let assignment = async (req: Request) => {
   return pagedata;
 
 };
+
+let takeAssignment = async (req: Request) => {
+  
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+
+  let id: number = Number(req.params.id);
+  let assignment: Assignment = new Assignment();
+  await assignment.loadFromID(id);
+
+  pagedata.assignment = await assignment.dataView();
+  pagedata.questions = await assignment.getQuestions();
+
+  pagedata.title = pagedata.assignment.name;
+
+  return pagedata;
+
+}
 
 let createQuestion = async (req: Request) => {
 
@@ -179,6 +190,7 @@ export {
   createCourse,
   coursePage,
   joinCourse,
+  takeAssignment,
   createAssignment,
   chooseQuestions,
   createQuestion,

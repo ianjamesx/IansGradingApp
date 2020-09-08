@@ -83,7 +83,6 @@ let tables: any = {
         latepenalty: `int`,
         category: `varchar(30)`,
         prompt: `text`,
-        active: `int`,
         course: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (author) REFERENCES users(id)`,
@@ -134,6 +133,14 @@ let tables: any = {
             `FOREIGN KEY (question) REFERENCES questions(id)`,
             `FOREIGN KEY (assignment) REFERENCES assignments(id)`
         ]
+    },
+
+    assignmentprogress: {
+        assignment: `int`,
+        question: `int`,
+        user: `int`,
+        correct: `int`,
+        attempts: `int`
     },
 
     question_types: {

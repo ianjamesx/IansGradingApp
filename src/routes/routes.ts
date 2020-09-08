@@ -106,6 +106,16 @@ let routes = (app: Application): void => {
     });
   });
 
+  app.get('/takeassignment/:id', (req: Request, res: Response) => {
+    pb.takeAssignment(req).then(content => {
+      if(content.error) return err(req, res);
+
+      let page: string = userpage(content.instructor, 'takeassignment');
+      res.render(page, content);
+
+    });
+  });
+
   app.get('/createquestion', (req: Request, res: Response) => {
     pb.createQuestion(req).then(content => {
       if(content.error) return err(req, res);

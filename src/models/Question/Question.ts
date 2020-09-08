@@ -267,6 +267,19 @@ class Question {
         }
 
     }
+
+    //call this view to avoid overhead of getting author name for question (when viewing in assignment)
+    public assignmentView(): any {
+
+        return {
+            body: this.body,
+            hint: this.hint,
+            type: this.type,
+            id: this.id,
+            answers: this.answers
+        }
+
+    }
     
 
 }
