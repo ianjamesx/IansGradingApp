@@ -82,6 +82,19 @@ let assignmentapi = (app: Application): void => {
 
     });
 
+    app.post('/api/assignment/answerquestion', async (req: Request, res: Response) => {
+
+        let assignmentID: number = Number(req.body.assignment);
+        let questionID: number = Number(req.body.question);
+        let user: User = new User();
+        let userID: number = user.getIDFromSession(req.session);
+        let answer: string = req.body.answer;
+
+        let assign: Assignment = new Assignment();
+        assign.setID(assignmentID);
+
+    });
+
 };
 
 export {

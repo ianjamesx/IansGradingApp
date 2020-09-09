@@ -22,6 +22,11 @@ interface Errors {
     dates?: string;
 }
 
+interface AnswerAttempt {
+    correct?: boolean;
+    hint?: string
+}
+
 class Assignment {
 
     //name, category, ids of author/course
@@ -305,6 +310,54 @@ class Assignment {
             }
           }
         }
+    }
+
+    //student tries to answer a single question
+    public async answerQuestion(questionID: number, userID: number, answer: string): Promise<AnswerAttempt> {
+
+        let checkquery = db.format(`SELECT correct FROM answers WHERE question = ? AND ans = ?`, [questionID, answer]);
+        let result: DBResult = await db.dbquery(checkquery);
+
+        if(result.error) return {correct: false, hint: db.unknownerr};
+        if(result.data.length == 0) return {correct: false, hint: db.unknownerr};
+
+        let iscorrect = result.data[0].correct;
+        let response: AnswerAttempt = {};
+        
+        if(iscorrect == 1){
+            response.correct = true;
+        }
+
+        //if student answers incorrectly, load question hint
+        if(iscorrect == 0){
+            response.correct = false;
+            let question: Question = new Question();
+            await question.loadFromID(questionID);
+            response.hint = question.getHint();
+        }
+
+        await this.useQuestionAttempt(questionID, userID, iscorrect);
+
+        return response;
+
+    }
+
+    //update attempts on a specific question (for homework assignments)
+    public async useQuestionAttempt(questionID: number, userID: number, correct: number): Promise<void> {
+
+        let update = `UPDATE assignmentprogress SET attempts = GREATEST(0, attempts - 1), correct = ? WHERE question = ? AND user = ? AND assignment = ?`
+
+        let updatequery = db.format(update, [correct, questionID, userID, this.getID()]);
+
+        console.log(updatequery);
+        await db.dbquery(updatequery);
+    }
+
+    //update all attempts (for questions on assignment)
+    public async useAssignmentAttempts(userID: number): Promise<void> {
+        let updatequery = db.format(`UPDATE assignmentprogress SET attempts = GREATEST(0, attempts - 1) 
+                                    WHERE user = ? AND assignment = ?`, [userID, this.getID()]);
+        await db.dbquery(updatequery);
     }
 
     public setID(id: number){

@@ -246,6 +246,9 @@ class Question {
         }
     }
 
+    public getHint(){
+        return this.hint;
+    }
 
     public async dataView(): Promise<any> {
 

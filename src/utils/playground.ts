@@ -75,22 +75,23 @@ let savequery = db.format(`INSERT INTO course_categories (name, points, course) 
 console.log(savequery);
 
 */
-/*
+
 import { Assignment } from '../models/Assignment/Assignment';
 
 let test = async (): Promise<void> => {
 
   let assign: Assignment = new Assignment();
-  await assign.loadFromID(65293285);
-  console.log(assign.getColumns());
+  await assign.loadFromID(75834904);
 
-  await assign.initStudentRecords([ '55600275', '94047721' ]);
+  let resp: any = await assign.answerQuestion(87999384, 75650946, 'A piece of data');
+
+  console.log(resp);
 
 }
 
-test();
+//test();
 
-*/
+
 /*
 import { tablekeys } from './utils';
 
