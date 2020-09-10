@@ -18,6 +18,7 @@ let questionapi = (app: Application): void => {
 
         let question: string = req.body.question;
         let answers: any[] = req.body.answers;
+        let hint: string = req.body.hint;
         let subject: string = req.body.subject;
         let topic: string = req.body.topic;
         let type: string = req.body.type;
@@ -28,7 +29,7 @@ let questionapi = (app: Application): void => {
         let authorID: number = author.getIDFromSession(req.session);
 
         //create question object
-        let quest: Question = new Question(question, answers, authorID, subject, topic, type, ispublic);
+        let quest: Question = new Question(question, answers, authorID, hint, subject, topic, type, ispublic);
 
         //save users data on this assignment
         let result: Result = {};

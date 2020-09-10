@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import { Assignment } from '../models/Assignment/Assignment';
+import { Assignment, AnswerAttempt } from '../models/Assignment/Assignment';
 import { User } from '../models/User/User';
 
 
@@ -90,8 +90,12 @@ let assignmentapi = (app: Application): void => {
         let userID: number = user.getIDFromSession(req.session);
         let answer: string = req.body.answer;
 
+        //just set ID, no methods require assignment to be loaded
         let assign: Assignment = new Assignment();
         assign.setID(assignmentID);
+
+        let result: AnswerAttempt = await assign.answerQuestion(questionID, userID, answer);
+        res.send(result);
 
     });
 

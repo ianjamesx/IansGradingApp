@@ -24,7 +24,7 @@
         <hr>
 
         <p><%= assignment.points %> <small>Points</small> | <%= assignment.latepenalty %> <small>Point Late Penalty</small></p>
-        <h4> <%= assignment.attempts %> Attempts Remaining</h4>
+        <h4> <%= assignment.attempts %> Attempts per Question</h4>
 
         <hr>
 
@@ -37,6 +37,22 @@
 
       </div> <%# close content %>
     </div> <%# close wrapper %>
+
+    <%# modal with info on question that comes up after answering%>
+    <div class="modal fade" id="answer_modal" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Answer Incorrect</h4>
+          </div>
+          <div class="modal-body" id="hint">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="okay" class="appbtn" data-dismiss="modal">Okay</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 
   <%- include('../../partials/scripts'); %>

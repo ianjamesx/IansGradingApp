@@ -24,6 +24,8 @@ interface Errors {
 
 interface AnswerAttempt {
     correct?: boolean;
+    attemptsleft?: number;
+    id?: number;
     hint?: string
 }
 
@@ -323,7 +325,8 @@ class Assignment {
 
         let iscorrect = result.data[0].correct;
         let response: AnswerAttempt = {};
-        
+        response.id = questionID;
+
         if(iscorrect == 1){
             response.correct = true;
         }
@@ -333,10 +336,16 @@ class Assignment {
             response.correct = false;
             let question: Question = new Question();
             await question.loadFromID(questionID);
+            console.log(question.getHint());
             response.hint = question.getHint();
         }
 
+        //use an attempt and update progress if correct
         await this.useQuestionAttempt(questionID, userID, iscorrect);
+
+        //get the number of attempts they have left as well
+        let resp: any = await this.getQuestionProgress(userID, questionID);
+        response.attemptsleft = resp.attemptsleft;
 
         return response;
 
@@ -345,19 +354,57 @@ class Assignment {
     //update attempts on a specific question (for homework assignments)
     public async useQuestionAttempt(questionID: number, userID: number, correct: number): Promise<void> {
 
-        let update = `UPDATE assignmentprogress SET attempts = GREATEST(0, attempts - 1), correct = ? WHERE question = ? AND user = ? AND assignment = ?`
+        let update = `UPDATE assignmentprogress SET attempts = GREATEST(0, attempts - 1), correct = ? WHERE question = ? AND user = ? AND assignment = ?`;
 
         let updatequery = db.format(update, [correct, questionID, userID, this.getID()]);
-
-        console.log(updatequery);
         await db.dbquery(updatequery);
+
     }
 
     //update all attempts (for questions on assignment)
     public async useAssignmentAttempts(userID: number): Promise<void> {
-        let updatequery = db.format(`UPDATE assignmentprogress SET attempts = GREATEST(0, attempts - 1) 
-                                    WHERE user = ? AND assignment = ?`, [userID, this.getID()]);
+        let updatequery = db.format(`UPDATE assignmentprogress SET attempts = GREATEST(0, attempts - 1) WHERE user = ? AND assignment = ?`, [userID, this.getID()]);
         await db.dbquery(updatequery);
+    }
+
+    //get all progress records for all questions user has on this assignment
+    public async getStudentProgress(userID: number): Promise<AnswerAttempt[]> {
+
+        let select = `SELECT correct, attempts, question FROM assignmentprogress WHERE user = ? AND assignment = ?`;
+        let selectquery: string = db.format(select, [userID, this.getID()]);
+        let result: DBResult = await db.dbquery(selectquery);
+
+        if(result.error) return [];
+
+        let progress: AnswerAttempt[] = [];
+        let i: number;
+        for(i = 0; i < result.data.length; i++){
+            progress.push({
+                correct: result.data[i].correct,
+                attemptsleft: result.data[i].attempts,
+                id: result.data[i].question
+            })
+        }
+
+        return progress;
+
+    }
+
+    //get progress record for just one question
+    public async getQuestionProgress(userID: number, questionID: number): Promise<AnswerAttempt> {
+        
+        let select = `SELECT correct, attempts FROM assignmentprogress WHERE question = ? AND user = ? AND assignment = ?`;
+        let selectquery = db.format(select, [questionID, userID, this.getID()]);
+        let result: DBResult = await db.dbquery(selectquery);
+        if(result.error || result.data.length == 0) return {};
+
+        let progress: AnswerAttempt = {
+            correct: result.data[0].correct,
+            attemptsleft: result.data[0].attempts,
+            id: questionID
+        }
+
+        return progress;
     }
 
     public setID(id: number){
@@ -420,5 +467,6 @@ class Assignment {
 
 export {
     Assignment,
+    AnswerAttempt,
     DBResult
 }

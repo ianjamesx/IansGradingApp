@@ -83,7 +83,7 @@ let test = async (): Promise<void> => {
   let assign: Assignment = new Assignment();
   await assign.loadFromID(75834904);
 
-  let resp: any = await assign.answerQuestion(87999384, 75650946, 'A piece of data');
+  let resp: any = await assign.answerQuestion(87999384, 29585364, 'A piece of data');
 
   console.log(resp);
 

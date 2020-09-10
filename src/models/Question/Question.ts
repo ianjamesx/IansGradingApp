@@ -33,10 +33,11 @@ class Question {
 
     public table:string = `questions`;
 
-    constructor(body?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
+    constructor(body?: string, answers?: any[], author?: number, hint?: string, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
 
         this.body = body;
         this.answers = answers;
+        this.hint = hint;
         this.author = author;
         this.subject = subject;
         this.topic = topic;
@@ -46,10 +47,11 @@ class Question {
 
     }
 
-    public loadQuestionData(body?: string, answers?: any[], author?: number, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number): void {
+    public loadQuestionData(body?: string, answers?: any[], author?: number, hint?: string, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number): void {
 
         this.body = body;
         this.answers = answers;
+        this.hint = hint;
         this.author = author;
         this.subject = subject;
         this.topic = topic;
@@ -60,7 +62,7 @@ class Question {
     }
 
     public loadFromObject(q: any): void{
-        this.loadQuestionData(q.body, q.answers, q.author, q.subject, q.topic, q.type, q.ispublic, q.id);
+        this.loadQuestionData(q.body, q.answers, q.author, q.hint, q.subject, q.topic, q.type, q.ispublic, q.id);
     }
 
     public async loadFromID(ID: number): Promise<string | void> {
