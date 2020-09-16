@@ -24,6 +24,12 @@ interface CourseCategory {
     points?: number;
 }
 
+interface Score {
+    total?: number;
+    actual?: number;
+    percent?: number;
+}
+
 /*
 not using regular enum interface TS provides as we want this to work on JS based client as well
 using traditional JS based enum logic so client can pass in string correlating to object key
@@ -322,12 +328,41 @@ class Course {
         return results.data;
     }
 
-    public async getStudentScore(userID: number): Promise<void> {
+    public async getStudentScore(userID: number): Promise<Score> {
 
-        let score = db.format(`SELECT aq.correct, a.points FROM assignmentprogress AS aq, assignments AS a WHERE aq.user = ? AND a.id = aq.assignment`, [userID]);
+        let selectscores = db.format(`SELECT aq.correct, a.points FROM assignmentprogress AS aq, assignments AS a WHERE aq.user = ? AND a.id = aq.assignment`, [userID]);
 
-        let results: DBResult = await db.dbquery(score);
+        let results: DBResult = await db.dbquery(selectscores);
         console.log(results);
+
+        if(results.error){
+            return {}
+        }
+
+        let scores = results.data;
+
+        let i: number;
+        let total: number = 0;
+        let actual: number = 0;
+
+        for(i = 0; i < scores.length; i++){
+
+            if(scores[i].correct){
+                actual += scores[i].points;
+            }
+
+            total += scores[i].points;
+
+        }
+
+        let percent: number = Math.floor((actual / total) * 100);
+
+        return {
+            actual: actual,
+            total: total,
+            percent: percent
+        }
+
     }
     
     /*
