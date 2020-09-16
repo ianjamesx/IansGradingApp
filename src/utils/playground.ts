@@ -76,20 +76,16 @@ console.log(savequery);
 
 */
 
-import { Assignment } from '../models/Assignment/Assignment';
+import { Course } from '../models/Course/Course';
 
 let test = async (): Promise<void> => {
 
-  let assign: Assignment = new Assignment();
-  await assign.loadFromID(75834904);
-
-  let resp: any = await assign.answerQuestion(87999384, 29585364, 'A piece of data');
-
-  console.log(resp);
+  let course: Course = new Course();
+  await course.getStudentScore(93667972);
 
 }
 
-//test();
+test();
 
 
 /*

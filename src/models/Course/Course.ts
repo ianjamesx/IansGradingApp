@@ -321,6 +321,14 @@ class Course {
 
         return results.data;
     }
+
+    public async getStudentScore(userID: number): Promise<void> {
+
+        let score = db.format(`SELECT aq.correct, a.points FROM assignmentprogress AS aq, assignments AS a WHERE aq.user = ? AND a.id = aq.assignment`, [userID]);
+
+        let results: DBResult = await db.dbquery(score);
+        console.log(results);
+    }
     
     /*
     for db/end user interactions
