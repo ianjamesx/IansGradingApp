@@ -1,0 +1,27 @@
+/* selecting questions to have on assignments */
+.question-select {
+    transition: 0.2s;
+}
+
+.question-select:hover {
+    background-color: #d5edff;
+    cursor: pointer;
+}
+
+.question-selected {
+    background-color: #addcff;
+}
+
+.question-selected:hover {
+    background-color: #addcff;
+}
+
+/* for if question is marked correct/wrong */
+.question-correct {
+    background-color: #c8f3ca;
+}
+
+/* for if question is marked correct/wrong */
+.question-incorrect {
+    background-color: #f1c2ca;
+}

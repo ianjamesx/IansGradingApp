@@ -165,6 +165,7 @@ let takeAssignment = async (req: Request) => {
 
   pagedata.assignment = await assignment.dataView();
   pagedata.questions = await assignment.getQuestions();
+  pagedata.score = await assignment.getStudentScore(pagedata.user.id);
   
   //merge progress of each questions with question object
   pagedata.progress = await assignment.getStudentProgress(pagedata.user.id);

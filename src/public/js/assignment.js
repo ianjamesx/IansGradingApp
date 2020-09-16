@@ -28,7 +28,15 @@ $(document).ready(function(){
 
         //add event listener to each question item (if its clicked, select it)
         $(removeBtn).click(function(){
-            removeQuestion(id, assignmentID);
+
+            //show modal
+            $('#delete_modal').modal('show');
+
+            //also for the modal prompt
+            $('#deletequestion').click(function(){
+                removeQuestion(id, assignmentID);
+            });
+
         });
 
     });

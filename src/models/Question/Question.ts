@@ -187,6 +187,18 @@ class Question {
         return result.data;
 
     }
+
+    public async getCorrectAnswer(): Promise<string> {
+        
+        let searchquery: string = db.format(`SELECT ans FROM answers WHERE correct = 1 AND question = ?`, [this.getID()]);
+        let result: DBResult = await db.dbquery(searchquery);
+
+        if(result.error || !result.data.length){
+            return db.unknownerr;
+        }
+
+        return result.data[0].ans;
+    }
 /*
     public static async allQuestionsBy(subject: string, topic: string, type: string, keywordlist: string): Promise<Question[]> {
         let result: DBResult = await db.allQuestionsByCriteria(subject, topic, type);

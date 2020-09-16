@@ -14,13 +14,14 @@
         <hr>
         
         <div class="form-row">
-            <div class="form-group col-md-4">
-                <h4>Course: <%= assignment.course %></h4>
-            </div>
-            <div class="form-group col-md-4">
-                <h4><small>Due by: </small>&emsp;<%= assignment.close %></h4>
-            </div>
-          </div>
+            <h4>Course: <%= assignment.course %></h4>
+        </div>
+        <div class="form-row">
+            <h4><small>Due by: </small><%= assignment.close %></h4>
+        </div>
+        <div class="form-row">
+            <h3 id="score"><%= score %>%</h3>
+        </div>
         <hr>
 
         <p><%= assignment.points %> <small>Points</small> | <%= assignment.latepenalty %> <small>Point Late Penalty</small></p>

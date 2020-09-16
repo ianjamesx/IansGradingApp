@@ -1,14 +1,40 @@
-<div id="question<%= question.id %>" class="list-group-item question-view">
+<div id="question<%= question.id %>" class="list-group-item question-view 
+    
+    <%# decide if we should mark question as correct/incorrect %>
+    <% if(question.correct){ %>
+        question-correct
+    <% } else { %>
+        <% if(question.attempts == 0){ %>
+            question-incorrect
+        <% } %>
+    <% } %>
+    ">
+
     <h5 class="card-title"><%= question.body %></h5>
     <p id="attempt<%= question.id %>"><%= question.attempts %> attempts remaining</p>
     <span style="display:block; height: 20px;"></span>
-    <% question.answers.forEach((answer) => { %>
-        <div class="custom-control custom-radio">
-            <input type="radio" id="<%= answer.id %>" value="<%= answer.answer %>" name="answer<%= question.id %>" class="custom-control-input">
-            <label class="custom-control-label" for="<%= answer.id %>"><%= answer.answer %></label>
-        </div>
-    <% }); %>
-    <span style="display:block; height: 20px;"></span>
-    <button id="<%= question.id %>" class="appbtn answerquestion" type="button">Answer</button>
-    <span style="display:block; height: 10px;"></span>
+
+    <div id="answers<%= question.id %>">
+        <% question.answers.forEach((answer) => { %>
+
+            <%# if already answered question (wrong or right) show only right answer %>
+            <% if(question.correct || question.attempts == 0){ %>
+                <% if(answer.correct){ %>
+                    <h4>Correct answer: <%= answer.answer %></h4>
+                <% }%>
+            <% } else { %>
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="<%= answer.id %>" value="<%= answer.answer %>" name="answer<%= question.id %>" class="custom-control-input">
+                    <label class="custom-control-label" for="<%= answer.id %>"><%= answer.answer %></label>
+                </div>
+            <% } %>
+        <% }); %>
+
+        <%# only give option to answer if question is not right or wrong yet %>
+        <% if(!question.correct && question.attempts > 0){ %>
+            <span style="display:block; height: 20px;"></span>
+            <button id="<%= question.id %>" class="appbtn answerquestion" type="button">Answer</button>
+            <span style="display:block; height: 10px;"></span>
+        <% } %>
+    </div>
 </div>

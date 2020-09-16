@@ -27,6 +27,8 @@ interface AnswerAttempt {
     attemptsleft?: number;
     id?: number;
     hint?: string
+    score?: number;
+    answer?: string;
 }
 
 class Assignment {
@@ -293,7 +295,7 @@ class Assignment {
     }
 
     public async removeQuestion(questionID: number): Promise<void> {
-        let deletequery: string = db.format(`DELETE FROM assignmentquestions WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
+        let deletequery: string = db.format(`DELETE FROM assignmentquestions, progress WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
         await db.dbquery(deletequery);
     }
 
@@ -317,6 +319,10 @@ class Assignment {
     //student tries to answer a single question
     public async answerQuestion(questionID: number, userID: number, answer: string): Promise<AnswerAttempt> {
 
+        //question we will be loading
+        let question: Question = new Question();
+        await question.loadFromID(questionID);
+
         let checkquery = db.format(`SELECT correct FROM answers WHERE question = ? AND ans = ?`, [questionID, answer]);
         let result: DBResult = await db.dbquery(checkquery);
 
@@ -334,9 +340,6 @@ class Assignment {
         //if student answers incorrectly, load question hint
         if(iscorrect == 0){
             response.correct = false;
-            let question: Question = new Question();
-            await question.loadFromID(questionID);
-            console.log(question.getHint());
             response.hint = question.getHint();
         }
 
@@ -346,6 +349,12 @@ class Assignment {
         //get the number of attempts they have left as well
         let resp: any = await this.getQuestionProgress(userID, questionID);
         response.attemptsleft = resp.attemptsleft;
+        response.score = await this.getStudentScore(userID);
+
+        //if no more attempts, or answer is correct, show student the answer
+        if(response.attemptsleft == 0 || iscorrect){
+            response.answer = await question.getCorrectAnswer();
+        }
 
         return response;
 
@@ -405,6 +414,24 @@ class Assignment {
         }
 
         return progress;
+    }
+
+    public async getStudentScore(userID: number): Promise<number> {
+        let progress: AnswerAttempt[] = await this.getStudentProgress(userID);
+
+        let correctanswers: number = 0;
+
+        let i: number;
+        for(i = 0; i < progress.length; i++){
+            if(progress[i].correct){
+                correctanswers++;
+            }
+        }
+
+        let score = (correctanswers / progress.length) * 100;
+        score = Math.floor(score);
+        return score;
+
     }
 
     public setID(id: number){
