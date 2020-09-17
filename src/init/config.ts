@@ -11,7 +11,7 @@ import fileupload = require('express-fileupload');
 
 import { init as dbinit } from '../db/tableman';
 import { tables } from '../db/tables';
-import { load as componentload } from '../clientviews/componentloader'
+import { load as componentload } from '../clientviews/componentloader';
 
 let init = (app: express.Application): void => {
 

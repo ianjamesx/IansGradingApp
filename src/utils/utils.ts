@@ -60,11 +60,21 @@ let key = (): string => {
 
 }
 
+let views = async (objs: any[]): Promise<any[]> => {
+    let i;
+    let objviews: any[] = [];
+    for(i = 0; i < objs.length; i++){
+        objviews.push(await objs[i].dataView());
+    }
+    return objviews;
+}
+
 export {
     vals,
     keys,
     tablekeys,
     id,
-    key
+    key,
+    views
 };
 

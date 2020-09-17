@@ -4,6 +4,7 @@ import { vals, keys, key } from '../../utils/utils';      //some utils for restr
 import { DBResult } from '../../interfaces';
 
 import { User } from '../User/User';
+import { Assignment } from '../Assignment/Assignment';
 
 //user input errors when making this class
 interface Errors {
@@ -308,6 +309,9 @@ class Course {
 
         if(result.error) return result.error;
 
+        //add progress records for all assignments for this user
+        await this.addNewStudentAssignments(userID);
+
     }
 
     //get all students/instructor/TAs for this course
@@ -362,6 +366,42 @@ class Course {
             total: total,
             percent: percent
         }
+
+    }
+
+    public async addNewStudentAssignments(userID: number): Promise<void> {
+        
+        let assignments: Assignment[] = await this.getAllAssignments();
+        let i: number;
+
+        for(i = 0; i < assignments.length; i++){
+            await assignments[i].addNewStudentRecords(userID);
+        }
+    }
+
+    public async getAllAssignments(): Promise<Assignment[]> {
+
+        let assign: Assignment = new Assignment();
+        let selectquery = db.format(`SELECT ?? FROM assignments WHERE course = ?`, [keys(assign.getColumns()), this.getID()]);
+
+        console.log(selectquery);
+
+
+        let result: DBResult = await db.dbquery(selectquery);
+
+        if(result.error){
+            return [];
+        }
+
+        let i: number;
+        let assignments: Assignment[] = [];
+        for(i = 0; i < result.data.length; i++){
+            assignments.push(new Assignment());
+            assignments[i].loadFromObject(result.data[i]);
+        }
+
+        console.log(assignments);
+        return assignments;
 
     }
     

@@ -91,4 +91,20 @@ $(document).ready(function(){
         home.contact(message, email, name, university, subject);
     });
 
+    //if they press enter on the login form, assume they want to login
+    $('#password').keypress(function (e) {
+        var key = e.which;
+        if(key == 13){
+           $('#login').click();
+           return false;  
+        }
+    });
+    $('#email').keypress(function (e) {
+        var key = e.which;
+        if(key == 13){
+           $('#login').click();
+           return false;  
+        }
+    });
+
 });

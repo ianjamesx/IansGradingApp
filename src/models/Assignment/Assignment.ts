@@ -162,9 +162,6 @@ class Assignment {
         course.loadCourseByID(this.course);
         let students: any[] = await course.getEnrollees();
 
-        let correct: number = 0;
-        let attempts = this.attempts;
-
         let records = [];
 
         for(i = 0; i < questionIDs.length; i++){
@@ -174,8 +171,8 @@ class Assignment {
                     this.id,
                     Number(questionIDs[i]), //cast question id to number
                     students[j].id,
-                    correct,
-                    attempts
+                    0,
+                    this.attempts
                 ]);
 
             }
@@ -185,6 +182,27 @@ class Assignment {
         let savequery = db.format(`INSERT INTO assignmentprogress (assignment, question, user, correct, attempts) VALUES ?`, [records]);
         await db.dbquery(savequery);
 
+    }
+
+    public async addNewStudentRecords(userID: number): Promise<void> {
+
+        let questions: number[] = await this.getQuestionIDs();
+        let i;
+        let progress = [];
+
+        for(i = 0; i < questions.length; i++){
+            progress.push([
+                this.id,
+                Number(questions[i]),
+                userID,
+                0,
+                this.attempts
+            ])
+        }
+
+        let savequery = db.format(`INSERT INTO assignmentprogress (assignment, question, user, correct, attempts) VALUES ? `, [progress]);
+        await db.dbquery(savequery);
+        
     }
 
     //determine if this assignment is coming up this week
@@ -198,6 +216,24 @@ class Assignment {
             return true;
         }
         return false;
+    }
+
+    public async getQuestionIDs(): Promise<number[]> {
+        let selectquery = db.format(`SELECT q.id FROM questions AS q, assignmentquestions AS aq WHERE aq.question = q.id AND aq.assignment = ?`, [this.getID()]);
+        let result: DBResult = await db.dbquery(selectquery);
+
+        if(result.error){
+            return [];
+        }
+
+        let ids: number[] = [];
+        let i;
+        for(i = 0; i < result.data.length; i++){
+            ids.push(result.data[i].id);
+        }
+
+        return ids;
+
     }
 
     public async saveQuestions(questionIDs: string[]): Promise<void> {
