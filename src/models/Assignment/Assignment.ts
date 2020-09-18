@@ -53,6 +53,9 @@ class Assignment {
 
     private id: number;
 
+    //if user decides to append questions, allow a question attribute
+    private questions: Question[];
+
     public table: string = `assignments`;
 
     constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, category?: string, type?: string, id?: number){

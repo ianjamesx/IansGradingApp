@@ -400,7 +400,6 @@ class Course {
             assignments[i].loadFromObject(result.data[i]);
         }
 
-        console.log(assignments);
         return assignments;
 
     }

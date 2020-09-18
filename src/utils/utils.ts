@@ -58,16 +58,17 @@ let key = (): string => {
 
     return key;
 
-}
+};
 
+//turn an array of objects into an array of views (e.g. just the actual data view for rendering the object)
 let views = async (objs: any[]): Promise<any[]> => {
-    let i;
+    let i: number;
     let objviews: any[] = [];
     for(i = 0; i < objs.length; i++){
         objviews.push(await objs[i].dataView());
     }
     return objviews;
-}
+};
 
 export {
     vals,
