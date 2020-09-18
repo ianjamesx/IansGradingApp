@@ -3,6 +3,7 @@ import { User } from '../models/User/User';
 import { Course } from '../models/Course/Course';
 import { Assignment } from '../models/Assignment/Assignment';
 import { Question } from '../models/Question/Question';
+import { views } from '../utils/utils';
 
 import { Request } from 'express';
 
@@ -73,10 +74,19 @@ let coursePage = async (req: Request) => {
   pagedata.course = await course.dataView();
   pagedata.title = course.getCourseTitle();
 
+  //load all assignments
+  let assignments: Assignment[] = await course.getAllAssignments();
+  pagedata.assignments = await views(assignments);
+
   //if instructor, get all enrollees
   if(pagedata.instructor){
     pagedata.enrolees = await course.getEnrollees();
+  } else {
+    //if not an instructor, get students current score
+    pagedata.score = await course.getStudentScore(pagedata.user.id);
   }
+
+  console.log(pagedata);
   
   return pagedata;
 

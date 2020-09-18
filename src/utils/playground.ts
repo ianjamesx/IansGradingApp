@@ -82,7 +82,20 @@ import { views } from './utils';
 
 
 let test = async (): Promise<void> => {
-  
+
+  let course: Course = new Course();
+  await course.loadCourseByID(37547264);
+
+  let score: any = await course.getStudentScore(5940387);
+
+  console.log(score);
+
+  //console.log(assignview);
+
+  //let assign: Assignment = new Assignment();
+  //await assign.loadFromID(27154755);
+
+  //console.log(await assign.getQuestionIDs());
 
 }
 

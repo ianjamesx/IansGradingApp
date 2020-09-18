@@ -10,18 +10,28 @@
       <%- include('../../partials/student/sidebar', {courses: courses}) %>
       <div id="content">
         <h1><%= course.department %> <%= course.number %> - <%= course.section %></h1>
-        <h2><%= course.name %></h2>
         <h2>Instructor: <%= course.instructor %></h2>
+        <h2><%= course.name %></h2>
+        <hr>
+        <h3>Current Score: <%= score.percent %>%</h3>
+        <h4><%= score.actual %> / <%= score.total %> points</h4>
 
         <table class="table">
             <thead>
               <tr>
-                <th scope="col">Student</th>
-                <th scope="col">Email</th>
-                <th scope="col">Report</th>
+                <th scope="col">Assignment</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">View Assignment</th>
               </tr>
             </thead>
             <tbody>
+              <% assignments.forEach((assignment) => { %>
+                <tr>
+                    <td><%= assignment.name %></td>
+                    <td><%= assignment.close %></td>
+                    <td><a href="/takeassignment/<%= assignment.id %>">Go To Assignment</a></td>
+                </tr>
+            <% }); %>
             </tbody>
         </table>
 

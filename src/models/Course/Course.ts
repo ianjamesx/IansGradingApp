@@ -337,14 +337,13 @@ class Course {
         let selectscores = db.format(`SELECT aq.correct, a.points FROM assignmentprogress AS aq, assignments AS a WHERE aq.user = ? AND a.id = aq.assignment`, [userID]);
 
         let results: DBResult = await db.dbquery(selectscores);
-        console.log(results);
 
-        if(results.error){
-            return {}
-        }
+        if(results.error) return {};
 
         let scores = results.data;
 
+        //keep track of total score (e.g. the sum of scores of all students assignments)
+        //and the acutal score (e.g. the total points student could have gotten)
         let i: number;
         let total: number = 0;
         let actual: number = 0;
@@ -354,7 +353,6 @@ class Course {
             if(scores[i].correct){
                 actual += scores[i].points;
             }
-
             total += scores[i].points;
 
         }
@@ -384,9 +382,6 @@ class Course {
         let assign: Assignment = new Assignment();
         let selectquery = db.format(`SELECT ?? FROM assignments WHERE course = ?`, [keys(assign.getColumns()), this.getID()]);
 
-        console.log(selectquery);
-
-
         let result: DBResult = await db.dbquery(selectquery);
 
         if(result.error){
@@ -403,7 +398,7 @@ class Course {
         return assignments;
 
     }
-    
+
     /*
     for db/end user interactions
     */

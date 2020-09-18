@@ -187,6 +187,7 @@ class Assignment {
 
     }
 
+    //add progress records for specific student (usually for when a student joins class after assignment already posted)
     public async addNewStudentRecords(userID: number): Promise<void> {
 
         let questions: number[] = await this.getQuestionIDs();
