@@ -334,6 +334,7 @@ class Assignment {
 
     }
 
+    //remove question (and progress records) from an assignment
     public async removeQuestion(questionID: number): Promise<void> {
         let deletequery: string = db.format(`DELETE FROM assignmentquestions, progress WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
         await db.dbquery(deletequery);
