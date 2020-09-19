@@ -336,8 +336,11 @@ class Assignment {
 
     //remove question (and progress records) from an assignment
     public async removeQuestion(questionID: number): Promise<void> {
-        let deletequery: string = db.format(`DELETE FROM assignmentquestions, progress WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
+        let deletequery: string = db.format(`DELETE FROM assignmentquestions WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
+        let deleteprogress: string = db.format(`DELETE FROM assignmentprogress WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
+        console.log(deletequery);
         await db.dbquery(deletequery);
+        await db.dbquery(deleteprogress);
     }
 
     //given a list of questions, remove any that exist currently in assignment
@@ -477,6 +480,10 @@ class Assignment {
 
     public setID(id: number){
         this.id = id;
+    }
+
+    public getDueDate(){
+        return this.close;
     }
 
     public getColumns(): any{

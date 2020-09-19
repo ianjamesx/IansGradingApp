@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <%- include('../../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../../partials/instructor/sidebar', {courses: courses}) %>
+      <div id="content">
+        <h1><small>Viewing Report for:</small> <%= student.firstname %> <%= student.lastname %></h1>
+        <h2><small>For the class:</small> <%= course %></h2>
+        <hr>
+        <h2>Overall Score: <%= score.percent %>%</h2>
+        <h4><%= score.actual %> / <%= score.total %> Points</h4>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Assignment Name</th>
+                <th scope="col">Student's Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% assignments.forEach((assignment) => { %>
+                <tr>
+                    <td><%= assignment.name %></td>
+                    <td><%= assignment.score %>%</td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+  </body>
+
+  <%- include('../../partials/scripts'); %>
+
+</html>
+ 

@@ -76,6 +76,13 @@ let coursePage = async (req: Request) => {
 
   //load all assignments
   let assignments: Assignment[] = await course.getAllAssignments();
+  //sort by due date (newest first)
+  assignments.sort(function(a, b) {
+    let c: number = (new Date(a.getDueDate())).getTime();
+    let d: number = (new Date(b.getDueDate())).getTime();
+    return d-c;
+  });
+
   pagedata.assignments = await views(assignments);
 
   //if instructor, get all enrollees
@@ -201,6 +208,49 @@ let createQuestion = async (req: Request) => {
 
 };
 
+let studentReport = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+
+  //get info for student
+  let studentID: number = Number(req.params.student);
+  let student: User = new User();
+  await student.loadFromID(studentID);
+  pagedata.student = student.dataView();
+
+  //get their score info for course
+  let courseID: number = Number(req.params.course);
+  let course: Course = new Course();
+  await course.loadCourseByID(courseID);
+  pagedata.course = course.getCourseTitle();
+  pagedata.score = await course.getStudentScore(studentID);
+
+  //get scores for all assignments
+  let assignments: Assignment[] = await course.getAllAssignments();
+  pagedata.assignments = [];
+
+  let i: number;
+  for(i = 0; i < assignments.length; i++){
+    let assignscore: number = await assignments[i].getStudentScore(studentID);
+    let assigndata = await assignments[i].dataView();
+
+    if(isNaN(assignscore)){
+      assignscore = 0;
+    }
+
+    pagedata.assignments.push({
+      name: assigndata.name,
+      score: assignscore
+    });
+
+  }
+
+  pagedata.title = 'Student Report';
+  return pagedata;
+
+};
+
 /*
 export all page functions
 */
@@ -214,5 +264,6 @@ export {
   createAssignment,
   chooseQuestions,
   createQuestion,
-  editAssignment
+  editAssignment,
+  studentReport
 };

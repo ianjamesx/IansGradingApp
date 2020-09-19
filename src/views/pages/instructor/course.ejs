@@ -13,29 +13,73 @@
         <h2><%= course.name %></h2>
         <h3>Course Key: <%= course.coursekey %></h3>
 
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Role</th>
-                <th scope="col">Email</th>
-                <th scope="col">Report</th>
-              </tr>
-            </thead>
-            <tbody>
-            <%# load all enrolees into the table %>
-            <% enrolees.forEach((enrolee) => { %>
-                <tr>
-                    <td><%= enrolee.firstname %> <%= enrolee.lastname %></td>
-                    <td><%= enrolee.type %></td>
-                    <td><%= enrolee.email %></td>
-                    <% if(enrolee.type == 'Student'){ %> 
-                      <td><a href="/studentreport/<%= enrolee.id %>">Full Report</a></td>
-                    <% } %>
-                </tr>
-            <% }); %>
-            </tbody>
-          </table>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="enrollee-tab" data-toggle="tab" href="#enrollees" role="tab" aria-controls="home" aria-selected="true">Enrollees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="assignments-tab" data-toggle="tab" href="#assignments" role="tab" aria-controls="profile" aria-selected="false">Assignments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#info" role="tab" aria-controls="contact" aria-selected="false">Class Info</a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane active show" id="enrollees" role="tabpanel" aria-labelledby="enrollee-tab">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Report</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <%# load all enrolees into the table %>
+                <% enrolees.forEach((enrolee) => { %>
+                    <tr>
+                        <td><%= enrolee.firstname %> <%= enrolee.lastname %></td>
+                        <td><%= enrolee.type %></td>
+                        <td><%= enrolee.email %></td>
+                        <% if(enrolee.type == 'Student'){ %> 
+                          <td><a href="/studentreport/<%= course.id %>/<%= enrolee.id %>">Full Report</a></td>
+                        <% } %>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+          </div>
+          <div class="tab-pane" id="assignments" role="tabpanel" aria-labelledby="enrollee-tab">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Due</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Points</th>
+                    <th scope="col">Attempts</th>
+                    <th scope="col">View Assignment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <%# load all enrolees into the table %>
+                <% assignments.forEach((assignment) => { %>
+                    <tr>
+                        <td><%= assignment.name %></td>
+                        <td><%= assignment.close %></td>
+                        <td><%= assignment.category %></td>
+                        <td><%= assignment.points %></td>
+                        <td><%= assignment.attempts %></td>
+                        <td><a href="/assignment/<%= assignment.id %>/">Assignment Page</a></td>
+                    </tr>
+                <% }); %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
       </div> <%# close content %>
     </div> <%# close wrapper %>
