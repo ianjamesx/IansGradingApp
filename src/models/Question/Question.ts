@@ -188,6 +188,22 @@ class Question {
 
     }
 
+    /*
+    get all questions that are public
+    */
+    public static async allPublicQuestions(): Promise<any[]> {
+
+        let question: Question = new Question();
+        let searchquery: string = db.format(`SELECT ?? FROM questions WHERE public = 1`,  [keys(question.getColumns())]);
+
+        let result: DBResult = await db.dbquery(searchquery);
+
+        //on error, return empty array of questions
+        if(result.error) return [];
+        return result.data;
+
+    }
+
     public async getCorrectAnswer(): Promise<string> {
         
         let searchquery: string = db.format(`SELECT ans FROM answers WHERE correct = 1 AND question = ?`, [this.getID()]);

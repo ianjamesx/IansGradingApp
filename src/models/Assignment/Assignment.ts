@@ -338,7 +338,6 @@ class Assignment {
     public async removeQuestion(questionID: number): Promise<void> {
         let deletequery: string = db.format(`DELETE FROM assignmentquestions WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
         let deleteprogress: string = db.format(`DELETE FROM assignmentprogress WHERE question = ? AND assignment = ?`, [questionID, this.getID()]);
-        console.log(deletequery);
         await db.dbquery(deletequery);
         await db.dbquery(deleteprogress);
     }

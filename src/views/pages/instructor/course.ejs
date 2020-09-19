@@ -13,6 +13,9 @@
         <h2><%= course.name %></h2>
         <h3>Course Key: <%= course.coursekey %></h3>
 
+        <a href="/createassignment/<%= course.id %>" class="appbtn" type="button">Add New Assignment</a>
+        <hr>
+
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="enrollee-tab" data-toggle="tab" href="#enrollees" role="tab" aria-controls="home" aria-selected="true">Enrollees</a>

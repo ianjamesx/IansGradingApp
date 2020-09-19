@@ -82,9 +82,13 @@ let errorsave = (error: string): void => {
 wrapper for returning results from a database query
 accounting for errors
 */
+
+let totalqueries = 0;
 let dbquery = async (sqlquery: string): Promise<DBResult> => {
 
   let result: DBResult = {};
+
+  totalqueries++;
 
   try {
     result.data = await query(sqlquery);
@@ -96,6 +100,10 @@ let dbquery = async (sqlquery: string): Promise<DBResult> => {
   return result;
 
 }
+
+setInterval(function(){
+  //console.log('queries: ' + totalqueries);
+}, 5000);
 
 export {
   query,

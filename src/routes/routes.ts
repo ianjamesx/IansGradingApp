@@ -76,6 +76,16 @@ let routes = (app: Application): void => {
     });
   });
 
+  app.get('/createassignment/:id', (req: Request, res: Response) => {
+    pb.createAssignment(req).then(content => {
+      if(content.error) return err(req, res);
+
+      let page: string = userpage(content.instructor, 'createassignment');
+      res.render(page, content);
+
+    });
+  });
+
   app.get('/editassignment', (req: Request, res: Response) => {
     pb.editAssignment(req).then(content => {
       if(content.error) return err(req, res);

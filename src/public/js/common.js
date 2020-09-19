@@ -51,6 +51,7 @@ var common = {
 
     getURLID: function(){
         var url = window.location.href;
-        return url.substring(url.lastIndexOf('/') + 1);
+        var id = url.substring(url.lastIndexOf('/') + 1);
+        return id;
     }
 };

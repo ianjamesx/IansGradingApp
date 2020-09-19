@@ -2,7 +2,9 @@
     <button type="button" id="remove<%= question.id %>" class="close" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h5 class="card-title"><%= question.body %></h5>
+    <% question.body = question.body.replace(/(?:\r\n|\r|\n)/g, '<br>'); %>
+    <% question.body = question.body.replace(/\t/g, ' '); %>
+    <h5 class="card-title"><%- question.body %></h5>
     <p><% question.answers.forEach((answer) => { %>
         <%= answer.answer %><br>
     <% }); %></p>

@@ -141,12 +141,14 @@ let chooseQuestions = async (req: Request) => {
 
   //get all questions made by this instructor (by user id)
   let userquestions: any[] = await Question.allQuestionsBy(pagedata.user.id);
+  let allquestions: any[] = await Question.allPublicQuestions();
+  let questions: any[] = userquestions.concat(allquestions);
 
   //get questions already in assignment and remove them (so they cant be selected again)
-  await assignment.removeQuestionsIfExists(userquestions);
+  await assignment.removeQuestionsIfExists(questions);
 
   pagedata.assignment = await assignment.dataView();
-  pagedata.questions = userquestions;
+  pagedata.questions = questions;
 
   return pagedata;
 

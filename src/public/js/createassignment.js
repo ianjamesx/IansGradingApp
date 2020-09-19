@@ -70,6 +70,12 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
   
   $(document).ready(function(){
 
+    //see if a course id is passed, if so, set course
+    var course = common.getURLID();
+    if(!(isNaN(course))){
+      $('#assignment_course').val(course);
+    }
+
     //init course categories to whatever course its selected to
     getCategories($('#assignment_course').val());
   

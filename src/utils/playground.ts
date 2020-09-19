@@ -80,17 +80,31 @@ import { Course } from '../models/Course/Course';
 import { Assignment } from '../models/Assignment/Assignment';
 import { views } from './utils';
 
+//import { saveQuestionsFromJSON } from '../services/questionparser';
+
+
+let fs = require('fs');
+let path = require('path');
 
 let test = async (): Promise<void> => {
 
-  let course: Course = new Course();
-  await course.loadCourseByID(37547264);
-
-  let score: any = await course.getStudentScore(5940387);
-
-  console.log(score);
-
   //console.log(assignview);
+/*
+  let questionpath = path.join(__dirname, '../data/questionsJSON.txt');
+  let questionsJSON = fs.readFileSync(questionpath, 'utf8');
+  let questions = JSON.parse(questionsJSON);
+
+  let i, j;
+  for(i in questions){
+    for(j in questions[i]){
+      console.log(questions[i][j]);
+      console.log('------');
+    }
+
+  }
+  */
+
+  //await saveQuestionsFromJSON();
 
   //let assign: Assignment = new Assignment();
   //await assign.loadFromID(27154755);
@@ -100,7 +114,6 @@ let test = async (): Promise<void> => {
 }
 
 test();
-
 
 /*
 import { tablekeys } from './utils';
