@@ -189,6 +189,13 @@ class Question {
     }
 
     /*
+    get questions by criteria
+    */
+    public checkQuestionsForKeywords(): any {
+
+    }
+
+    /*
     get all questions that are public
     */
     public static async allPublicQuestions(): Promise<any[]> {
@@ -215,39 +222,6 @@ class Question {
 
         return result.data[0].ans;
     }
-/*
-    public static async allQuestionsBy(subject: string, topic: string, type: string, keywordlist: string): Promise<Question[]> {
-        let result: DBResult = await db.allQuestionsByCriteria(subject, topic, type);
-
-        //on error, return empty array of questions, signifying none found
-        if(result.error) return [];
-
-        //split keywords into list of keywords to search for
-        let keywords: string[] = keywordlist.split(' ');
-
-        //convert to question objects, then see how many contain keywords
-        let i: number;
-        let questionlist: any[] = [];
-        for(i = 0; i < result.data.length; i++){
-
-            //load question
-            let currquest: Question = new Question();
-            currquest.loadFromObject(result.data[i]);
-
-            //get score of keywords, populate list
-            let keycount: number = currquest.containsKeywords(keywords);
-            questionlist.push(currquest);
-            questionlist[i].keycount = keycount;
-        }
-
-        //sort by keycount
-        questionlist.sort(function(a, b) { 
-            return b.keycount - a.keycount;
-        })
-
-        return questionlist;
-    }
-    */
 
     public getColumns(): any {
 

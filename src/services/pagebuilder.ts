@@ -237,6 +237,7 @@ let studentReport = async (req: Request) => {
     let assignscore: number = await assignments[i].getStudentScore(studentID);
     let assigndata = await assignments[i].dataView();
 
+    //if there is no score for this assignment, set to 0
     if(isNaN(assignscore)){
       assignscore = 0;
     }
