@@ -30,25 +30,42 @@ interface UserSession {
   id: number;
 }
 
+
+
 class User {
 
-  protected email: string;
-  protected password: string;
-  protected firstname: string;
-  protected lastname: string;
-  protected instructor: number;
-  protected hash: string; //hashed password
-  protected id: number;
+  private email: string;
+  private password: string;
+  private firstname: string;
+  private lastname: string;
+  private instructor: number;
+  private hash: string; //hashed password
+  private id: number;
 
   public table = `users`;
 
+
+  constructor(data?: any){
+    if(data) this.load(data);
+  }
+
+  public load(data?: any){
+      this.email = data.email;
+      this.password = data.password;
+      this.firstname = data.firstname;
+      this.lastname = data.lastname;
+      this.instructor = data.instructor;
+      this.id = data.id;
+  }
+
+  /*
   constructor(email?:string, password?:string, firstname?:string, lastname?:string, instructor?: number){
     this.email = email;
     this.password = password;
     this.firstname = firstname;
     this.lastname = lastname;
     this.instructor = instructor;
-  }
+  }*/
 
   /*
 
@@ -56,7 +73,7 @@ class User {
 
   */
 
-  public getIDFromSession(session: any): number {
+  public static getIDFromSession(session: any): number {
     if(!session.user){
       return null;
     }
@@ -77,7 +94,7 @@ class User {
     let result: DBResult = await db.load(this);
 
     if(result.error) return result.error; //error here most likely caused by user having no active session
-    this.loadtouser(result.data);
+    this.load(result.data);
 
   }
 
@@ -85,16 +102,7 @@ class User {
     let sess: UserSession = {
       id: this.getID()
     };
-
     session.user = sess;
-  }
-
-  public loadtouser(data: any){
-    this.email = data.email;
-    this.firstname = data.firstname;
-    this.lastname = data.lastname;
-    this.id = data.id;
-    this.instructor = data.instructor;
   }
 
   /*
@@ -144,8 +152,6 @@ class User {
     //select first entry
     result.data = result.data[0];
 
-    console.log(result.data);
-
     //if no users found from email, return a login error message
     if(!result.data){
       return `Email or password incorrect`;
@@ -156,7 +162,7 @@ class User {
     if(!passwordmatched) return `Email or password incorrect`;
 
     //save data to this object and to session
-    this.loadtouser(result.data);
+    this.load(result.data);
     this.setSession(req);
   }
 
@@ -200,8 +206,35 @@ class User {
   }
 
   /*
-
   general getters, for db inserts, or interfaces
+  */
+
+  /*
+
+  public data(): any {
+
+    return {
+      email: this.email,
+      password: this.hash, //when retrieving password to store, only retrieve hash
+      firstname: this.firstname,
+      lastname: this.lastname,
+      instructor: this.instructor ? 1 : 0,
+      id: this.id
+    };
+
+  }
+
+  public view(): any {
+
+    return {
+      email: this.email,
+      firstname: this.firstname,
+      lastname: this.lastname,
+      instructor: this.instructor ? 1 : 0,
+      id: this.id
+    };
+
+  }
 
   */
 

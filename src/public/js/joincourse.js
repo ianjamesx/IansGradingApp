@@ -1,6 +1,6 @@
 function joincourse(id){
 
-    $.ajax('/course/join', {
+    $.ajax('api/course/join', {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -30,7 +30,7 @@ function joincourse(id){
 //9M0356VC
 function coursesearch(key){
 
-    $.ajax('/course/searchbykey', {
+    $.ajax('api/course/searchbykey', {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

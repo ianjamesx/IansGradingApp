@@ -12,47 +12,39 @@ let courseapi = (app: Application): void => {
 
     //create a course with user entered properties
     //send generated ID of course on success
-    app.post('/course/create', (req: Request, res: Response) => {
+    app.post('/api/course/create', async (req: Request, res: Response) => {
 
-        let name: string = req.body.name;
-        let department: string = req.body.department;
-        let season: string = req.body.season;
-        let year: number = Number(req.body.year);
-        let number: number = Number(req.body.number);
-        let section: number = Number(req.body.section);
-        let categories: any = req.body.categories;
+        let course: Course = new Course({
+            name: req.body.name,
+            department: req.body.department,
+            season: req.body.season,
+            year: Number(req.body.year),
+            number: Number(req.body.number),
+            section: Number(req.body.section),
+            categories: req.body.categories,
+            instructor: User.getIDFromSession(req.session)
+        })
 
-        //load instructor data
-        let instructor: User = new User();
-        let instructorID: number = instructor.getIDFromSession(req.session);
-
-        //load new course
-        let course: Course = new Course(name, department, season, year, number, section, instructorID, categories);
         let result: Result = {};
 
-        //save users data on this course in database
-        course.save().then(err => {
-            if(err) {
-                result.error = err;
-                res.send(result);
-            } else {
-                
-                //add connection between instructor and course
-                //if joining through create API, user is the instructor
-                course.joinCourse(instructorID, `Instructor`).then(joinerr => {
-                    if(joinerr){
-                        result.error = joinerr;
-                    } else {
-                        result.success = course.getID();
-                    }
-                    res.send(result);
-                });
-            }
+        let saveerr: any = await course.save();
+        if(saveerr){
+            result.error = saveerr;
+            res.send(result);
+        }
 
-        });
+        let joinerr = await course.joinCourse(User.getIDFromSession(req.session), `Instructor`);
+        if(joinerr){
+            result.error = joinerr;
+        } else {
+            result.success = course.getID();
+        }
+
+        res.send(result);
+
     });
 
-    app.post('/course/searchbykey', async (req: Request, res: Response) => {
+    app.post('/api/course/searchbykey', async (req: Request, res: Response) => {
 
         let key: string = req.body.key;
 
@@ -60,6 +52,8 @@ let courseapi = (app: Application): void => {
         let result: Result = {};
 
         let err: any = await course.loadCourseByKey(key);
+
+        console.log(err);
 
         //send error if could not find course by that key
         if(err){
@@ -75,18 +69,17 @@ let courseapi = (app: Application): void => {
 
     });
 
-    app.post('/course/join', async (req: Request, res: Response) => {
+    app.post('/api/course/join', async (req: Request, res: Response) => {
 
         let id: number = Number(req.body.id);
         let course: Course = new Course();
         let result: Result = {};
 
         //get user id for course to add connection
-        let user: User = new User();
-        let userID: number = user.getIDFromSession(req.session);
+        let userID: number = User.getIDFromSession(req.session);
 
         //try to load course by that id
-        let loaderr: any = await course.loadCourseByID(id);
+        let loaderr: any = await course.loadByID(id);
 
         console.log(userID + ' joining course ' + id);
         if(loaderr){
@@ -109,14 +102,14 @@ let courseapi = (app: Application): void => {
 
     });
 
-    app.post('/course/getcategories', async (req: Request, res: Response) => {
+    app.post('/api/course/getcategories', async (req: Request, res: Response) => {
 
         let id: number = Number(req.body.id);
         let course: Course = new Course();
         let result: Result = {};
 
         //try to load course by that id
-        let loaderr: any = await course.loadCourseByID(id);
+        let loaderr: any = await course.loadByID(id);
 
         if(loaderr){
             result.error = loaderr;

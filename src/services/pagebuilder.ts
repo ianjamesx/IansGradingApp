@@ -31,8 +31,7 @@ let dashboard = async (req: Request) => {
   let courses: Course[] = common.loadCourses(pagedata.course);
 
   //reload user from column data
-  let user: User = new User();
-  user.loadtouser(pagedata.user);
+  let user: User = new User(pagedata.user);
 
   //load upcoming assignments
   pagedata.assignments = await common.upcomingAssignments(user);
@@ -48,8 +47,7 @@ let createCourse = async (req: Request) => {
   if(pagedata.error) return { error: pagedata.error };
 
   //get departments to populate list to choose from
-  let course: Course = new Course;
-  pagedata.departments = await course.getDepartments();
+  pagedata.departments = await Course.getDepartments();
   
   pagedata.title = 'Create New Course';
 
@@ -68,7 +66,7 @@ let coursePage = async (req: Request) => {
 
   //load course from ID given
   let course: Course = new Course;
-  await course.loadCourseByID(id);
+  await course.loadByID(id);
   
   //after course loads, get course data, title
   pagedata.course = await course.dataView();
@@ -76,6 +74,7 @@ let coursePage = async (req: Request) => {
 
   //load all assignments
   let assignments: Assignment[] = await course.getAllAssignments();
+  
   //sort by due date (newest first)
   assignments.sort(function(a, b) {
     let c: number = (new Date(a.getDueDate())).getTime();
@@ -92,8 +91,6 @@ let coursePage = async (req: Request) => {
     //if not an instructor, get students current score
     pagedata.score = await course.getStudentScore(pagedata.user.id);
   }
-
-  console.log(pagedata);
   
   return pagedata;
 
@@ -224,7 +221,8 @@ let studentReport = async (req: Request) => {
   //get their score info for course
   let courseID: number = Number(req.params.course);
   let course: Course = new Course();
-  await course.loadCourseByID(courseID);
+  await course.loadByID(courseID);
+  
   pagedata.course = course.getCourseTitle();
   pagedata.score = await course.getStudentScore(studentID);
 

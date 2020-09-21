@@ -58,6 +58,31 @@ class Assignment {
 
     public table: string = `assignments`;
 
+    constructor(data?: any){
+        if(data) this.load(data);
+    }
+
+    public load(data?: any){
+        this.name = data.name;
+        this.author = data.author;
+        this.course = data.course;
+        this.prompt = data.prompt;
+        
+        this.attempts = data.attempts;
+        this.randomize = data.randomize;
+        this.latepenalty = data.latepenalty;
+        this.points = data.points;
+
+        this.open = data.open;
+        this.close = data.close;
+        this.cutoff = data.cutoff;
+
+        this.category = data.category;
+        this.type = data.type;
+
+        this.id = data.id;
+    }
+/*
     constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, category?: string, type?: string, id?: number){
 
         this.name = name;
@@ -107,6 +132,8 @@ class Assignment {
         this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.category, a.type, a.id);
     }
 
+    */
+
     public async loadFromID(ID: number): Promise<string | void> {
         this.id = ID;
         let result: DBResult = await db.load(this);
@@ -114,7 +141,7 @@ class Assignment {
         if(result.error)
             return result.error;
 
-        this.loadFromObject(result.data);
+        this.load(result.data);
     }
 
     public async save(): Promise<any | void> {
@@ -162,7 +189,7 @@ class Assignment {
         let i: any, j: any;
 
         let course: Course = new Course();
-        course.loadCourseByID(this.course);
+        course.loadByID(this.course);
         let students: any[] = await course.getEnrollees();
 
         let records = [];
@@ -279,11 +306,7 @@ class Assignment {
         let questions: Question[] = [];
 
         for(i in quests){
-
-            let currquest = new Question();
-            currquest.loadFromObject(quests[i]);
-            questions.push(currquest);
-
+            questions.push(new Question(quests[i]));
         }
 
         //then, get the assignment view of each question
@@ -364,7 +387,7 @@ class Assignment {
 
         //question we will be loading
         let question: Question = new Question();
-        await question.loadFromID(questionID);
+        await question.loadByID(questionID);
 
         let checkquery = db.format(`SELECT correct FROM answers WHERE question = ? AND ans = ?`, [questionID, answer]);
         let result: DBResult = await db.dbquery(checkquery);
@@ -515,7 +538,7 @@ class Assignment {
         //also get readable name for course
 
         let course: Course = new Course();
-        await course.loadCourseByID(this.course);
+        await course.loadByID(this.course);
         let coursename = course.getNameFormatted();
 
         return {

@@ -1,6 +1,6 @@
 function createCourse(name, department, number, section, season, year, categories){
 
-  $.ajax('/course/create', {
+  $.ajax('api/course/create', {
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({

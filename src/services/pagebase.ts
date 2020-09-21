@@ -2,6 +2,7 @@ import { User } from '../models/User/User';
 import { Course } from '../models/Course/Course';
 import { Assignment } from '../models/Assignment/Assignment';
 import { Request } from 'express';
+import { views } from '../utils/utils';
 
 /*
 data needed for all pages, to build sidebar, notifications, etc
@@ -35,8 +36,7 @@ let loadCourses = (coursedata: any[]): Course[] => {
   let courses: Course[] = [];
 
   for(i = 0; i < courses.length; i++){
-    courses[i] = new Course;
-    courses[i].loadFromObject(coursedata[i]);
+    courses[i] = new Course(coursedata[i]);
   }
 
   return courses;
@@ -60,14 +60,22 @@ let upcomingAssignments = async (user: User) => {
   let upcoming: any[] = [];
 
   for(i = 0; i < assign.length; i++){
-    let assignment: Assignment = new Assignment();
-    assignment.loadFromObject(assign[i]);
+    let assignment: Assignment = new Assignment(assign[i]);
 
     if(assignment.isUpcoming()){
-      //push dataview of assignment into array
-      upcoming.push(await assignment.dataView());
+      upcoming.push(assignment);
     }
   }
+
+  //sort assignments by due date
+  upcoming.sort(function(a, b) {
+    let c: number = (new Date(a.getDueDate())).getTime();
+    let d: number = (new Date(b.getDueDate())).getTime();
+    return c-d;
+  });
+
+  //just return assignment views
+  upcoming = await (views(upcoming));
 
   return upcoming;
 

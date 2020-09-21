@@ -1,4 +1,5 @@
 import { Application, Request, Response } from 'express';
+import { loginerr } from '../db/dbquery';
 import { User } from '../models/User/User';
 
 //result interface for an API call
@@ -11,47 +12,53 @@ let userapi = (app: Application): void => {
 
     //login with email, password
     //if success, store user id in session
-    app.post('/login', (req: Request, res: Response) => {
-        let email: string = req.body.email;
-        let password: string = req.body.password;
+    app.post('/api/user/login', async (req: Request, res: Response) => {
 
-        let user: User = new User(email, password);
-        let result: Result = {};
-
-        user.login(req.session).then(err => {
-            if(err)
-                result.error = err;
-             else 
-                result.success = true;
-            
-            res.send(result);
+        let user: User = new User({
+            email: req.body.email,
+            password: req.body.password
         });
+
+        let result: Result = {};
+        let err: string | void = await user.login(req.session);
+
+        if(err)
+            result.error = err;
+         else 
+            result.success = true;
+
+        res.send(result);
     });
 
     //create new user
     //with email, pass, fn, ln
-    app.post('/user/create', (req: Request, res: Response) => {
-        let email: string = req.body.email;
-        let password: string = req.body.password;
-        let firstname: string = req.body.firstname;
-        let lastname: string = req.body.lastname;
-        let instructor: number = Number(req.body.instructor);
+    app.post('/api/user/create', async (req: Request, res: Response) => {
 
-        let user: User = new User(email, password, firstname, lastname, instructor);
+        let user: User = new User({
+            email: req.body.email,
+            password: req.body.password,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            instructor: Number(req.body.instructor)
+        })
+
         let result: Result = {};
 
-        user.save().then(err => { //attempt to save user
-            console.log(err);
-            if(err){
-                result.error = err;
-                res.send(result);
-            } else {
-                result.success = true;
-                user.login(req).then(err => { //save data to session, login
-                    if(!err) res.send(result);
-                });
-            }
-        });
+        let saveErr: any = await user.save();
+
+        if(saveErr){
+            result.error = saveErr;
+            res.send(result);
+        }
+
+        let loginerr: string | void = await user.login(req);
+        if(!loginerr){
+            result.success = true;
+        } else {
+            result.error = loginerr;
+        }
+
+        res.send(result);
 
     });
 

@@ -1,7 +1,7 @@
 var home = {
     login: function(email, password){
 
-        $.ajax('/login', {
+        $.ajax('/api/user/login', {
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -27,7 +27,7 @@ var home = {
 
     accountcreate: function(email, password, firstname, lastname, instructor){
 
-        $.ajax('/user/create', {
+        $.ajax('/api/user/create', {
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({

@@ -15,26 +15,24 @@ let assignmentapi = (app: Application): void => {
     //send generated ID of course on success
     app.post('/api/assignment/create', async (req: Request, res: Response) => {
 
-        let name: string = req.body.name;
-        let prompt: string = req.body.prompt;
-        let course: number = Number(req.body.course);
-        let category: string = req.body.category;
-        let type: string = req.body.type;
+        let assignment: Assignment = new Assignment({
+            name: req.body.name,
+            author: User.getIDFromSession(req.session),
+            prompt: req.body.prompt,
+            course: Number(req.body.course),
+            category: req.body.category,
+            type: req.body.type,
 
-        let attempts: number = Number(req.body.attempts);
-        let randomize: number = Number(req.body.randomize);
-        let latepenalty: number = Number(req.body.latepenalty);
-        let points: number = Number(req.body.points);
+            attempts: Number(req.body.attempts),
+            randomize: Number(req.body.randomize),
+            latepenalty: Number(req.body.latepenalty),
+            points: Number(req.body.points),
 
-        let open: string = req.body.open;
-        let close: string = req.body.close;
-        let cutoff: string = req.body.cutoff;
+            open: req.body.open,
+            close: req.body.close,
+            cutoff: req.body.cutoff
 
-        //load instructor data
-        let author: User = new User();
-        let authorID: number = author.getIDFromSession(req.session);
-
-        let assignment: Assignment = new Assignment(name, authorID, course, prompt, attempts, randomize, latepenalty, points, open, close, cutoff, category, type);
+        });
 
         //save users data on this assignment
         let result: Result = {};
@@ -55,7 +53,6 @@ let assignmentapi = (app: Application): void => {
 
         let assign: Assignment = new Assignment();
         await assign.loadFromID(assignmentID);
-
         await assign.saveQuestions(questions);
 
         let result: Result = {
@@ -86,8 +83,7 @@ let assignmentapi = (app: Application): void => {
 
         let assignmentID: number = Number(req.body.assignment);
         let questionID: number = Number(req.body.question);
-        let user: User = new User();
-        let userID: number = user.getIDFromSession(req.session);
+        let userID: number = User.getIDFromSession(req.session);
         let answer: string = req.body.answer;
 
         //just set ID, no methods require assignment to be loaded

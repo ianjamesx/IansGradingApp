@@ -40,7 +40,12 @@ let saveOneQuestion = async (questionObj) => {
     }
 
     //create question object
-    let quest: Question = new Question(question, answers, null, null, null, null, 'Multiple Choice', 1);
+    let quest: Question = new Question({
+        body: question,
+        answers: answers,
+        type: 'Multiple Choice',
+        ispublic: 1
+    });
 
     let err: any = await quest.save();
 

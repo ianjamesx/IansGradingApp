@@ -16,29 +16,25 @@ let questionapi = (app: Application): void => {
     //send generated ID of course on success
     app.post('/api/question/create', async (req: Request, res: Response) => {
 
-        let question: string = req.body.question;
-        let answers: any[] = req.body.answers;
-        let hint: string = req.body.hint;
-        let subject: string = req.body.subject;
-        let topic: string = req.body.topic;
-        let type: string = req.body.type;
-        let ispublic: number = req.body.public;
-
-        //load instructor data
-        let author: User = new User();
-        let authorID: number = author.getIDFromSession(req.session);
-
-        //create question object
-        let quest: Question = new Question(question, answers, authorID, hint, subject, topic, type, ispublic);
+        let question: Question = new Question({
+            body: req.body.question,
+            answers: req.body.answers,
+            hint: req.body.hint,
+            subject: req.body.subject,
+            topic: req.body.topic,
+            type: req.body.type,
+            ispublic: req.body.public,
+            author: User.getIDFromSession(req.session)
+        }) 
 
         //save users data on this assignment
         let result: Result = {};
-        let err: any = await quest.save();
+        let err: any = await question.save();
 
         if(err) {
             result.error = err;
         } else {
-            result.success = quest.getID();
+            result.success = question.getID();
         }
         res.send(result);
     });

@@ -47,7 +47,7 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
     //remove all current options
     $("#assignment_category").empty();
 
-    $.ajax('/course/getcategories', {
+    $.ajax('api/course/getcategories', {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({

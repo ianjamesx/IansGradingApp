@@ -33,6 +33,25 @@ class Question {
 
     public table:string = `questions`;
 
+    
+    constructor(data?: any){
+        if(data) this.load(data);
+    }
+
+    public load(data?: any){
+        this.body = data.body;
+        this.answers = data.answers;
+        this.hint = data.hint;
+        this.author = data.author;
+        this.subject = data.subject;
+        this.topic = data.topic;
+        this.type = data.type;
+        this.ispublic = data.ispublic;
+        this.id = data.id;
+    }
+    /*
+
+
     constructor(body?: string, answers?: any[], author?: number, hint?: string, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
 
         this.body = body;
@@ -65,7 +84,9 @@ class Question {
         this.loadQuestionData(q.body, q.answers, q.author, q.hint, q.subject, q.topic, q.type, q.ispublic, q.id);
     }
 
-    public async loadFromID(ID: number): Promise<string | void> {
+    */
+
+    public async loadByID(ID: number): Promise<string | void> {
         this.id = ID;
         let result: DBResult = await db.load(this);
 
@@ -76,7 +97,7 @@ class Question {
         await this.loadAnswers();
         result.data.answers = this.answers;
 
-        this.loadFromObject(result.data);
+        this.load(result.data);
     }
 
     public async save(): Promise<any | void> {

@@ -61,6 +61,25 @@ class Course {
 
     public table: string = `courses`;
 
+    
+    constructor(data?: any){
+        if(data) this.load(data);
+    }
+
+    public load(data?: any){
+        this.name = data.name;
+        this.department = data.department;
+        this.season = data.season;
+        this.year = data.year;
+        this.number = data.number;
+        this.section = data.section;
+        this.id = data.id;
+        this.coursekey = data.coursekey;
+        this.instructor = data.instructor;
+        this.categories = data.categories;
+    }
+    
+/*
     constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, categories?: any, id?: number, coursekey?: string){
         this.name = name;
         this.department = department;
@@ -93,6 +112,8 @@ class Course {
         this.loadCourseData(c.name, c.department, c.season, c.year, c.number, c.section, c.id, c.coursekey, c.instructor);
     }
 
+    */
+
     //attempt to load course data into this object from a key given
     public async loadCourseByKey(key?: string): Promise<string | void> {
 
@@ -103,28 +124,31 @@ class Course {
         let loadquery = db.format(`SELECT ?? FROM courses WHERE coursekey = ?`, [keys(this.getColumns()), this.getKey()]);
         let result: DBResult = await db.dbquery(loadquery);
 
+        console.log('course res')
+        console.log(result);
+
         //return any errors
         if(result.data.length == 0 || result.error) return db.unknownerr;
         
         //load to object if successful
         result.data = result.data[0];
-        this.loadFromObject(result.data);
+        this.load(result.data);
     }
 
     //can also load course by ID
-    public async loadCourseByID(ID: number): Promise<string | void> {
+    public async loadByID(ID: number): Promise<string | void> {
         this.id = ID;
         let result: DBResult = await db.load(this);
 
         if(result.error)
             return result.error;
 
-        this.loadFromObject(result.data);
+        this.load(result.data);
     }
 
     //get all departments available
     //run db query to get departments, turn into an enum style object
-    public async getDepartments(): Promise<any> {
+    public static async getDepartments(): Promise<any> {
 
         let loadquery = `SELECT abbreviation, name FROM departments`;
         let result: DBResult = await db.dbquery(loadquery);
@@ -391,8 +415,7 @@ class Course {
         let i: number;
         let assignments: Assignment[] = [];
         for(i = 0; i < result.data.length; i++){
-            assignments.push(new Assignment());
-            assignments[i].loadFromObject(result.data[i]);
+            assignments.push(new Assignment(result.data[i]));
         }
 
         return assignments;

@@ -22,6 +22,7 @@ let routes = (app: Application): void => {
 
   app.get('/dashboard', (req: Request, res: Response) => {
     pb.dashboard(req).then(content => {
+      console.log(content.error);
       if(content.error) return err(req, res); //<-- error check, if we get an error from pagebuilder, send user a 404
 
       //get page path from userpage function IF page depends on user type
