@@ -8,7 +8,6 @@ import { views } from '../utils/utils';
 import { Request } from 'express';
 
 import common = require('./pagebase');
-import { questionapi } from '../api/question';
 
 /*
 page builder
@@ -26,9 +25,6 @@ let dashboard = async (req: Request) => {
   if(pagedata.error) return { error: pagedata.error };
 
   pagedata.title = 'Your Dashboard';
-
-  //load raw course objects and user objectfrom pagedata
-  let courses: Course[] = common.loadCourses(pagedata.course);
 
   //reload user from column data
   let user: User = new User(pagedata.user);
@@ -75,21 +71,36 @@ let coursePage = async (req: Request) => {
   //load all assignments
   let assignments: Assignment[] = await course.getAllAssignments();
   
-  //sort by due date (newest first)
+  //sort by due date (newest first), then turn to view
   assignments.sort(function(a, b) {
     let c: number = (new Date(a.getDueDate())).getTime();
     let d: number = (new Date(b.getDueDate())).getTime();
     return d-c;
   });
 
-  pagedata.assignments = await views(assignments);
-
   //if instructor, get all enrollees
   if(pagedata.instructor){
     pagedata.enrolees = await course.getEnrollees();
+    pagedata.assignments = await views(assignments);
+
   } else {
     //if not an instructor, get students current score
     pagedata.score = await course.getStudentScore(pagedata.user.id);
+    pagedata.assignments = [];
+    let i: number;
+
+    //get scores for individual assignments too
+    for(i = 0; i < assignments.length; i++){
+      let assignscore: number = await assignments[i].getStudentScore(pagedata.user.id);
+      let assigndata = await assignments[i].dataView();
+
+      //if there is no score for this assignment, set to 0
+      if(isNaN(assignscore)) assignscore = 0;
+
+      pagedata.assignments.push(assigndata);
+      pagedata.assignments[i].score = assignscore;
+
+    }
   }
   
   return pagedata;

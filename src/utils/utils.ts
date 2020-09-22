@@ -70,12 +70,27 @@ let views = async (objs: any[]): Promise<any[]> => {
     return objviews;
 };
 
+//given two arrays of obejcts, merge two objects from seperate arrays if the id is the same
+let mergeOnId = (arr1: any[], arr2: any[]): any[] => {
+    let i: number, j: number;
+    for(i = 0; i < arr1.length; i++){
+        for(j = 0; j < arr2.length; j++){
+            if(arr1[i].id == arr2[j].id){
+                arr1[i] = Object.assign(arr1[i], arr2[j]);
+            }
+        }
+    }
+
+    return arr1;
+}
+
 export {
     vals,
     keys,
     tablekeys,
     id,
     key,
-    views
+    views,
+    mergeOnId
 };
 

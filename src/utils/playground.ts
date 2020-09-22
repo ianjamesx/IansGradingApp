@@ -79,6 +79,7 @@ console.log(savequery);
 import { Course } from '../models/Course/Course';
 import { Assignment } from '../models/Assignment/Assignment';
 import { views } from './utils';
+import { mergeOnId } from './utils';
 
 //import { saveQuestionsFromJSON } from '../services/questionparser';
 
@@ -87,30 +88,12 @@ let fs = require('fs');
 let path = require('path');
 
 let test = async (): Promise<void> => {
-
-  //console.log(assignview);
 /*
-  let questionpath = path.join(__dirname, '../data/questionsJSON.txt');
-  let questionsJSON = fs.readFileSync(questionpath, 'utf8');
-  let questions = JSON.parse(questionsJSON);
+  let arr1: any = [{id: 1, a: 3}, {id: 2, a: 53}];
+  let arr2: any = [{id: 1, b: 6}, {id: 2, b: 12}];
 
-  let i, j;
-  for(i in questions){
-    for(j in questions[i]){
-      console.log(questions[i][j]);
-      console.log('------');
-    }
-
-  }
-  */
-
-  //await saveQuestionsFromJSON();
-
-  //let assign: Assignment = new Assignment();
-  //await assign.loadFromID(27154755);
-
-  //console.log(await assign.getQuestionIDs());
-
+  console.log(mergeOnId(arr1, arr2));
+*/
 }
 
 test();

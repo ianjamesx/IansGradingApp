@@ -31,6 +31,13 @@ interface AnswerAttempt {
     answer?: string;
 }
 
+interface Score {
+    total?: number;
+    actual?: number;
+    percent?: number;
+}
+
+
 class Assignment {
 
     //name, category, ids of author/course
@@ -385,6 +392,9 @@ class Assignment {
     //student tries to answer a single question
     public async answerQuestion(questionID: number, userID: number, answer: string): Promise<AnswerAttempt> {
 
+        //if this assignment is passed cutoff date, dont do anything
+        if(this.passDue()) return {};
+
         //question we will be loading
         let question: Question = new Question();
         await question.loadByID(questionID);
@@ -451,8 +461,15 @@ class Assignment {
 
         if(result.error) return [];
 
-        let progress: AnswerAttempt[] = [];
+        //if we're passed cutoff, take away attempts (to render assignment unanswerable)
         let i: number;
+        if(this.passCutoff()){
+            for(i = 0; i < result.data.length; i++){
+                result.data[i].attempts = 0;
+            }
+        }
+
+        let progress: AnswerAttempt[] = [];
         for(i = 0; i < result.data.length; i++){
             progress.push({
                 correct: result.data[i].correct,
@@ -463,6 +480,26 @@ class Assignment {
 
         return progress;
 
+    }
+
+    /*
+    see if assignment is passed closing date or cutoff date
+    */
+
+    public passCutoff(): boolean {
+        let cutoff: Date = new Date(this.cutoff);
+        if(cutoff.getTime() < Date.now()){
+            return true;
+        }
+        return false;
+    }
+
+    public passDue(): boolean {
+        let close: Date = new Date(this.close);
+        if(close.getTime() < Date.now()){
+            return true;
+        }
+        return false;
     }
 
     //get progress record for just one question
@@ -555,6 +592,9 @@ class Assignment {
             open: moment(this.open).format("dddd, MMMM Do YYYY, h:mm a"),
             close: moment(this.close).format("dddd, MMMM Do YYYY, h:mm a"),
             cutoff: moment(this.cutoff).format("dddd, MMMM Do YYYY, h:mm a"),
+            openms: new Date(this.open).getTime(),
+            closems: new Date(this.close).getTime(),
+            cutoffms: new Date(this.cutoff).getTime(),
             id: this.id
         };
 

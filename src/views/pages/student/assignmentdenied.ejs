@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <%- include('../../partials/head', { title: title }) %>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('../../partials/student/sidebar', {courses: courses}) %>
+      <div id="content">
+
+        <h1><%= assignment.name %> <small>| <%= assignment.category %></small></h1>
+        <hr>
+        <h4>This assignment is not open yet, come back</h4>
+        <h2><%= assignment.open %></h2>
+        <h4>to take it</h4>
+        <hr>
+
+      </div> <%# close content %>
+    </div> <%# close wrapper %>
+
+  </body>
+
+  <%- include('../../partials/scripts'); %>
+  <script type="text/javascript" src="http://localhost:8080/public/js/takeassignment.js"></script>
+
+</html>

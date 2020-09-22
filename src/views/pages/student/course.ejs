@@ -21,6 +21,7 @@
               <tr>
                 <th scope="col">Assignment</th>
                 <th scope="col">Due Date</th>
+                <th scope="col">Your Score</th>
                 <th scope="col">View Assignment</th>
               </tr>
             </thead>
@@ -29,7 +30,12 @@
                 <tr>
                     <td><%= assignment.name %></td>
                     <td><%= assignment.close %></td>
-                    <td><a href="/takeassignment/<%= assignment.id %>">Go To Assignment</a></td>
+                    <td><%= assignment.score %>%</td>
+                    <% if(assignment.openms < Date.now()){ %>
+                      <td><a class="reportlink" href="/takeassignment/<%= assignment.id %>">Go To Assignment</a></td>
+                    <% } else { %>
+                      <td><small>Available</small> <%= assignment.open %></td>
+                    <% } %>
                 </tr>
             <% }); %>
             </tbody>
