@@ -96,6 +96,9 @@ class User {
     session.user = sess;
   }
 
+  public setPassword(pass: string): void {
+    this.password = pass;
+  }
   /*
 
   saving/verification of user inputted data
@@ -124,6 +127,18 @@ class User {
     
     if(!this.hash) await this.encryptPassword(); //if we dont have a hash, get it from current password
     if(!this.id) await this.generateID();        //if we dont have an ID either, generate one
+
+    let dberr: DBResult = await db.save(this); //save in db, return any db errors or null if no errs
+    if(dberr.error)
+      return { any: dberr.error };
+  }
+
+  public async update(): Promise<Errors | void> {
+
+    let errs: Errors = {};
+    errs = await this.verify(); //first, see if we have any errors in user inputted data
+    if(errs)
+      return errs;
 
     let dberr: DBResult = await db.save(this); //save in db, return any db errors or null if no errs
     if(dberr.error)
@@ -201,6 +216,13 @@ class User {
     this.password = '!';
     await this.encryptPassword();
     await this.save();
+  }
+
+  public async passwordCorrect(): Promise<boolean>{
+    let passquery = db.format(`SELECT password FROM users WHERE id = ?)`, [this.id]);
+    let result: DBResult = await db.dbquery(passquery);
+    let passwordmatched: boolean = await compare(this.password, result.data.password);
+    return passwordmatched;
   }
 
   /*

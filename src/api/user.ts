@@ -1,4 +1,5 @@
 import { Application, Request, Response } from 'express';
+import { resolve } from 'path';
 import { loginerr } from '../db/dbquery';
 import { User } from '../models/User/User';
 
@@ -59,6 +60,52 @@ let userapi = (app: Application): void => {
         }
 
         res.send(result);
+
+    });
+
+    app.post('/api/user/update', async (req: Request, res: Response) => {
+
+        let user: User = new User({
+            email: req.body.email,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            id: req.body.id
+        });
+
+        let result: Result = {};
+        result.error = await user.save();
+
+        if(!result.error){
+            result.success = true;
+        }
+
+        res.send(result);
+
+    });
+
+    app.post('/api/user/updatepassword', async (req: Request, res: Response) => {
+
+        let user: User = new User();
+        await user.loadFromID(Number(req.body.id));
+
+        let newpass: string = req.body.newpassword;
+        let result: Result = {};
+
+        if(await user.passwordCorrect()){
+            user.setPassword(newpass);
+            result.error = await user.save();
+
+            //turn result.error object into just an error about password
+            if(result.error) 
+                result.error = result.error.password;
+            else
+                result.success = true;
+
+            res.send(result);
+
+        } else {
+            res.send({error: 'Current Password Incorrect'});
+        }
 
     });
 

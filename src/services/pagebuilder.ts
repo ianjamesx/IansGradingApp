@@ -212,6 +212,15 @@ let createQuestion = async (req: Request) => {
 
 };
 
+let account = async (req: Request) => {
+
+  let pagedata = await common.pagebase(req);
+  if(pagedata.error) return { error: pagedata.error };
+  pagedata.title = 'Update Account Info';
+  return pagedata;
+
+};
+
 let studentReport = async (req: Request) => {
 
   let pagedata = await common.pagebase(req);
@@ -265,6 +274,7 @@ export {
   assignment,
   createCourse,
   coursePage,
+  account,
   joinCourse,
   takeAssignment,
   createAssignment,

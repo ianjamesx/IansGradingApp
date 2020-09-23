@@ -137,6 +137,16 @@ let routes = (app: Application): void => {
     });
   });
 
+  app.get('/account', (req: Request, res: Response) => {
+    pb.account(req).then(content => {
+      if(content.error) return err(req, res);
+
+      let page: string = userpage(content.instructor, 'account');
+      res.render(page, content);
+
+    });
+  });
+
   app.get('/studentreport/:course/:student', (req: Request, res: Response) => {
     pb.studentReport(req).then(content => {
       if(content.error) return err(req, res);
