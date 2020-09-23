@@ -78,41 +78,6 @@ class Course {
         this.instructor = data.instructor;
         this.categories = data.categories;
     }
-    
-/*
-    constructor(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, instructor?: number, categories?: any, id?: number, coursekey?: string){
-        this.name = name;
-        this.department = department;
-        this.season = season;
-        this.year = year;
-        this.number = number;
-        this.section = section;
-        this.id = id;
-        this.coursekey = coursekey;
-        this.instructor = instructor;
-        this.categories = categories;
-    }
-
-    //load data after loaded from database
-    public loadCourseData(name?: string, department?: string, season?: string, year?: number, number?: number, section?: number, id?: number, coursekey?: string, instructor?: number, categories?: any){
-        this.name = name;
-        this.department = department;
-        this.season = season;
-        this.year = year;
-        this.number = number;
-        this.section = section;
-        this.id = id;
-        this.coursekey = coursekey;
-        this.instructor = instructor;
-        this.categories = categories
-    }
-
-    //load data into this object from another object (e.g. anonymous object from database)
-    public loadFromObject(c: any): void {
-        this.loadCourseData(c.name, c.department, c.season, c.year, c.number, c.section, c.id, c.coursekey, c.instructor);
-    }
-
-    */
 
     //attempt to load course data into this object from a key given
     public async loadCourseByKey(key?: string): Promise<string | void> {
@@ -420,6 +385,12 @@ class Course {
 
         return assignments;
 
+    }
+
+    //to disable, set the course key to a disabled key
+    public async disable(): Promise<void> {
+        this.coursekey = 'DISABLED';
+        await this.save();
     }
 
     /*

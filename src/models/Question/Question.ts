@@ -49,42 +49,6 @@ class Question {
         this.ispublic = data.ispublic;
         this.id = data.id;
     }
-    /*
-
-
-    constructor(body?: string, answers?: any[], author?: number, hint?: string, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number){
-
-        this.body = body;
-        this.answers = answers;
-        this.hint = hint;
-        this.author = author;
-        this.subject = subject;
-        this.topic = topic;
-        this.type = type;
-        this.ispublic = ispublic;
-        this.id = id;
-
-    }
-
-    public loadQuestionData(body?: string, answers?: any[], author?: number, hint?: string, subject?: string, topic?: string, type?: string, ispublic?: number, id?: number): void {
-
-        this.body = body;
-        this.answers = answers;
-        this.hint = hint;
-        this.author = author;
-        this.subject = subject;
-        this.topic = topic;
-        this.type = type;
-        this.ispublic = ispublic;
-        this.id = id;
-
-    }
-
-    public loadFromObject(q: any): void{
-        this.loadQuestionData(q.body, q.answers, q.author, q.hint, q.subject, q.topic, q.type, q.ispublic, q.id);
-    }
-
-    */
 
     public async loadByID(ID: number): Promise<string | void> {
         this.id = ID;

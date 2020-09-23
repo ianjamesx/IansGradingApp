@@ -3,7 +3,7 @@ import { User } from '../models/User/User';
 import { Course } from '../models/Course/Course';
 import { Assignment } from '../models/Assignment/Assignment';
 import { Question } from '../models/Question/Question';
-import { views } from '../utils/utils';
+import { views, mergeOnId } from '../utils/utils';
 
 import { Request } from 'express';
 
@@ -196,15 +196,9 @@ let takeAssignment = async (req: Request) => {
   
   //merge progress of each questions with question object
   pagedata.progress = await assignment.getStudentProgress(pagedata.user.id);
- 
-  let i: number;
-  for(i = 0; i < pagedata.questions.length; i++){
-    pagedata.questions[i].correct = pagedata.progress[i].correct;
-    pagedata.questions[i].attempts = pagedata.progress[i].attemptsleft;
-  }
+  pagedata.questions = mergeOnId(pagedata.questions, pagedata.progress);
 
   pagedata.title = pagedata.assignment.name;
-
   return pagedata;
 
 }

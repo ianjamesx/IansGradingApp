@@ -59,15 +59,6 @@ class User {
   }
 
   /*
-  constructor(email?:string, password?:string, firstname?:string, lastname?:string, instructor?: number){
-    this.email = email;
-    this.password = password;
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.instructor = instructor;
-  }*/
-
-  /*
 
   user session interaction, either loading user data from session (which contain User ID) or loading User ID to session
 
@@ -205,38 +196,17 @@ class User {
     return assignmentdata;
   }
 
+  //delete user, simply set password as ! to disable their login
+  public async disable(): Promise<void> {
+    this.password = '!';
+    await this.encryptPassword();
+    await this.save();
+  }
+
   /*
   general getters, for db inserts, or interfaces
   */
 
-  /*
-
-  public data(): any {
-
-    return {
-      email: this.email,
-      password: this.hash, //when retrieving password to store, only retrieve hash
-      firstname: this.firstname,
-      lastname: this.lastname,
-      instructor: this.instructor ? 1 : 0,
-      id: this.id
-    };
-
-  }
-
-  public view(): any {
-
-    return {
-      email: this.email,
-      firstname: this.firstname,
-      lastname: this.lastname,
-      instructor: this.instructor ? 1 : 0,
-      id: this.id
-    };
-
-  }
-
-  */
 
   public getColumns(): any {
 

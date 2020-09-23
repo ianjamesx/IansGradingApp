@@ -24,7 +24,7 @@ interface Errors {
 
 interface AnswerAttempt {
     correct?: boolean;
-    attemptsleft?: number;
+    attempts?: number;
     id?: number;
     hint?: string
     score?: number;
@@ -89,57 +89,6 @@ class Assignment {
 
         this.id = data.id;
     }
-/*
-    constructor(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, category?: string, type?: string, id?: number){
-
-        this.name = name;
-        this.author = author;
-        this.course = course;
-        this.prompt = prompt;
-        
-        this.attempts = attempts;
-        this.randomize = randomize;
-        this.latepenalty = latepenalty;
-        this.points = points;
-
-        this.open = open;
-        this.close = close;
-        this.cutoff = cutoff;
-
-        this.category = category;
-        this.type = type;
-
-        this.id = id;
-    }
-
-    public loadAssignmentData(name?: string, author?: number, course?: number, prompt?: string, attempts?: number, randomize?: number, latepenalty?: number, points?: number, open?: string, close?: string, cutoff?: string, category?: string, type?: string, id?: number): void {
-
-        this.name = name;
-        this.author = author;
-        this.course = course;
-        this.category = category;
-        this.type = type;
-        this.prompt = prompt;
-        
-        this.attempts = attempts;
-        this.randomize = randomize;
-        this.latepenalty = latepenalty;
-        this.points = points;
-
-        this.open = open;
-        this.close = close;
-        this.cutoff = cutoff;
-
-        this.category = category;
-
-        this.id = id;
-    }
-
-    public loadFromObject(a: any): void{
-        this.loadAssignmentData(a.name, a.author, a.course, a.prompt, a.attempts, a.randomize, a.latepenalty, a.points, a.open, a.close, a.cutoff, a.category, a.type, a.id);
-    }
-
-    */
 
     public async loadFromID(ID: number): Promise<string | void> {
         this.id = ID;
@@ -393,7 +342,7 @@ class Assignment {
     public async answerQuestion(questionID: number, userID: number, answer: string): Promise<AnswerAttempt> {
 
         //if this assignment is passed cutoff date, dont do anything
-        if(this.passDue()) return {};
+        if(this.passCutoff()) return {};
 
         //question we will be loading
         let question: Question = new Question();
@@ -424,11 +373,11 @@ class Assignment {
 
         //get the number of attempts they have left as well
         let resp: any = await this.getQuestionProgress(userID, questionID);
-        response.attemptsleft = resp.attemptsleft;
+        response.attempts = resp.attempts;
         response.score = await this.getStudentScore(userID);
 
         //if no more attempts, or answer is correct, show student the answer
-        if(response.attemptsleft == 0 || iscorrect){
+        if(response.attempts == 0 || iscorrect){
             response.answer = await question.getCorrectAnswer();
         }
 
@@ -473,7 +422,7 @@ class Assignment {
         for(i = 0; i < result.data.length; i++){
             progress.push({
                 correct: result.data[i].correct,
-                attemptsleft: result.data[i].attempts,
+                attempts: result.data[i].attempts,
                 id: result.data[i].question
             })
         }
@@ -512,7 +461,7 @@ class Assignment {
 
         let progress: AnswerAttempt = {
             correct: result.data[0].correct,
-            attemptsleft: result.data[0].attempts,
+            attempts: result.data[0].attempts,
             id: questionID
         }
 

@@ -140,7 +140,8 @@ let tables: any = {
         question: `int`,
         user: `int`,
         correct: `int`,
-        attempts: `int`
+        attempts: `int`,
+        late: `int`
     },
 
     question_types: {

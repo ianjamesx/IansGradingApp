@@ -18,11 +18,11 @@ function answerQuestion(assignment, question, answer){
 
                 //update attempts remaining
                 var attemptID = 'attempt' + question;
-                var newmsg = (data.attemptsleft + ' attempts remaining');
+                var newmsg = (data.attempts + ' attempts remaining');
                 $('#' + attemptID).text(newmsg);
 
                 //if out of attempts, set question to incorrect
-                if(data.attemptsleft == 0){
+                if(data.attempts == 0){
                     $('#question' + data.id).addClass('question-incorrect');
                     disableQuestion(data.id, data.answer);
                 }
