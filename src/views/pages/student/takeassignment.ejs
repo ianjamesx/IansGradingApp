@@ -10,19 +10,16 @@
       <%- include('../../partials/student/sidebar', {courses: courses}) %>
       <div id="content">
 
-        <h1><%= assignment.name %> <small>| <%= assignment.category %></small></h1>
+        <h1><%= assignment.name %> <small>| <%= assignment.category %></small> <small>| <%= assignment.course %></small></h1>
         <hr>
         <h4><%= assignment.prompt %></h4>
         <hr>
         
         <div class="form-row">
-            <h4>Course: <%= assignment.course %></h4>
-        </div>
-        <div class="form-row">
             <h4><small>Due by: </small><%= assignment.close %></h4>
         </div>
         <div class="form-row">
-            <h3 id="score"><%= score %>%</h3>
+            <h3 id="score">Your Score: <%= score %>%</h3>
         </div>
         <hr>
 

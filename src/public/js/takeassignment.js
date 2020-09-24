@@ -30,7 +30,7 @@ function answerQuestion(assignment, question, answer){
             } else {
 
                 //update score
-                var score = data.score + '%';
+                var score = 'Your Score: ' + data.score + '%';
                 $('#score').text(score);
 
                 //set question to correct

@@ -44,7 +44,6 @@ let createCourse = async (req: Request) => {
 
   //get departments to populate list to choose from
   pagedata.departments = await Course.getDepartments();
-  
   pagedata.title = 'Create New Course';
 
   return pagedata;
@@ -63,46 +62,26 @@ let coursePage = async (req: Request) => {
   //load course from ID given
   let course: Course = new Course;
   await course.loadByID(id);
-  
-  //after course loads, get course data, title
+
   pagedata.course = await course.dataView();
   pagedata.title = course.getCourseTitle();
 
-  //load all assignments
   let assignments: Assignment[] = await course.getAllAssignments();
-  
-  //sort by due date (newest first), then turn to view
-  assignments.sort(function(a, b) {
-    let c: number = (new Date(a.getDueDate())).getTime();
-    let d: number = (new Date(b.getDueDate())).getTime();
-    return d-c;
-  });
 
-  //if instructor, get all enrollees
+  //if user is an instructor, load the enrollees for this course
   if(pagedata.instructor){
+
     pagedata.enrolees = await course.getEnrollees();
     pagedata.assignments = await views(assignments);
 
   } else {
-    //if not an instructor, get students current score
+
+    //if not an instructor, get students current score (and scores for all assignment)
     pagedata.score = await course.getStudentScore(pagedata.user.id);
-    pagedata.assignments = [];
-    let i: number;
+    pagedata.assignments = await Assignment.appendStudentScores(pagedata.user.id, assignments);
 
-    //get scores for individual assignments too
-    for(i = 0; i < assignments.length; i++){
-      let assignscore: number = await assignments[i].getStudentScore(pagedata.user.id);
-      let assigndata = await assignments[i].dataView();
-
-      //if there is no score for this assignment, set to 0
-      if(isNaN(assignscore)) assignscore = 0;
-
-      pagedata.assignments.push(assigndata);
-      pagedata.assignments[i].score = assignscore;
-
-    }
   }
-  
+
   return pagedata;
 
 };
@@ -242,24 +221,7 @@ let studentReport = async (req: Request) => {
 
   //get scores for all assignments
   let assignments: Assignment[] = await course.getAllAssignments();
-  pagedata.assignments = [];
-
-  let i: number;
-  for(i = 0; i < assignments.length; i++){
-    let assignscore: number = await assignments[i].getStudentScore(studentID);
-    let assigndata = await assignments[i].dataView();
-
-    //if there is no score for this assignment, set to 0
-    if(isNaN(assignscore)){
-      assignscore = 0;
-    }
-
-    pagedata.assignments.push({
-      name: assigndata.name,
-      score: assignscore
-    });
-
-  }
+  pagedata.assignments = await Assignment.appendStudentScores(studentID, assignments);
 
   pagedata.title = 'Student Report';
   return pagedata;

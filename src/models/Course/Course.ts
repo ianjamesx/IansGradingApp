@@ -284,8 +284,6 @@ class Course {
 
     public async joinCourse(userID: number, role: string): Promise<string | void> {
 
-        let result: DBResult = {};
-
         //see if user is already in course
         let incourse: boolean = await this.userInCourse(userID);
         if(incourse){
@@ -296,7 +294,10 @@ class Course {
         let connquery = db.format(`INSERT INTO usercourse (user, course, type) VALUES (?, ?, ?)`, [userID, this.getID(), role]);
         let results: DBResult = await db.dbquery(connquery);
 
-        if(result.error) return result.error;
+        if(results.error) return results.error;
+
+        console.log('adding user ' + connquery);
+        console.log(results);
 
         //add progress records for all assignments for this user
         await this.addNewStudentAssignments(userID);
@@ -383,7 +384,20 @@ class Course {
             assignments.push(new Assignment(result.data[i]));
         }
 
+        this.sortAssignmentsByDate(assignments);
+
         return assignments;
+
+    }
+
+    public sortAssignmentsByDate(assigns: Assignment[]): void{
+
+        //sort by due date (newest first)
+        assigns.sort(function(a, b) {
+            let c: number = (new Date(a.getDueDate())).getTime();
+            let d: number = (new Date(b.getDueDate())).getTime();
+            return d-c;
+        });
 
     }
 

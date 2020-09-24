@@ -1,5 +1,5 @@
 function joincourse(id){
-
+    
     $.ajax('api/course/join', {
         type: 'POST',
         contentType: 'application/json',

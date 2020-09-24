@@ -52,7 +52,6 @@ class User {
   public load(data?: any){
       this.email = data.email;
       this.password = data.password;
-      this.hash = data.password;
       this.firstname = data.firstname;
       this.lastname = data.lastname;
       this.instructor = data.instructor;

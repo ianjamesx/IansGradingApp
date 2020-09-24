@@ -37,6 +37,7 @@
                     <th scope="col">Role</th>
                     <th scope="col">Email</th>
                     <th scope="col">Report</th>
+                    <th scope="col">Drop Student</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -47,7 +48,8 @@
                         <td><%= enrolee.type %></td>
                         <td><%= enrolee.email %></td>
                         <% if(enrolee.type == 'Student'){ %> 
-                          <td><a href="/studentreport/<%= course.id %>/<%= enrolee.id %>">Full Report</a></td>
+                          <td><a class="reportlink" href="/studentreport/<%= course.id %>/<%= enrolee.id %>">Full Report</a></td>
+                          <td><i id="delete<%= enrolee.id %>" class="fa fa-minus-close" style="font-size:36px;color:red"></i></td>
                         <% } %>
                     </tr>
                 <% }); %>
@@ -75,7 +77,7 @@
                         <td><%= assignment.category %></td>
                         <td><%= assignment.points %></td>
                         <td><%= assignment.attempts %></td>
-                        <td><a href="/assignment/<%= assignment.id %>/">Assignment Page</a></td>
+                        <td><a class="reportlink" href="/assignment/<%= assignment.id %>/">Assignment Page</a></td>
                     </tr>
                 <% }); %>
                 </tbody>

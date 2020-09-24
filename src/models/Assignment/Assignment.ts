@@ -486,6 +486,26 @@ class Assignment {
 
     }
 
+    public static async appendStudentScores(userID: number, assigns: Assignment[]): Promise<any> {
+
+        let i: number;
+        let assignviews = [];
+        for(i = 0; i < assigns.length; i++){
+            let assignscore: number = await assigns[i].getStudentScore(userID);
+            let assigndata = await assigns[i].dataView();
+
+            //if there is no score for this assignment, set to 0
+            if(isNaN(assignscore)) assignscore = 0;
+
+            assigndata.score = assignscore;
+            assignviews.push(assigndata);
+
+        }
+
+        return assignviews;
+
+    }
+
     public setID(id: number){
         this.id = id;
     }

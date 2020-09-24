@@ -81,7 +81,6 @@ let courseapi = (app: Application): void => {
         //try to load course by that id
         let loaderr: any = await course.loadByID(id);
 
-        console.log(userID + ' joining course ' + id);
         if(loaderr){
             
             result.error = loaderr;

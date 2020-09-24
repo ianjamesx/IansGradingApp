@@ -15,6 +15,10 @@
     color: #0866b9;
 }
 
+.deletelink:hover {
+    color: #cf5353;
+}
+
 /* buttons */
 
 .appbtn {
@@ -58,4 +62,12 @@
 
 .editbtn:hover {
     background-color: #8859b7;
+}
+
+.correct-toggle {
+    background-color: #4aa5cc;
+}
+
+.correct-toggle:checked {
+    background-color: #266885;
 }
