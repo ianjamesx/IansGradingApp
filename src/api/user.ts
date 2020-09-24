@@ -65,20 +65,18 @@ let userapi = (app: Application): void => {
 
     app.post('/api/user/update', async (req: Request, res: Response) => {
 
-        let user: User = new User({
+        let user: User = new User();
+        await user.loadFromID(Number(req.body.id));
+
+        let result: Result = {};
+
+        result.error = await user.update({
             email: req.body.email,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
-            id: req.body.id
         });
 
-        let result: Result = {};
-        result.error = await user.save();
-
-        if(!result.error){
-            result.success = true;
-        }
-
+        if(!result.error) result.success = true;
         res.send(result);
 
     });
@@ -91,8 +89,10 @@ let userapi = (app: Application): void => {
         let newpass: string = req.body.newpassword;
         let result: Result = {};
 
-        if(await user.passwordCorrect()){
-            user.setPassword(newpass);
+        //see if password user entered is correct in order to update pw
+        if(await user.passwordCorrect(req.body.password)){
+
+            await user.setPassword(newpass);
             result.error = await user.save();
 
             //turn result.error object into just an error about password
@@ -104,7 +104,7 @@ let userapi = (app: Application): void => {
             res.send(result);
 
         } else {
-            res.send({error: 'Current Password Incorrect'});
+            res.send({error: 'Current Password Entered Is Incorrect'});
         }
 
     });

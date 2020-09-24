@@ -52,6 +52,7 @@ class User {
   public load(data?: any){
       this.email = data.email;
       this.password = data.password;
+      this.hash = data.password;
       this.firstname = data.firstname;
       this.lastname = data.lastname;
       this.instructor = data.instructor;
@@ -96,8 +97,9 @@ class User {
     session.user = sess;
   }
 
-  public setPassword(pass: string): void {
+  public async setPassword(pass: string): Promise<void> {
     this.password = pass;
+    this.encryptPassword();
   }
   /*
 
@@ -133,16 +135,20 @@ class User {
       return { any: dberr.error };
   }
 
-  public async update(): Promise<Errors | void> {
+  public async update(props: any): Promise<Errors | void> {
 
-    let errs: Errors = {};
-    errs = await this.verify(); //first, see if we have any errors in user inputted data
-    if(errs)
-      return errs;
+    //set all properties passed to this 
+    let i: any;
+    for(i in props){
+      this[i] = props[i];
+    }
 
-    let dberr: DBResult = await db.save(this); //save in db, return any db errors or null if no errs
-    if(dberr.error)
-      return { any: dberr.error };
+    //verify for errs
+    let errs = await this.verify();
+    if(errs) return errs;
+
+    await this.save();
+    
   }
 
   public async login(req: any): Promise<string | void> {
@@ -150,8 +156,6 @@ class User {
     //build query to search by email only (we'll compare to password later)
     let loginquery: string = db.format(`SELECT ?? FROM users WHERE email = ?`, [keys(this.getColumns()), this.email]);
     let result: DBResult = await db.dbquery(loginquery);
-
-    console.log(result);
 
     if(result.error) return result.error;
 
@@ -218,17 +222,16 @@ class User {
     await this.save();
   }
 
-  public async passwordCorrect(): Promise<boolean>{
+  public async passwordCorrect(password): Promise<boolean>{
     let passquery = db.format(`SELECT password FROM users WHERE id = ?)`, [this.id]);
     let result: DBResult = await db.dbquery(passquery);
-    let passwordmatched: boolean = await compare(this.password, result.data.password);
+    let passwordmatched: boolean = await compare(password, result.data.password);
     return passwordmatched;
   }
 
   /*
   general getters, for db inserts, or interfaces
   */
-
 
   public getColumns(): any {
 
