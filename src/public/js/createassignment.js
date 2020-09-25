@@ -32,6 +32,12 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
                 if(data.error.any){
                   common.unknownerr('unknownerr');
                 }
+
+                var err = Components.error({
+                  message: 'There were some errors with your assignment details, scroll up for more'
+                });
+                $('#unknownerr').html(err);
+
             } else if(data.success){
                 location.href='/assignment/choosequestions/' + data.success;
             }
@@ -47,7 +53,7 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
     //remove all current options
     $("#assignment_category").empty();
 
-    $.ajax('api/course/getcategories', {
+    $.ajax('/api/course/getcategories', {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -56,6 +62,7 @@ function createAssignment(name, course, category, prompt, open, close, cutoff, a
         success: function(data){
 
             var categories = data.success;
+            console.log(categories);
 
             var i;
             for(i = 0; i < categories.length; i++){

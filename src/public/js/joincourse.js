@@ -1,5 +1,5 @@
 function joincourse(id){
-    
+    alert('joining')
     $.ajax('api/course/join', {
         type: 'POST',
         contentType: 'application/json',
@@ -67,7 +67,12 @@ function coursesearch(key){
                 $('#join').click(function(){
                     joincourse(data.success.id);
                 });
-
+                
+                //on modal close, unbind previous event listeners
+                $('#course_modal').on('hidden.bs.modal', function () {
+                    $("#join").unbind();
+                });
+                
             }
 
         }

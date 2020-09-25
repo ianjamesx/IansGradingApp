@@ -88,12 +88,8 @@ let fs = require('fs');
 let path = require('path');
 
 let test = async (): Promise<void> => {
-/*
-  let arr1: any = [{id: 1, a: 3}, {id: 2, a: 53}];
-  let arr2: any = [{id: 1, b: 6}, {id: 2, b: 12}];
 
-  console.log(mergeOnId(arr1, arr2));
-*/
+  
 }
 
 test();
