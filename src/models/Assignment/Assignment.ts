@@ -41,27 +41,27 @@ interface Score {
 class Assignment {
 
     //name, category, ids of author/course
-    private name: string;
-    private author: number;
-    private course: number;
-    private category: string; //category (e.g. lab, hw)
-    private prompt: string; //prompt for assignment (e.g 'this test is...')
-    private type: string;
+    protected name: string;
+    protected author: number;
+    protected course: number;
+    protected category: string; //category (e.g. lab, hw)
+    protected prompt: string; //prompt for assignment (e.g 'this test is...')
+    protected type: string;
     
-    private attempts: number;
-    private randomize: number;
-    private latepenalty: number;
-    private points: number;
+    protected attempts: number;
+    protected randomize: number;
+    protected latepenalty: number;
+    protected points: number;
 
     //dates for assignment
-    private open: string;
-    private close: string;
-    private cutoff: string;
+    protected open: string;
+    protected close: string;
+    protected cutoff: string;
 
-    private id: number;
+    protected id: number;
 
     //if user decides to append questions, allow a question attribute
-    private questions: Question[];
+    protected questions: Question[];
 
     public table: string = `assignments`;
 
@@ -114,7 +114,7 @@ class Assignment {
             return { any: dberr.error };
     }
 
-    private async verify(): Promise<any | null> {
+    protected async verify(): Promise<any | null> {
 
         let errs: Errors = {
             name: verify.title(this.name),
@@ -128,7 +128,7 @@ class Assignment {
 
     }
 
-    private async generateID(): Promise<void> {
+    protected async generateID(): Promise<void> {
         this.id = await db.generateID(`questions`);
     }
 
@@ -274,7 +274,7 @@ class Assignment {
 
     }
 
-    private reformQuestionData(result: any): any {
+    protected reformQuestionData(result: any): any {
 
         let i: number;
         let quests: any = {};

@@ -141,7 +141,8 @@ let tables: any = {
         user: `int`,
         correct: `int`,
         attempts: `int`,
-        late: `int`
+        late: `int`,
+        timestamp: `varchar(20)`
     },
 
     question_types: {
@@ -175,7 +176,7 @@ let tables: any = {
 
     testcases: {
         assignment: `int`,
-        visible: `bit`,
+        visible: `int`,
         input: `varchar(100)`,
         output: `varchar(100)`
     },
@@ -183,7 +184,8 @@ let tables: any = {
     programfiles: {
         language: `varchar(20)`,
         filename: `varchar(40)`,
-        sourcecode: `text`,
+        sourcecode: `mediumtext`,
+        timestamp: `varchar(20)`,
         assignment: `int`,
         question: `int`,
         author: `int`,
