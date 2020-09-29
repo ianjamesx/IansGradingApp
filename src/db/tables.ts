@@ -84,6 +84,8 @@ let tables: any = {
         category: `varchar(30)`,
         prompt: `text`,
         course: `int`,
+        language: `varchar(20)`,
+        class: `varchar(30)`,
         CONSTRAINTS: [
             `FOREIGN KEY (author) REFERENCES users(id)`,
             //`FOREIGN KEY (category) REFERENCES course_categories(name)`,
@@ -161,19 +163,6 @@ let tables: any = {
     code questions/labs
     */
 
-    programs: {
-
-        id: `int NOT NULL PRIMARY KEY`,
-        type: `varchar(20)`,
-        author: `int`,
-        question: `text`,
-        hint: `varchar(200)`,
-        subject: `varchar(20)`,
-        topic: `varchar(20)`,
-        public: `bit`,
-
-    },
-
     testcases: {
         assignment: `int`,
         visible: `int`,
@@ -182,7 +171,6 @@ let tables: any = {
     },
 
     programfiles: {
-        language: `varchar(20)`,
         filename: `varchar(40)`,
         sourcecode: `mediumtext`,
         timestamp: `varchar(20)`,
@@ -190,7 +178,6 @@ let tables: any = {
         question: `int`,
         author: `int`,
         CONSTRAINTS: [
-            `FOREIGN KEY (language) REFERENCES languages(name)`,
             `FOREIGN KEY (assignment) REFERENCES assignments(id)`,
             `FOREIGN KEY (question) REFERENCES questions(id)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,

@@ -90,7 +90,6 @@ import { addAssignmentDir } from '../filesys/FileManager';
 
 let test = async (): Promise<void> => {
 
-  await addAssignmentDir(1241242, [12412, 1244112]);
 }
 
 test();
