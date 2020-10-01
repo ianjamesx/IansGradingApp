@@ -224,6 +224,7 @@ let studentReport = async (req: Request) => {
   pagedata.assignments = await Assignment.appendStudentScores(studentID, assignments);
 
   pagedata.title = 'Student Report';
+
   return pagedata;
 
 };

@@ -10,7 +10,7 @@ import express = require('express');
 const app = express();
 
 //all our configuration code (express, database, public files)
-import { init } from './init/config';
+import { init } from './config/config';
 init(app);
 
 //all our page routes
