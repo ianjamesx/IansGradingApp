@@ -24,8 +24,6 @@ class Question {
     private hint: string;
 
     private author: number;
-    private subject: string;
-    private topic: string;
     private type: string;
     private ispublic: number;
 
@@ -43,8 +41,6 @@ class Question {
         this.answers = data.answers;
         this.hint = data.hint;
         this.author = data.author;
-        this.subject = data.subject;
-        this.topic = data.topic;
         this.type = data.type;
         this.ispublic = data.ispublic;
         this.id = data.id;
@@ -217,8 +213,6 @@ class Question {
             body: this.body,
             hint: this.hint,
             author: this.author,
-            subject: this.subject,
-            topic: this.topic,
             type: this.type,
             public: this.ispublic,
             id: this.id
@@ -250,8 +244,6 @@ class Question {
             body: this.body,
             hint: this.hint,
             author: authorname,
-            subject: this.subject,
-            topic: this.topic,
             type: this.type,
             public: this.ispublic,
             id: this.id,

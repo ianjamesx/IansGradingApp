@@ -11,7 +11,6 @@ import fileupload = require('express-fileupload');
 
 //our ENV configs
 require('dotenv').config();
-console.log(process.env);
 
 import { init as dbinit } from '../db/tableman';
 import { tables } from '../db/tables';

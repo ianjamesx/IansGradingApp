@@ -20,8 +20,6 @@ let questionapi = (app: Application): void => {
             body: req.body.question,
             answers: req.body.answers,
             hint: req.body.hint,
-            subject: req.body.subject,
-            topic: req.body.topic,
             type: req.body.type,
             ispublic: req.body.public,
             author: User.getIDFromSession(req.session)

@@ -1,13 +1,13 @@
-function getQuestions(subject, topic, type, keywords){
+function getQuestions(textbook, public, chapter, section){
 
     $.ajax('/api/question/search', {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
-            subject: subject,
-            topic: topic,
-            type: type,
-            keywords: keywords
+            textbook: textbook,
+            chapter: chapter,
+            section: section,
+            public: public
         }),
         success: function(data){
 

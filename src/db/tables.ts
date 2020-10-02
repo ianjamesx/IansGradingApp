@@ -31,6 +31,7 @@ let tables: any = {
         section: `int`,
         id: `int NOT NULL PRIMARY KEY`,
         coursekey: `varchar(12)`,
+        textbook: `varchar(50)`,
         instructor: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (department) REFERENCES departments(abbreviation)`,
@@ -68,7 +69,6 @@ let tables: any = {
     /*
     assignment tables
     */
-
     assignments: {
         id: `int NOT NULL PRIMARY KEY`,
         author: `int`,
@@ -94,8 +94,6 @@ let tables: any = {
 
     },
     
-    //SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_NAME = 'assignments';
-    
     /*
     question tables
     */
@@ -106,9 +104,9 @@ let tables: any = {
         author: `int`,
         body: `text`,
         hint: `varchar(200)`,
-        subject: `varchar(20)`,
-        topic: `varchar(20)`,
         public: `int`,
+        chapter: `int`,
+        section: `int`,
         CONSTRAINTS: [
             `FOREIGN KEY (type) REFERENCES question_types(type)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,
@@ -116,7 +114,6 @@ let tables: any = {
             `FOREIGN KEY (topic) REFERENCES question_topics(topic)`
         ]
     },
-
     answers: {
         id: `int NOT NULL PRIMARY KEY`,
         correct: `int`,
@@ -137,6 +134,7 @@ let tables: any = {
         ]
     },
 
+    //keep tracks of question score for each on assignment
     assignmentprogress: {
         assignment: `int`,
         question: `int`,
@@ -147,22 +145,30 @@ let tables: any = {
         timestamp: `varchar(20)`
     },
 
+    //types of questions (e.g multiple choice, fill in blank)
     question_types: {
         type: `varchar(20) NOT NULL PRIMARY KEY`
     },
 
-    question_subjects: {
-        subject: `varchar(20) NOT NULL PRIMARY KEY`
+
+    /*
+    info for textbooks, used for keeping track of questions belonging to certain classes/topics
+    */
+    textbooks: {
+        name: `varchar(50) NOT NULL PRIMARY KEY`,
+        chapters: `int`,
     },
 
-    question_topics: {
-        topic: `varchar(20) NOT NULL PRIMARY KEY`
+    chapters: {
+        textbook: `varchar(50)`,
+        number: `int`,
+        sections: `int`,
+        name: `varchar(30)`
     },
 
     /*
     code questions/labs
     */
-
     testcases: {
         assignment: `int`,
         visible: `int`,

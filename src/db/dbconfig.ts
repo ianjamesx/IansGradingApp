@@ -32,12 +32,14 @@ let sqlconfig: any = {
 
 */
 
+
+//set SQL options according to .ENV
 let sqlconfig: any = {
   connectionLimit: 100,
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'password',
-  database: 'grade_db'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB
 };
 
 let unknownerr: string = `Ah! Something went wrong. We saved this error and we're looking into it. Please try again later.`; //error message when anything in database goes wrong
