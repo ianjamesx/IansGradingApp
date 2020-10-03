@@ -19,3 +19,4 @@ Dependencies you need first: NodeJS, MySQL, Typescript compiler (TSC)
 Notes:
 
 App should compile to a build/ directory in main directory on compilation. Tables should be auto generated and inserted during first one (this may cause some issues with table constraints)
+If errors on table insert, try rebuilding (running run.sh) multiple times until all tables are force-inserted
