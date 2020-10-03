@@ -15,3 +15,7 @@ Dependencies you need first: NodeJS, MySQL, Typescript compiler (TSC)
 3. run `run.sh` (assuming file has execute permissions)
 
 4. visit localhost:8080 to see app running
+
+Notes:
+
+App should compile to a build/ directory in main directory on compilation. Tables should be auto generated and inserted during first one (this may cause some issues with table constraints)
