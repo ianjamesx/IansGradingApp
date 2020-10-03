@@ -24,6 +24,6 @@ api(app);
 //import playground for testing/debugging
 let playground = require('./utils/playground');
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log('xgrade running on port ' + process.env.PORT);
 });

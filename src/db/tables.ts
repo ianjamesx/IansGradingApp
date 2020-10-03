@@ -22,6 +22,12 @@ let tables: any = {
         name: `varchar(20) NOT NULL PRIMARY KEY`,
     },
 
+    //all departments a course can belong to
+    departments: {
+        name: `varchar(20)`,
+        abbreviation: `char(4) NOT NULL PRIMARY KEY`
+    },
+
     courses: {
         name: `varchar(30)`,
         department: `char(4)`,
@@ -60,12 +66,6 @@ let tables: any = {
         ]
     },
 
-    //all departments a course can belong to
-    departments: {
-        name: `varchar(20)`,
-        abbreviation: `char(4) NOT NULL PRIMARY KEY`
-    },
-
     /*
     assignment tables
     */
@@ -98,6 +98,26 @@ let tables: any = {
     question tables
     */
 
+    //types of questions (e.g multiple choice, fill in blank)
+    question_types: {
+        type: `varchar(20) NOT NULL PRIMARY KEY`
+    },
+
+    /*
+    info for textbooks, used for keeping track of questions belonging to certain classes/topics
+    */
+    textbooks: {
+        name: `varchar(50) NOT NULL PRIMARY KEY`,
+        chapters: `int`,
+    },
+
+    chapters: {
+        textbook: `varchar(50)`,
+        number: `int`,
+        sections: `int`,
+        name: `varchar(30)`
+    },
+
     questions: {
         id: `int NOT NULL PRIMARY KEY`,
         type: `varchar(20)`,
@@ -110,10 +130,9 @@ let tables: any = {
         CONSTRAINTS: [
             `FOREIGN KEY (type) REFERENCES question_types(type)`,
             `FOREIGN KEY (author) REFERENCES users(id)`,
-            `FOREIGN KEY (subject) REFERENCES question_subjects(subject)`,
-            `FOREIGN KEY (topic) REFERENCES question_topics(topic)`
         ]
     },
+    
     answers: {
         id: `int NOT NULL PRIMARY KEY`,
         correct: `int`,
@@ -143,27 +162,6 @@ let tables: any = {
         attempts: `int`,
         late: `int`,
         timestamp: `varchar(20)`
-    },
-
-    //types of questions (e.g multiple choice, fill in blank)
-    question_types: {
-        type: `varchar(20) NOT NULL PRIMARY KEY`
-    },
-
-
-    /*
-    info for textbooks, used for keeping track of questions belonging to certain classes/topics
-    */
-    textbooks: {
-        name: `varchar(50) NOT NULL PRIMARY KEY`,
-        chapters: `int`,
-    },
-
-    chapters: {
-        textbook: `varchar(50)`,
-        number: `int`,
-        sections: `int`,
-        name: `varchar(30)`
     },
 
     /*

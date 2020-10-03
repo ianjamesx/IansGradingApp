@@ -5,41 +5,14 @@ connection pooling/promise wrapper for mysql
 import mysql = require('mysql'); //db module
 import { DBResult } from '../interfaces';
 
-/*
-MySQL database configuration
-
-for DarkRock/Silver:
-
-also, cmd for silver mySQL access: /usr/local/mysql/bin/mysql -u root -p
-
-let sqlconfig: any = {
-  connectionLimit: 100,
-  host: '127.0.0.1',
-  user: 'root',
-  password: 'password',
-  database: 'grade_db'
-};
-
-for SUSE III:
-
-let sqlconfig: any = {
-  connectionLimit: 100,
-  host: '127.0.0.1',
-  user: 'root',
-  password: '',
-  database: 'grade_db'
-};
-
-*/
-
 
 //set SQL options according to .ENV
 let sqlconfig: any = {
   connectionLimit: 100,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB
+  host: process.env.DB_HOST || '127.0.0.1',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password',
+  database: process.env.DB || 'grade_db'
 };
 
 let unknownerr: string = `Ah! Something went wrong. We saved this error and we're looking into it. Please try again later.`; //error message when anything in database goes wrong
