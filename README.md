@@ -5,10 +5,7 @@ Ian's Grading App is an open source solution for instructors to post course cont
 
 To install:
 
-Dependencies you need first:
--NodeJS
--MySQL
--Typescript compiler (TSC)
+Dependencies you need first: NodeJS, MySQL, Typescript compiler (TSC)
 
 
 1. install all npm modules using `npm i install`
