@@ -1,4 +1,4 @@
-# OpenCourse
+# Ian's Grading App
 Production mirror of Ian's Grading App.
 
 Ian's Grading App is an open source solution for instructors to post course content, and offers an autonomous grading solution for simple computer programming coursework.
